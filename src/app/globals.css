@@ -105,7 +105,7 @@
     font-feature-settings: "cv02", "cv03", "cv04", "ss01";
   }
   html {
-    @apply font-sans overflow-hidden h-full;
+    @apply font-sans h-full;
   }
 
   .input-glow:focus {

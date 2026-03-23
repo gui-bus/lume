@@ -7,13 +7,16 @@ import { ResumeData } from "@/types/resume";
 import { Button } from "@/components/ui/button";
 import {
   Printer,
-  Aperture,
   Moon,
   Sun,
   MagnifyingGlassPlus,
   MagnifyingGlassMinus,
   CloudCheck,
   ArrowsClockwise,
+  ShareNetwork,
+  FileArrowUp,
+  FileArrowDown,
+  ShieldCheck,
 } from "@phosphor-icons/react";
 import {
   Popover,
@@ -27,6 +30,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import { ResumePDF } from "@/components/pdf/ResumePDF";
 import { cn } from "@/lib/utils";
+import { validateATS, ATSResult } from "@/lib/validations/ats-validator";
 
 const defaultData: ResumeData = {
   personalInfo: {
@@ -48,14 +52,14 @@ const defaultData: ResumeData = {
 };
 
 const COLORS = [
-  "#18181b", // Zinc/Preto
-  "#2563eb", // Azul
-  "#059669", // Esmeralda
-  "#dc2626", // Vermelho
-  "#7c3aed", // Violeta
-  "#ea580c", // Laranja
-  "#0891b2", // Ciano
-  "#be185d", // Rosa
+  "#18181b",
+  "#2563eb",
+  "#059669",
+  "#dc2626",
+  "#7c3aed",
+  "#ea580c",
+  "#0891b2",
+  "#be185d",
 ];
 
 export default function Home() {
@@ -65,6 +69,7 @@ export default function Home() {
   const [mounted, setMounted] = useState(false);
   const [isSyncing, setIsSyncing] = useState(false);
   const [zoom, setZoom] = useState(0.8);
+  const [atsResult, setAtsResult] = useState<ATSResult | null>(null);
 
   const { theme, setTheme } = useTheme();
 
@@ -85,18 +90,67 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    if (mounted) localStorage.setItem("resume-color", colorTheme);
-  }, [colorTheme, mounted]);
+    if (mounted) {
+      localStorage.setItem("resume-color", colorTheme);
+      setAtsResult(validateATS(data));
+    }
+  }, [colorTheme, data, mounted]);
 
   const handleDataChange = useCallback((newData: ResumeData) => {
     setData(newData);
   }, []);
 
+  const handleImportJSON = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      try {
+        const json = JSON.parse(event.target?.result as string);
+        setData(json);
+        toast.success("Dados importados com sucesso");
+      } catch (error) {
+        toast.error("Erro ao ler o arquivo JSON");
+      }
+    };
+    reader.readAsText(file);
+  };
+
+  const handleExportJSON = () => {
+    const jsonString = JSON.stringify(data, null, 2);
+    const blob = new Blob([jsonString], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `curriculo-${data.personalInfo.name?.toLowerCase().replace(/\s+/g, "-") || "lume"}.json`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    toast.success("JSON exportado com sucesso");
+  };
+
+  const handleShare = async () => {
+    try {
+      setIsSyncing(true);
+      const result = await saveResume(resumeId, data);
+      setIsSyncing(false);
+
+      const shareUrl = `${window.location.origin}/share/${result.id}`;
+      await navigator.clipboard.writeText(shareUrl);
+      setResumeId(result.id);
+      localStorage.setItem("resume-id", result.id);
+      toast.success("Link copiado para a área de transferência!");
+    } catch (error) {
+      setIsSyncing(false);
+      toast.error("Falha ao gerar link de compartilhamento");
+    }
+  };
+
   if (!mounted) return null;
 
   return (
     <main className="h-screen flex flex-col bg-background text-foreground overflow-hidden">
-      {/* Header Minimalista Premium */}
       <header className="no-print h-16 border-b border-border/40 bg-background/50 backdrop-blur-xl flex items-center justify-between px-8 shrink-0 z-50">
         <motion.div
           className="flex items-center group cursor-pointer select-none"
@@ -108,7 +162,95 @@ export default function Home() {
         </motion.div>
 
         <div className="flex items-center gap-6">
-          {/* Controles de Zoom Simplificados */}
+          {atsResult && (
+            <Popover>
+              <PopoverTrigger asChild>
+                <button className="flex items-center gap-2 px-3 py-1.5 bg-primary/5 hover:bg-primary/10 border border-primary/10 rounded-full transition-all">
+                  <ShieldCheck
+                    size={18}
+                    weight="bold"
+                    className={cn(
+                      atsResult.score > 70
+                        ? "text-emerald-500"
+                        : "text-amber-500",
+                    )}
+                  />
+                  <span className="text-[11px] font-black uppercase tracking-widest">
+                    Score: {atsResult.score}
+                  </span>
+                </button>
+              </PopoverTrigger>
+              <PopoverContent
+                className="w-72 p-4 rounded-2xl bg-background/95 backdrop-blur-xl border border-border/40 shadow-2xl"
+                align="end"
+              >
+                <h3 className="text-xs font-black uppercase tracking-widest mb-3 flex items-center gap-2 text-primary">
+                  <ShieldCheck size={16} /> Análise de ATS
+                </h3>
+                <div className="space-y-3">
+                  {atsResult.suggestions.length > 0 ? (
+                    atsResult.suggestions.map((s, i) => (
+                      <div
+                        key={i}
+                        className="text-[11px] text-muted-foreground flex gap-2"
+                      >
+                        <span className="text-primary font-bold">•</span> {s}
+                      </div>
+                    ))
+                  ) : (
+                    <div className="text-[11px] text-emerald-500 font-bold text-center py-2">
+                      ✨ Seu currículo está otimizado!
+                    </div>
+                  )}
+                </div>
+              </PopoverContent>
+            </Popover>
+          )}
+
+          <div className="h-4 w-[1px] bg-border/40" />
+
+          <div className="flex items-center gap-2">
+            <div className="relative">
+              <input
+                type="file"
+                accept=".json"
+                onChange={handleImportJSON}
+                className="absolute inset-0 opacity-0 cursor-pointer"
+                title="Importar JSON"
+              />
+              <Button
+                variant="ghost"
+                size="icon"
+                className="rounded-full"
+                title="Importar JSON"
+              >
+                <FileArrowUp size={20} weight="duotone" />
+              </Button>
+            </div>
+
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleExportJSON}
+              className="rounded-full"
+              title="Exportar JSON"
+            >
+              <FileArrowDown size={20} weight="duotone" />
+            </Button>
+
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleShare}
+              className="rounded-full"
+              title="Compartilhar link público"
+            >
+              <ShareNetwork size={20} weight="duotone" />
+            </Button>
+          </div>
+
+          <div className="h-4 w-[1px] bg-border/40" />
+
           <div className="hidden md:flex items-center bg-muted/20 rounded-full px-1 py-1 border border-border/30">
             <Button
               variant="ghost"
@@ -131,10 +273,7 @@ export default function Home() {
             </Button>
           </div>
 
-          <div className="h-4 w-[1px] bg-border/40" />
-
           <div className="flex items-center gap-3">
-            {/* Tema */}
             <Button
               variant="ghost"
               size="icon"
@@ -148,7 +287,6 @@ export default function Home() {
               )}
             </Button>
 
-            {/* Accent Color */}
             <Popover>
               <PopoverTrigger asChild>
                 <Button
@@ -187,7 +325,6 @@ export default function Home() {
               </PopoverContent>
             </Popover>
 
-            {/* Download */}
             <AnimatePresence mode="wait">
               <motion.div key={JSON.stringify(data) + colorTheme}>
                 <PDFDownloadLink
@@ -211,9 +348,7 @@ export default function Home() {
         </div>
       </header>
 
-      {/* Main Content Area */}
       <div className="flex-1 flex overflow-hidden">
-        {/* Left Side: Professional Editor */}
         <div className="w-full lg:w-[480px] xl:w-[540px] shrink-0 border-r bg-card/10 overflow-hidden relative flex flex-col">
           <ResumeForm
             initialData={data}
@@ -222,7 +357,6 @@ export default function Home() {
             onIdGenerated={setResumeId}
           />
 
-          {/* Status Badge - Refined */}
           <div className="absolute bottom-6 left-6 no-print z-50">
             <AnimatePresence mode="wait">
               {isSyncing ? (
@@ -254,7 +388,6 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Right Side: Preview Stage */}
         <div className="hidden lg:flex flex-1 bg-muted/5 relative overflow-hidden items-center justify-center">
           <div className="absolute inset-0 overflow-auto custom-scrollbar flex items-start justify-center p-12 canvas-grid">
             <motion.div

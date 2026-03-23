@@ -40,7 +40,7 @@ export default function RootLayout({
         manrope.variable,
       )}
     >
-      <body className="min-h-full flex flex-col transition-colors duration-500 ease-in-out">
+      <body className="min-h-full flex flex-col transition-colors duration-500 ease-in-out w-full max-w-440 mx-auto">
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
