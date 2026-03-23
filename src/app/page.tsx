@@ -98,10 +98,10 @@ export default function Home() {
       setIsSyncing(true);
       await saveResume(resumeId, data);
       setIsSyncing(false);
-      toast.success("Progresso salvo!");
+      toast.success("Progresso salvo com sucesso");
     } catch (error) {
       setIsSyncing(false);
-      toast.error("Erro ao salvar.");
+      toast.error("Falha ao sincronizar");
     }
   }, [resumeId, data]);
 
@@ -109,49 +109,55 @@ export default function Home() {
 
   return (
     <main className="h-screen flex flex-col bg-background text-foreground overflow-hidden">
-      {/* Header Premium */}
-      <header className="no-print h-16 border-b bg-background/50 backdrop-blur-xl flex items-center justify-between px-6 shrink-0 z-50">
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-primary flex items-center justify-center shadow-lg shadow-primary/20">
-            <Sparkle
-              size={22}
-              weight="fill"
-              className="text-primary-foreground"
-            />
+      {/* Header Premium High-End */}
+      <header className="no-print h-16 border-b bg-background/60 backdrop-blur-2xl flex items-center justify-between px-8 shrink-0 z-50">
+        <div className="flex items-center gap-4">
+          <div className="relative group">
+            <div className="absolute -inset-1 bg-gradient-to-tr from-lume-indigo via-lume-violet to-lume-blue rounded-xl blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200" />
+            <div className="relative w-10 h-10 rounded-xl bg-background border flex items-center justify-center shadow-2xl">
+              <Sparkle size={24} weight="fill" className="text-primary" />
+            </div>
           </div>
-          <span className="text-xl font-bold tracking-tight">Lume</span>
+          <div className="flex flex-col leading-none">
+            <span className="text-xl font-black tracking-tighter">Lume</span>
+            <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em] ml-0.5">
+              Resume AI
+            </span>
+          </div>
         </div>
 
-        <div className="flex items-center gap-3">
-          <div className="flex items-center bg-muted/50 rounded-full p-1 border">
+        <div className="flex items-center gap-4">
+          {/* Zoom Controls */}
+          <div className="hidden md:flex items-center bg-muted/30 hover:bg-muted/50 transition-colors rounded-full p-1 border border-border/50">
             <Button
               variant="ghost"
               size="icon"
               onClick={() => setZoom((prev) => Math.max(0.4, prev - 0.1))}
-              className="h-8 w-8 rounded-full"
+              className="h-7 w-7 rounded-full"
             >
-              <MagnifyingGlassMinus size={16} />
+              <MagnifyingGlassMinus size={14} />
             </Button>
-            <span className="text-[10px] font-mono w-10 text-center font-bold">
+            <span className="text-[10px] font-bold w-10 text-center">
               {Math.round(zoom * 100)}%
             </span>
             <Button
               variant="ghost"
               size="icon"
               onClick={() => setZoom((prev) => Math.min(1.2, prev + 0.1))}
-              className="h-8 w-8 rounded-full"
+              className="h-7 w-7 rounded-full"
             >
-              <MagnifyingGlassPlus size={16} />
+              <MagnifyingGlassPlus size={14} />
             </Button>
           </div>
 
-          <div className="h-6 w-[1px] bg-border mx-1" />
+          <div className="h-4 w-[1px] bg-border/50 mx-1" />
 
+          {/* Theme Toggle */}
           <Button
             variant="ghost"
             size="icon"
             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-            className="rounded-full"
+            className="rounded-full hover:bg-muted/50"
           >
             {theme === "dark" ? (
               <Sun size={20} weight="duotone" />
@@ -160,29 +166,30 @@ export default function Home() {
             )}
           </Button>
 
+          {/* Color Picker */}
           <Popover>
             <PopoverTrigger asChild>
               <Button
                 variant="outline"
                 size="sm"
-                className="gap-2 rounded-full border-dashed"
+                className="gap-2 rounded-full border-border/50 h-9 px-4 hover:bg-muted/50 transition-all"
               >
                 <div
-                  className="w-3 h-3 rounded-full"
+                  className="w-3 h-3 rounded-full shadow-inner"
                   style={{ backgroundColor: colorTheme }}
                 />
-                <span className="hidden sm:inline text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                  Cor
+                <span className="text-[11px] font-bold uppercase tracking-wider">
+                  Accent
                 </span>
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-44 p-3 rounded-2xl">
+            <PopoverContent className="w-48 p-3 rounded-2xl bg-background/95 backdrop-blur-xl border-border/50 shadow-2xl">
               <div className="grid grid-cols-4 gap-2">
                 {COLORS.map((color) => (
                   <button
                     key={color}
                     className={cn(
-                      "w-8 h-8 rounded-full border-2 transition-all hover:scale-110",
+                      "w-9 h-9 rounded-full border-2 transition-all hover:scale-110 hover:shadow-lg",
                       colorTheme === color
                         ? "border-primary"
                         : "border-transparent",
@@ -195,6 +202,7 @@ export default function Home() {
             </PopoverContent>
           </Popover>
 
+          {/* Download Action */}
           <AnimatePresence mode="wait">
             <motion.div key={JSON.stringify(data) + colorTheme}>
               <PDFDownloadLink
@@ -204,13 +212,11 @@ export default function Home() {
                 {({ loading }) => (
                   <Button
                     size="sm"
-                    className="gap-2 rounded-full px-5 font-bold shadow-xl shadow-primary/20"
+                    className="gap-2 rounded-full px-6 h-9 font-black shadow-xl shadow-primary/10 transition-all hover:shadow-primary/20 active:scale-95"
                     disabled={loading}
                   >
                     <Printer size={18} weight="bold" />
-                    <span className="hidden sm:inline">
-                      {loading ? "Gerando..." : "Download"}
-                    </span>
+                    <span>{loading ? "GERANDO..." : "DOWNLOAD PDF"}</span>
                   </Button>
                 )}
               </PDFDownloadLink>
@@ -219,10 +225,10 @@ export default function Home() {
         </div>
       </header>
 
-      {/* Editor & Preview Split Area */}
+      {/* Main Content Area */}
       <div className="flex-1 flex overflow-hidden">
-        {/* Left Side: Editor */}
-        <div className="w-full lg:w-[480px] xl:w-[580px] shrink-0 border-r bg-card/30 overflow-hidden relative flex flex-col">
+        {/* Left Side: Professional Editor */}
+        <div className="w-full lg:w-[500px] xl:w-[600px] shrink-0 border-r bg-card/20 overflow-hidden relative flex flex-col">
           <ResumeForm
             initialData={data}
             resumeId={resumeId}
@@ -230,7 +236,7 @@ export default function Home() {
             onIdGenerated={setResumeId}
           />
 
-          {/* Status Badge */}
+          {/* Status Badge - Refined */}
           <div className="absolute bottom-6 left-6 no-print z-50">
             <AnimatePresence mode="wait">
               {isSyncing ? (
@@ -239,19 +245,22 @@ export default function Home() {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
-                  className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground bg-background/80 backdrop-blur-md border px-3 py-1.5 rounded-full shadow-sm"
+                  className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground bg-background/80 backdrop-blur-xl border px-4 py-2 rounded-full shadow-sm"
                 >
-                  <ArrowsClockwise size={12} className="animate-spin" />
-                  Salvando...
+                  <ArrowsClockwise
+                    size={12}
+                    className="animate-spin text-primary"
+                  />
+                  Sincronizando...
                 </motion.div>
               ) : (
                 <motion.div
                   key="saved"
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-green-600 bg-background/80 backdrop-blur-md border border-green-500/20 px-3 py-1.5 rounded-full shadow-sm"
+                  className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-emerald-500 bg-background/80 backdrop-blur-xl border border-emerald-500/20 px-4 py-2 rounded-full shadow-sm"
                 >
-                  <CloudCheck size={14} weight="fill" />
+                  <CloudCheck size={16} weight="bold" />
                   Documento Salvo
                 </motion.div>
               )}
@@ -259,23 +268,23 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Right Side: Preview Engine */}
-        <div className="hidden lg:flex flex-1 bg-muted/20 relative overflow-hidden items-center justify-center">
-          <div className="absolute inset-0 overflow-auto custom-scrollbar flex items-start justify-center p-12">
+        {/* Right Side: Preview Stage */}
+        <div className="hidden lg:flex flex-1 bg-muted/10 relative overflow-hidden items-center justify-center">
+          <div className="absolute inset-0 overflow-auto custom-scrollbar flex items-start justify-center p-16 mesh-bg">
             <motion.div
               animate={{ scale: zoom }}
               className="origin-top"
-              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              transition={{ type: "spring", stiffness: 200, damping: 25 }}
             >
-              <div className="shadow-[0_30px_100px_rgba(0,0,0,0.12)] dark:shadow-[0_30px_100px_rgba(0,0,0,0.3)] rounded-sm overflow-hidden bg-white">
+              <div className="shadow-[0_50px_150px_-30px_rgba(0,0,0,0.5)] rounded-sm overflow-hidden bg-white">
                 <ResumeView data={data} colorTheme={colorTheme} />
               </div>
             </motion.div>
           </div>
 
-          <div className="absolute bottom-6 right-6 flex items-center gap-2 px-4 py-2 bg-background/50 backdrop-blur-md border rounded-full text-[10px] font-bold uppercase tracking-widest text-muted-foreground shadow-sm">
-            <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
-            Edição em Tempo Real
+          <div className="absolute bottom-8 right-8 flex items-center gap-3 px-5 py-2.5 bg-background/40 backdrop-blur-2xl border border-white/5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground shadow-2xl">
+            <span className="w-2 h-2 rounded-full bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.5)] animate-pulse" />
+            Live Preview Engine
           </div>
         </div>
       </div>

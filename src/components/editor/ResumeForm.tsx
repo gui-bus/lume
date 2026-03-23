@@ -23,6 +23,7 @@ import {
   Certificate,
   HandHeart,
   PlusCircle,
+  DotsSixVertical,
 } from "@phosphor-icons/react";
 import { useEffect, useState } from "react";
 import { useDebounce } from "@/hooks/use-debounce";
@@ -57,12 +58,12 @@ const defaultValues: ResumeData = {
 };
 
 const STEPS = [
-  { id: "identidade", label: "Identidade", icon: User },
+  { id: "identidade", label: "Perfil", icon: User },
   { id: "stack", label: "Stack", icon: Toolbox },
   { id: "jornada", label: "Jornada", icon: Briefcase },
   { id: "formacao", label: "Formação", icon: GraduationCap },
   { id: "projetos", label: "Projetos", icon: GitBranch },
-  { id: "extra", label: "Extra", icon: PlusCircle },
+  { id: "extra", label: "Extras", icon: PlusCircle },
 ];
 
 export function ResumeForm({
@@ -144,114 +145,142 @@ export function ResumeForm({
 
   return (
     <div className="flex flex-col h-full bg-background overflow-hidden">
-      <div className="px-8 pt-8 pb-4 flex justify-between items-center border-b bg-muted/5 shrink-0">
-        <div className="flex gap-2">
+      {/* Premium Step Indicator */}
+      <div className="px-6 pt-6 pb-2 flex items-center justify-center border-b bg-muted/10 shrink-0">
+        <div className="flex gap-1.5 p-1.5 bg-muted/30 rounded-2xl border border-border/50">
           {STEPS.map((step, i) => (
             <button
               key={step.id}
               onClick={() => setActiveStep(i)}
+              title={step.label}
               className={cn(
-                "w-8 h-8 rounded-lg flex items-center justify-center transition-all",
+                "relative w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-500",
                 activeStep === i
-                  ? "bg-primary text-primary-foreground shadow-lg"
-                  : "bg-muted text-muted-foreground hover:bg-muted/80",
+                  ? "bg-background text-primary shadow-xl ring-1 ring-border/50"
+                  : "text-muted-foreground hover:text-foreground hover:bg-background/50",
               )}
             >
               <step.icon
-                size={18}
+                size={20}
                 weight={activeStep === i ? "fill" : "duotone"}
               />
+              {activeStep === i && (
+                <motion.div
+                  layoutId="activeStep"
+                  className="absolute -bottom-1 w-1 h-1 bg-primary rounded-full"
+                />
+              )}
             </button>
           ))}
         </div>
-        <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-          Passo {activeStep + 1} de {STEPS.length}
-        </span>
       </div>
 
-      <div className="flex-1 overflow-y-auto custom-scrollbar px-8 py-10 pb-32">
+      {/* Scrollable Content Area */}
+      <div className="flex-1 overflow-y-auto custom-scrollbar px-10 py-12 pb-32">
         <AnimatePresence mode="wait">
           <motion.div
             key={activeStep}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.2 }}
-            className="space-y-8"
+            initial={{ opacity: 0, x: 10 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -10 }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
+            className="space-y-10"
           >
-            <div className="space-y-1">
-              <h2 className="text-2xl font-bold tracking-tight">
+            <div className="space-y-2">
+              <div className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/50">
+                Passo {activeStep + 1}
+              </div>
+              <h2 className="text-4xl font-black tracking-tight">
                 {STEPS[activeStep].label}
               </h2>
-              <p className="text-sm text-muted-foreground">
-                Preencha as informações com atenção.
+              <p className="text-sm text-muted-foreground font-medium">
+                Refine suas informações profissionais.
               </p>
             </div>
 
             {activeStep === 0 && (
-              <div className="space-y-6">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label>Nome Completo</Label>
+              <div className="space-y-8">
+                <div className="grid grid-cols-2 gap-6">
+                  <div className="space-y-2.5">
+                    <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                      Nome Completo
+                    </Label>
                     <Input
                       {...register("personalInfo.name")}
-                      className="input-glow h-11"
+                      placeholder="Ex: Linus Torvalds"
+                      className="input-glow h-12 bg-muted/20 border-border/50 font-bold"
                     />
                   </div>
-                  <div className="space-y-2">
-                    <Label>E-mail</Label>
+                  <div className="space-y-2.5">
+                    <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                      E-mail
+                    </Label>
                     <Input
                       {...register("personalInfo.email")}
-                      className="input-glow h-11"
+                      placeholder="linus@linux.org"
+                      className="input-glow h-12 bg-muted/20 border-border/50"
                     />
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label>Telefone</Label>
+                <div className="grid grid-cols-2 gap-6">
+                  <div className="space-y-2.5">
+                    <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                      Telefone
+                    </Label>
                     <Input
                       {...register("personalInfo.phone")}
-                      className="input-glow h-11"
+                      placeholder="(11) 99999-9999"
+                      className="input-glow h-12 bg-muted/20 border-border/50"
                     />
                   </div>
-                  <div className="space-y-2">
-                    <Label>Localização</Label>
+                  <div className="space-y-2.5">
+                    <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                      Localização
+                    </Label>
                     <Input
                       {...register("personalInfo.location")}
-                      className="input-glow h-11"
+                      placeholder="São Paulo, SP"
+                      className="input-glow h-12 bg-muted/20 border-border/50"
                     />
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label>LinkedIn</Label>
+                <div className="grid grid-cols-2 gap-6">
+                  <div className="space-y-2.5">
+                    <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                      LinkedIn
+                    </Label>
                     <Input
                       {...register("personalInfo.linkedin")}
-                      className="input-glow h-11"
+                      className="input-glow h-12 bg-muted/20 border-border/50"
                     />
                   </div>
-                  <div className="space-y-2">
-                    <Label>Portfólio</Label>
+                  <div className="space-y-2.5">
+                    <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                      Portfólio
+                    </Label>
                     <Input
                       {...register("personalInfo.website")}
-                      className="input-glow h-11"
+                      className="input-glow h-12 bg-muted/20 border-border/50"
                     />
                   </div>
                 </div>
-                <div className="space-y-2">
-                  <Label>Resumo Profissional</Label>
+                <div className="space-y-2.5">
+                  <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                    Resumo Profissional
+                  </Label>
                   <Textarea
                     {...register("personalInfo.summary")}
-                    className="min-h-[120px] input-glow"
+                    placeholder="Uma breve introdução..."
+                    className="min-h-[150px] input-glow bg-muted/20 border-border/50 leading-relaxed py-4"
                   />
                 </div>
               </div>
             )}
 
             {activeStep === 1 && (
-              <div className="space-y-4">
-                <Label className="text-base font-bold">
-                  Tecnologias & Habilidades
+              <div className="space-y-6">
+                <Label className="text-sm font-bold uppercase tracking-widest text-muted-foreground">
+                  Tecnologias & Expertises
                 </Label>
                 <Textarea
                   {...register("skills", {
@@ -263,73 +292,90 @@ export function ResumeForm({
                             .filter((s) => s !== "")
                         : v,
                   })}
-                  placeholder="React, Node.js, TypeScript..."
-                  className="min-h-[250px] input-glow text-lg font-mono leading-relaxed"
+                  placeholder="React, Node.js, TypeScript, Docker, AWS..."
+                  className="min-h-[350px] input-glow text-xl font-mono leading-relaxed bg-muted/20 border-border/50 p-8"
                 />
+                <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest text-center">
+                  Separe cada tecnologia utilizando vírgulas
+                </p>
               </div>
             )}
 
             {activeStep === 2 && (
-              <div className="space-y-6">
+              <div className="space-y-8">
                 {expFields.map((field, i) => (
                   <Card
                     key={field.id}
-                    className="border-border/50 bg-muted/5 relative overflow-hidden group"
+                    className="border-border/50 bg-muted/10 relative overflow-hidden group shadow-none hover:bg-muted/20 transition-all duration-500"
                   >
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="absolute top-2 right-2 text-destructive opacity-0 group-hover:opacity-100 transition-opacity"
+                      className="absolute top-3 right-3 text-muted-foreground hover:text-destructive opacity-0 group-hover:opacity-100 transition-all h-8 w-8"
                       onClick={() => removeExp(i)}
                     >
-                      <Trash size={18} />
+                      <Trash size={16} />
                     </Button>
-                    <CardContent className="p-6 pt-10 grid grid-cols-2 gap-4">
+                    <CardContent className="p-8 pt-12 grid grid-cols-2 gap-6">
                       <div className="space-y-2">
-                        <Label>Empresa</Label>
+                        <Label className="text-[10px] font-black uppercase tracking-widest">
+                          Empresa
+                        </Label>
                         <Input
                           {...register(`experiences.${i}.company`)}
-                          className="input-glow h-10"
+                          className="h-11 bg-background/50 border-border/50 font-bold"
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label>Cargo</Label>
+                        <Label className="text-[10px] font-black uppercase tracking-widest">
+                          Cargo
+                        </Label>
                         <Input
                           {...register(`experiences.${i}.position`)}
-                          className="input-glow h-10"
+                          className="h-11 bg-background/50 border-border/50"
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label>Início</Label>
+                        <Label className="text-[10px] font-black uppercase tracking-widest">
+                          Início
+                        </Label>
                         <Input
                           {...register(`experiences.${i}.startDate`)}
-                          className="input-glow h-10"
+                          placeholder="Jan 2020"
+                          className="h-11 bg-background/50 border-border/50"
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label>Fim</Label>
+                        <Label className="text-[10px] font-black uppercase tracking-widest">
+                          Fim
+                        </Label>
                         <Input
                           {...register(`experiences.${i}.endDate`)}
                           disabled={watch(`experiences.${i}.current`)}
-                          className="input-glow h-10"
+                          className="h-11 bg-background/50 border-border/50"
                         />
                       </div>
-                      <div className="col-span-2 flex items-center gap-2">
+                      <div className="col-span-2 flex items-center gap-3 bg-background/30 p-3 rounded-lg border border-border/30">
                         <input
                           type="checkbox"
                           id={`exp-cur-${i}`}
                           {...register(`experiences.${i}.current`)}
-                          className="rounded accent-primary"
+                          className="w-4 h-4 rounded border-border bg-background accent-primary"
                         />
-                        <Label htmlFor={`exp-cur-${i}`} className="text-xs">
-                          Trabalho atual
+                        <Label
+                          htmlFor={`exp-cur-${i}`}
+                          className="text-xs font-bold text-muted-foreground uppercase tracking-widest"
+                        >
+                          Ainda trabalho nesta empresa
                         </Label>
                       </div>
                       <div className="col-span-2 space-y-2">
-                        <Label>Descrição</Label>
+                        <Label className="text-[10px] font-black uppercase tracking-widest">
+                          Descrição
+                        </Label>
                         <Textarea
                           {...register(`experiences.${i}.description`)}
-                          className="min-h-[100px] input-glow text-sm"
+                          className="min-h-[150px] text-sm bg-background/50 border-border/50 leading-relaxed"
                         />
                       </div>
                     </CardContent>
@@ -337,7 +383,7 @@ export function ResumeForm({
                 ))}
                 <Button
                   variant="outline"
-                  className="w-full h-14 border-dashed border-2"
+                  className="w-full h-20 border-dashed border-2 bg-muted/5 hover:bg-muted/20 border-border/50 rounded-2xl transition-all"
                   onClick={() =>
                     appendExp({
                       company: "",
@@ -349,46 +395,69 @@ export function ResumeForm({
                     })
                   }
                 >
-                  <Plus weight="bold" className="mr-2" /> Adicionar Experiência
+                  <PlusCircle
+                    size={20}
+                    weight="duotone"
+                    className="mr-2 text-primary"
+                  />
+                  <span className="font-black uppercase tracking-widest text-xs">
+                    Adicionar Experiência
+                  </span>
                 </Button>
               </div>
             )}
 
             {activeStep === 3 && (
-              <div className="space-y-6">
+              <div className="space-y-8">
                 {eduFields.map((field, i) => (
                   <Card
                     key={field.id}
-                    className="border-border/50 bg-muted/5 relative group"
+                    className="border-border/50 bg-muted/10 relative group shadow-none hover:bg-muted/20 transition-all"
                   >
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="absolute top-2 right-2 text-destructive opacity-0 group-hover:opacity-100"
+                      className="absolute top-3 right-3 text-muted-foreground hover:text-destructive opacity-0 group-hover:opacity-100 transition-all"
                       onClick={() => removeEdu(i)}
                     >
-                      <Trash size={18} />
+                      <Trash size={16} />
                     </Button>
-                    <CardContent className="p-6 pt-10 grid grid-cols-2 gap-4">
+                    <CardContent className="p-8 pt-12 grid grid-cols-2 gap-6">
                       <div className="col-span-2 space-y-2">
-                        <Label>Instituição</Label>
+                        <Label className="text-[10px] font-black uppercase tracking-widest">
+                          Instituição
+                        </Label>
                         <Input
                           {...register(`educations.${i}.school`)}
-                          className="input-glow h-10"
+                          className="h-11 bg-background/50 border-border/50 font-bold"
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label>Grau</Label>
+                        <Label className="text-[10px] font-black uppercase tracking-widest">
+                          Grau
+                        </Label>
                         <Input
                           {...register(`educations.${i}.degree`)}
-                          className="input-glow h-10"
+                          className="h-11 bg-background/50 border-border/50"
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label>Área</Label>
+                        <Label className="text-[10px] font-black uppercase tracking-widest">
+                          Área
+                        </Label>
                         <Input
                           {...register(`educations.${i}.field`)}
-                          className="input-glow h-10"
+                          className="h-11 bg-background/50 border-border/50"
+                        />
+                      </div>
+                      <div className="col-span-2 space-y-2">
+                        <Label className="text-[10px] font-black uppercase tracking-widest">
+                          Data de Graduação
+                        </Label>
+                        <Input
+                          {...register(`educations.${i}.graduationDate`)}
+                          placeholder="2019"
+                          className="h-11 bg-background/50 border-border/50"
                         />
                       </div>
                     </CardContent>
@@ -396,7 +465,7 @@ export function ResumeForm({
                 ))}
                 <Button
                   variant="outline"
-                  className="w-full h-14 border-dashed border-2"
+                  className="w-full h-20 border-dashed border-2 bg-muted/5 hover:bg-muted/20 border-border/50 rounded-2xl transition-all"
                   onClick={() =>
                     appendEdu({
                       school: "",
@@ -406,55 +475,70 @@ export function ResumeForm({
                     })
                   }
                 >
-                  <Plus weight="bold" className="mr-2" /> Adicionar Formação
+                  <PlusCircle
+                    size={20}
+                    weight="duotone"
+                    className="mr-2 text-primary"
+                  />
+                  <span className="font-black uppercase tracking-widest text-xs">
+                    Adicionar Formação
+                  </span>
                 </Button>
               </div>
             )}
 
             {activeStep === 4 && (
-              <div className="space-y-6">
+              <div className="space-y-8">
                 {projFields.map((field, i) => (
                   <Card
                     key={field.id}
-                    className="border-border/50 bg-muted/5 relative group"
+                    className="border-border/50 bg-muted/10 relative group shadow-none hover:bg-muted/20 transition-all"
                   >
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="absolute top-2 right-2 text-destructive opacity-0 group-hover:opacity-100"
+                      className="absolute top-3 right-3 text-muted-foreground hover:text-destructive opacity-0 group-hover:opacity-100 transition-all"
                       onClick={() => removeProj(i)}
                     >
-                      <Trash size={18} />
+                      <Trash size={16} />
                     </Button>
-                    <CardContent className="p-6 pt-10 space-y-4">
+                    <CardContent className="p-8 pt-12 space-y-6">
                       <div className="space-y-2">
-                        <Label>Nome do Projeto</Label>
+                        <Label className="text-[10px] font-black uppercase tracking-widest">
+                          Nome do Projeto
+                        </Label>
                         <Input
                           {...register(`projects.${i}.name`)}
-                          className="input-glow h-10"
+                          className="h-11 bg-background/50 border-border/50 font-bold"
                         />
                       </div>
-                      <div className="grid grid-cols-2 gap-4">
+                      <div className="grid grid-cols-2 gap-6">
                         <div className="space-y-2">
-                          <Label>GitHub</Label>
+                          <Label className="text-[10px] font-black uppercase tracking-widest">
+                            GitHub
+                          </Label>
                           <Input
                             {...register(`projects.${i}.github`)}
-                            className="input-glow h-10"
+                            className="h-11 bg-background/50 border-border/50"
                           />
                         </div>
                         <div className="space-y-2">
-                          <Label>Deploy</Label>
+                          <Label className="text-[10px] font-black uppercase tracking-widest">
+                            Deploy
+                          </Label>
                           <Input
                             {...register(`projects.${i}.deploy`)}
-                            className="input-glow h-10"
+                            className="h-11 bg-background/50 border-border/50"
                           />
                         </div>
                       </div>
                       <div className="space-y-2">
-                        <Label>Descrição</Label>
+                        <Label className="text-[10px] font-black uppercase tracking-widest">
+                          Descrição
+                        </Label>
                         <Textarea
                           {...register(`projects.${i}.description`)}
-                          className="min-h-[80px] input-glow text-sm"
+                          className="min-h-[120px] text-sm bg-background/50 border-border/50 leading-relaxed"
                         />
                       </div>
                     </CardContent>
@@ -462,7 +546,7 @@ export function ResumeForm({
                 ))}
                 <Button
                   variant="outline"
-                  className="w-full h-14 border-dashed border-2"
+                  className="w-full h-20 border-dashed border-2 bg-muted/5 hover:bg-muted/20 border-border/50 rounded-2xl transition-all"
                   onClick={() =>
                     appendProj({
                       name: "",
@@ -472,35 +556,55 @@ export function ResumeForm({
                     })
                   }
                 >
-                  <Plus weight="bold" className="mr-2" /> Adicionar Projeto
+                  <PlusCircle
+                    size={20}
+                    weight="duotone"
+                    className="mr-2 text-primary"
+                  />
+                  <span className="font-black uppercase tracking-widest text-xs">
+                    Adicionar Projeto
+                  </span>
                 </Button>
               </div>
             )}
 
             {activeStep === 5 && (
-              <div className="space-y-10">
+              <div className="space-y-12">
                 {/* Idiomas */}
-                <div className="space-y-4">
-                  <div className="flex items-center gap-2">
-                    <Translate size={20} className="text-primary" />{" "}
-                    <Label className="text-lg font-bold">Idiomas</Label>
+                <div className="space-y-6">
+                  <div className="flex items-center gap-3">
+                    <Translate
+                      size={24}
+                      weight="duotone"
+                      className="text-primary"
+                    />{" "}
+                    <Label className="text-xl font-black uppercase tracking-tight">
+                      Idiomas
+                    </Label>
                   </div>
                   <div className="grid gap-4">
                     {langFields.map((field, i) => (
-                      <div key={field.id} className="flex gap-2 items-end">
+                      <div
+                        key={field.id}
+                        className="flex gap-4 items-end bg-muted/5 p-4 rounded-xl border border-border/30"
+                      >
                         <div className="flex-1 space-y-2">
-                          <Label className="text-xs">Idioma</Label>
+                          <Label className="text-[10px] font-bold uppercase tracking-widest">
+                            Idioma
+                          </Label>
                           <Input
                             {...register(`languages.${i}.name`)}
-                            className="h-9"
-                            placeholder="Inglês"
+                            className="h-10 bg-background/50"
+                            placeholder="Ex: Inglês"
                           />
                         </div>
-                        <div className="w-40 space-y-2">
-                          <Label className="text-xs">Nível</Label>
+                        <div className="w-48 space-y-2">
+                          <Label className="text-[10px] font-bold uppercase tracking-widest">
+                            Proficiência
+                          </Label>
                           <select
                             {...register(`languages.${i}.level`)}
-                            className="w-full h-9 rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                            className="w-full h-10 rounded-lg border border-border/50 bg-background/50 px-3 py-1 text-sm focus:ring-1 focus:ring-primary outline-none"
                           >
                             <option value="Básico">Básico</option>
                             <option value="Intermediário">Intermediário</option>
@@ -512,122 +616,145 @@ export function ResumeForm({
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="text-destructive h-9 w-9"
+                          className="text-muted-foreground hover:text-destructive h-10 w-10"
                           onClick={() => removeLang(i)}
                         >
-                          <Trash size={16} />
+                          <Trash size={18} />
                         </Button>
                       </div>
                     ))}
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="w-fit"
+                      className="w-fit font-bold uppercase tracking-widest text-[10px]"
                       onClick={() => appendLang({ name: "", level: "Básico" })}
                     >
-                      <Plus weight="bold" className="mr-2" /> Adicionar Idioma
+                      <Plus weight="bold" className="mr-2" /> Novo Idioma
                     </Button>
                   </div>
                 </div>
 
                 {/* Certificações */}
-                <div className="space-y-4">
-                  <div className="flex items-center gap-2">
-                    <Certificate size={20} className="text-primary" />{" "}
-                    <Label className="text-lg font-bold">Certificações</Label>
+                <div className="space-y-6">
+                  <div className="flex items-center gap-3">
+                    <Certificate
+                      size={24}
+                      weight="duotone"
+                      className="text-primary"
+                    />{" "}
+                    <Label className="text-xl font-black uppercase tracking-tight">
+                      Certificações
+                    </Label>
                   </div>
                   <div className="grid gap-4">
                     {certFields.map((field, i) => (
                       <div
                         key={field.id}
-                        className="flex gap-2 items-end border-b pb-4 border-dashed border-border/50"
+                        className="flex gap-4 items-end bg-muted/5 p-6 rounded-xl border border-border/30 group"
                       >
-                        <div className="flex-1 space-y-2">
-                          <Label className="text-xs">Certificado</Label>
+                        <div className="flex-[2] space-y-2">
+                          <Label className="text-[10px] font-bold uppercase tracking-widest">
+                            Certificado
+                          </Label>
                           <Input
                             {...register(`certifications.${i}.name`)}
-                            className="h-9"
+                            className="h-10 bg-background/50"
                           />
                         </div>
                         <div className="flex-1 space-y-2">
-                          <Label className="text-xs">Emissor</Label>
+                          <Label className="text-[10px] font-bold uppercase tracking-widest">
+                            Emissor
+                          </Label>
                           <Input
                             {...register(`certifications.${i}.issuer`)}
-                            className="h-9"
+                            className="h-10 bg-background/50"
                           />
                         </div>
-                        <div className="w-32 space-y-2">
-                          <Label className="text-xs">Data</Label>
+                        <div className="w-28 space-y-2">
+                          <Label className="text-[10px] font-bold uppercase tracking-widest">
+                            Ano
+                          </Label>
                           <Input
                             {...register(`certifications.${i}.date`)}
-                            className="h-9"
+                            className="h-10 bg-background/50 text-center"
                             placeholder="2023"
                           />
                         </div>
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="text-destructive h-9 w-9"
+                          className="text-muted-foreground hover:text-destructive h-10 w-10"
                           onClick={() => removeCert(i)}
                         >
-                          <Trash size={16} />
+                          <Trash size={18} />
                         </Button>
                       </div>
                     ))}
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="w-fit"
+                      className="w-fit font-bold uppercase tracking-widest text-[10px]"
                       onClick={() =>
                         appendCert({ name: "", issuer: "", date: "" })
                       }
                     >
-                      <Plus weight="bold" className="mr-2" /> Adicionar
-                      Certificação
+                      <Plus weight="bold" className="mr-2" /> Nova Certificação
                     </Button>
                   </div>
                 </div>
 
                 {/* Trabalho Voluntário */}
-                <div className="space-y-4">
-                  <div className="flex items-center gap-2">
-                    <HandHeart size={20} className="text-primary" />{" "}
-                    <Label className="text-lg font-bold">Voluntariado</Label>
+                <div className="space-y-6">
+                  <div className="flex items-center gap-3">
+                    <HandHeart
+                      size={24}
+                      weight="duotone"
+                      className="text-primary"
+                    />{" "}
+                    <Label className="text-xl font-black uppercase tracking-tight">
+                      Voluntariado
+                    </Label>
                   </div>
                   <div className="grid gap-4">
                     {volFields.map((field, i) => (
                       <Card
                         key={field.id}
-                        className="border-border/50 bg-muted/5 relative overflow-hidden group"
+                        className="border-border/50 bg-muted/10 relative overflow-hidden group shadow-none"
                       >
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="absolute top-2 right-2 text-destructive opacity-0 group-hover:opacity-100"
+                          className="absolute top-2 right-2 text-muted-foreground hover:text-destructive opacity-0 group-hover:opacity-100 h-8 w-8"
                           onClick={() => removeVol(i)}
                         >
                           <Trash size={16} />
                         </Button>
-                        <CardContent className="p-4 pt-8 grid grid-cols-2 gap-4">
+                        <CardContent className="p-6 pt-10 grid grid-cols-2 gap-6">
                           <div className="space-y-2">
-                            <Label className="text-xs">Organização</Label>
+                            <Label className="text-[10px] font-bold uppercase tracking-widest">
+                              Organização
+                            </Label>
                             <Input
                               {...register(`volunteering.${i}.organization`)}
-                              className="h-9"
+                              className="h-10 bg-background/50"
                             />
                           </div>
                           <div className="space-y-2">
-                            <Label className="text-xs">Papel</Label>
+                            <Label className="text-[10px] font-bold uppercase tracking-widest">
+                              Papel
+                            </Label>
                             <Input
                               {...register(`volunteering.${i}.role`)}
-                              className="h-9"
+                              className="h-10 bg-background/50"
                             />
                           </div>
                           <div className="col-span-2 space-y-2">
-                            <Label className="text-xs">Descrição</Label>
+                            <Label className="text-[10px] font-bold uppercase tracking-widest">
+                              Sobre o trabalho
+                            </Label>
                             <Textarea
                               {...register(`volunteering.${i}.description`)}
-                              className="text-xs min-h-[60px]"
+                              className="text-sm min-h-[80px] bg-background/50 leading-relaxed"
                             />
                           </div>
                         </CardContent>
@@ -636,7 +763,7 @@ export function ResumeForm({
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="w-fit"
+                      className="w-fit font-bold uppercase tracking-widest text-[10px]"
                       onClick={() =>
                         appendVol({
                           organization: "",
@@ -647,8 +774,7 @@ export function ResumeForm({
                         })
                       }
                     >
-                      <Plus weight="bold" className="mr-2" /> Adicionar
-                      Voluntariado
+                      <Plus weight="bold" className="mr-2" /> Novo Registro
                     </Button>
                   </div>
                 </div>
@@ -658,21 +784,33 @@ export function ResumeForm({
         </AnimatePresence>
       </div>
 
-      <div className="p-6 border-t bg-background shrink-0 flex justify-between items-center">
+      {/* Modern Navigation Footer */}
+      <div className="px-10 py-6 border-t bg-background/80 backdrop-blur-xl shrink-0 flex justify-between items-center">
         <Button
           variant="ghost"
           disabled={activeStep === 0}
           onClick={() => setActiveStep((s) => s - 1)}
-          className="rounded-xl px-6"
+          className="rounded-xl px-6 h-11 font-bold text-muted-foreground hover:text-foreground hover:bg-muted/50"
         >
           <CaretLeft weight="bold" className="mr-2" /> Anterior
         </Button>
+        <div className="flex gap-1.5">
+          {STEPS.map((_, i) => (
+            <div
+              key={i}
+              className={cn(
+                "w-1.5 h-1.5 rounded-full transition-all duration-500",
+                activeStep === i ? "bg-primary w-6" : "bg-border/50",
+              )}
+            />
+          ))}
+        </div>
         <Button
           onClick={() =>
             activeStep < STEPS.length - 1 && setActiveStep((s) => s + 1)
           }
           disabled={activeStep === STEPS.length - 1}
-          className="rounded-xl px-8 shadow-lg transition-transform hover:scale-105 active:scale-95"
+          className="rounded-xl px-10 h-11 shadow-xl shadow-primary/10 transition-all hover:scale-[1.03] active:scale-95 font-black uppercase tracking-widest text-xs"
         >
           Próximo <CaretRight weight="bold" className="ml-2" />
         </Button>

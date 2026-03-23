@@ -46,10 +46,15 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+
+  /* Lume Custom Palette */
+  --color-lume-indigo: #6366f1;
+  --color-lume-violet: #8b5cf6;
+  --color-lume-blue: #3b82f6;
 }
 
 :root {
-  --background: #f4f4f5;
+  --background: #fdfdfd;
   --foreground: #09090b;
   --card: #ffffff;
   --card-foreground: #09090b;
@@ -67,27 +72,27 @@
   --border: #e4e4e7;
   --input: #e4e4e7;
   --ring: #18181b;
-  --radius: 0.5rem;
+  --radius: 0.75rem;
 }
 
 .dark {
-  --background: #050505;
-  --foreground: #e5e5e5;
-  --card: #0a0a0a;
-  --card-foreground: #e5e5e5;
-  --popover: #0a0a0a;
-  --popover-foreground: #e5e5e5;
+  --background: #121214; /* Deep Charcoal Grey */
+  --foreground: #ececed;
+  --card: #1a1a1e; /* Lighter Grey Card */
+  --card-foreground: #ececed;
+  --popover: #1a1a1e;
+  --popover-foreground: #ececed;
   --primary: #ffffff;
-  --primary-foreground: #050505;
-  --secondary: #141414;
-  --secondary-foreground: #ffffff;
-  --muted: #141414;
-  --muted-foreground: #737373;
-  --accent: #141414;
-  --accent-foreground: #ffffff;
+  --primary-foreground: #121214;
+  --secondary: #202024;
+  --secondary-foreground: #ececed;
+  --muted: #202024;
+  --muted-foreground: #94949e;
+  --accent: #202024;
+  --accent-foreground: #ececed;
   --destructive: #ef4444;
-  --border: #1a1a1a;
-  --input: #1a1a1a;
+  --border: #2a2a2e; /* Visible but subtle grey border */
+  --input: #2a2a2e;
   --ring: #ffffff;
 }
 
@@ -96,19 +101,17 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground tracking-tight transition-colors duration-300;
+    @apply bg-background text-foreground tracking-tight transition-colors duration-500;
+    font-feature-settings: "cv02", "cv03", "cv04", "ss01";
   }
   html {
     @apply font-sans overflow-hidden h-full;
   }
 
   .input-glow:focus {
-    @apply ring-1 ring-primary/20 shadow-[0_0_20px_rgba(255,255,255,0.02)];
+    @apply ring-2 ring-primary/10 border-primary/20 shadow-[0_0_20px_rgba(255,255,255,0.03)];
   }
 
-  /* 
-     PRINT & PDF PAGINATION RULES
-  */
   @media print {
     nav,
     button,
@@ -116,65 +119,41 @@
     .no-print {
       display: none !important;
     }
-
     body {
       background: white !important;
       padding: 0 !important;
       margin: 0 !important;
       color: black !important;
     }
-
-    .page-wrapper {
-      background: white !important;
-      padding: 0 !important;
-    }
-
-    .a4-sheet {
-      margin: 0 !important;
-      padding: 20mm !important;
+    .resume-preview {
+      position: static !important;
+      width: 100% !important;
       box-shadow: none !important;
-      width: 210mm !important;
-      min-height: 297mm !important;
-      height: auto !important;
-      page-break-after: always;
-      display: block !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      background: white !important;
+      color: black !important;
     }
-
-    .section-block {
-      break-inside: avoid;
-    }
-
-    .page-break {
-      break-before: page;
-    }
-
-    h1,
-    h2,
-    h3 {
-      break-after: avoid;
+    .experience-item {
+      page-break-inside: avoid;
     }
   }
 }
 
-/* 
-   SCREEN PAGINATION SIMULATOR
-*/
-.a4-sheet {
+/* Premium Page UI */
+.a4-page {
   width: 210mm;
   min-height: 297mm;
   background: white;
+  margin: 0 auto;
   padding: 20mm;
+  box-shadow: 0 30px 100px -20px rgba(0, 0, 0, 0.3);
   position: relative;
-  box-shadow: 0 10px 50px rgba(0, 0, 0, 0.1);
   color: #0f172a;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  z-index: 1;
 }
 
-.dark .a4-sheet {
-  box-shadow: 0 20px 80px rgba(0, 0, 0, 0.5);
+.dark .a4-page {
+  box-shadow: 0 40px 120px -30px rgba(0, 0, 0, 0.6);
 }
 
 /* Custom Scrollbar */
@@ -185,5 +164,13 @@
   background: transparent;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  @apply bg-muted-foreground/20 rounded-full hover:bg-muted-foreground/40;
+  @apply bg-muted-foreground/10 rounded-full hover:bg-muted-foreground/30;
+}
+
+/* Mesh Gradient Background */
+.mesh-bg {
+  background-image:
+    radial-gradient(at 0% 0%, hsla(253, 16%, 15%, 1) 0, transparent 50%),
+    radial-gradient(at 50% 0%, hsla(225, 39%, 18%, 1) 0, transparent 50%),
+    radial-gradient(at 100% 0%, hsla(339, 49%, 18%, 1) 0, transparent 50%);
 }
