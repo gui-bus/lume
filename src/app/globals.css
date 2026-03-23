@@ -167,10 +167,36 @@
   @apply bg-muted-foreground/10 rounded-full hover:bg-muted-foreground/30;
 }
 
+/* Canvas Grid Background (estilo n8n/Figma) */
+.canvas-grid {
+  background-color: var(--background);
+  background-image: radial-gradient(
+    circle,
+    var(--border) 1.5px,
+    transparent 1.5px
+  );
+  background-size: 24px 24px;
+}
+
+.dark .canvas-grid {
+  background-image: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.05) 1px,
+    transparent 1px
+  );
+}
+
 /* Mesh Gradient Background */
 .mesh-bg {
   background-image:
-    radial-gradient(at 0% 0%, hsla(253, 16%, 15%, 1) 0, transparent 50%),
-    radial-gradient(at 50% 0%, hsla(225, 39%, 18%, 1) 0, transparent 50%),
-    radial-gradient(at 100% 0%, hsla(339, 49%, 18%, 1) 0, transparent 50%);
+    radial-gradient(at 0% 0%, hsla(253, 16%, 96%, 1) 0, transparent 50%),
+    radial-gradient(at 50% 0%, hsla(225, 39%, 96%, 1) 0, transparent 50%),
+    radial-gradient(at 100% 0%, hsla(339, 49%, 96%, 1) 0, transparent 50%);
+}
+
+.dark .mesh-bg {
+  background-image:
+    radial-gradient(at 0% 0%, hsla(253, 16%, 10%, 1) 0, transparent 50%),
+    radial-gradient(at 50% 0%, hsla(225, 39%, 10%, 1) 0, transparent 50%),
+    radial-gradient(at 100% 0%, hsla(339, 49%, 10%, 1) 0, transparent 50%);
 }

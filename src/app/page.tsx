@@ -7,11 +7,9 @@ import { ResumeData } from "@/types/resume";
 import { Button } from "@/components/ui/button";
 import {
   Printer,
-  Palette,
-  Sparkle,
+  Aperture,
   Moon,
   Sun,
-  CheckCircle,
   MagnifyingGlassPlus,
   MagnifyingGlassMinus,
   CloudCheck,
@@ -50,22 +48,23 @@ const defaultData: ResumeData = {
 };
 
 const COLORS = [
-  "#000000",
-  "#2563eb",
-  "#059669",
-  "#dc2626",
-  "#7c3aed",
-  "#ea580c",
-  "#0891b2",
+  "#18181b", // Zinc/Preto
+  "#2563eb", // Azul
+  "#059669", // Esmeralda
+  "#dc2626", // Vermelho
+  "#7c3aed", // Violeta
+  "#ea580c", // Laranja
+  "#0891b2", // Ciano
+  "#be185d", // Rosa
 ];
 
 export default function Home() {
   const [data, setData] = useState<ResumeData>(defaultData);
-  const [colorTheme, setColorTheme] = useState("#000000");
+  const [colorTheme, setColorTheme] = useState("#18181b");
   const [resumeId, setResumeId] = useState<string | undefined>(undefined);
   const [mounted, setMounted] = useState(false);
   const [isSyncing, setIsSyncing] = useState(false);
-  const [zoom, setZoom] = useState(0.85);
+  const [zoom, setZoom] = useState(0.8);
 
   const { theme, setTheme } = useTheme();
 
@@ -93,142 +92,133 @@ export default function Home() {
     setData(newData);
   }, []);
 
-  const handleSave = useCallback(async () => {
-    try {
-      setIsSyncing(true);
-      await saveResume(resumeId, data);
-      setIsSyncing(false);
-      toast.success("Progresso salvo com sucesso");
-    } catch (error) {
-      setIsSyncing(false);
-      toast.error("Falha ao sincronizar");
-    }
-  }, [resumeId, data]);
-
   if (!mounted) return null;
 
   return (
     <main className="h-screen flex flex-col bg-background text-foreground overflow-hidden">
-      {/* Header Premium High-End */}
-      <header className="no-print h-16 border-b bg-background/60 backdrop-blur-2xl flex items-center justify-between px-8 shrink-0 z-50">
-        <div className="flex items-center gap-4">
-          <div className="relative group">
-            <div className="absolute -inset-1 bg-gradient-to-tr from-lume-indigo via-lume-violet to-lume-blue rounded-xl blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200" />
-            <div className="relative w-10 h-10 rounded-xl bg-background border flex items-center justify-center shadow-2xl">
-              <Sparkle size={24} weight="fill" className="text-primary" />
-            </div>
+      {/* Header Minimalista Premium */}
+      <header className="no-print h-16 border-b border-border/40 bg-background/50 backdrop-blur-xl flex items-center justify-between px-8 shrink-0 z-50">
+        <div className="flex items-center gap-3 group cursor-default">
+          <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center transition-all duration-500 group-hover:rotate-90 shadow-lg shadow-primary/10">
+            <Aperture
+              size={24}
+              weight="bold"
+              className="text-primary-foreground"
+            />
           </div>
-          <div className="flex flex-col leading-none">
-            <span className="text-xl font-black tracking-tighter">Lume</span>
-            <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em] ml-0.5">
-              Resume AI
-            </span>
-          </div>
+          <span className="text-2xl font-black tracking-tighter uppercase">
+            Lume
+          </span>
         </div>
 
-        <div className="flex items-center gap-4">
-          {/* Zoom Controls */}
-          <div className="hidden md:flex items-center bg-muted/30 hover:bg-muted/50 transition-colors rounded-full p-1 border border-border/50">
+        <div className="flex items-center gap-6">
+          {/* Controles de Zoom Simplificados */}
+          <div className="hidden md:flex items-center bg-muted/20 rounded-full px-1 py-1 border border-border/30">
             <Button
               variant="ghost"
               size="icon"
               onClick={() => setZoom((prev) => Math.max(0.4, prev - 0.1))}
-              className="h-7 w-7 rounded-full"
+              className="h-7 w-7 rounded-full hover:bg-background/80"
             >
-              <MagnifyingGlassMinus size={14} />
+              <MagnifyingGlassMinus size={14} weight="bold" />
             </Button>
-            <span className="text-[10px] font-bold w-10 text-center">
+            <span className="text-[10px] font-black w-10 text-center text-muted-foreground/70 tracking-tighter">
               {Math.round(zoom * 100)}%
             </span>
             <Button
               variant="ghost"
               size="icon"
               onClick={() => setZoom((prev) => Math.min(1.2, prev + 0.1))}
-              className="h-7 w-7 rounded-full"
+              className="h-7 w-7 rounded-full hover:bg-background/80"
             >
-              <MagnifyingGlassPlus size={14} />
+              <MagnifyingGlassPlus size={14} weight="bold" />
             </Button>
           </div>
 
-          <div className="h-4 w-[1px] bg-border/50 mx-1" />
+          <div className="h-4 w-[1px] bg-border/40" />
 
-          {/* Theme Toggle */}
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-            className="rounded-full hover:bg-muted/50"
-          >
-            {theme === "dark" ? (
-              <Sun size={20} weight="duotone" />
-            ) : (
-              <Moon size={20} weight="duotone" />
-            )}
-          </Button>
+          <div className="flex items-center gap-3">
+            {/* Tema */}
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+              className="rounded-full hover:bg-muted/50 transition-colors"
+            >
+              {theme === "dark" ? (
+                <Sun size={20} weight="duotone" />
+              ) : (
+                <Moon size={20} weight="duotone" />
+              )}
+            </Button>
 
-          {/* Color Picker */}
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button
-                variant="outline"
-                size="sm"
-                className="gap-2 rounded-full border-border/50 h-9 px-4 hover:bg-muted/50 transition-all"
-              >
-                <div
-                  className="w-3 h-3 rounded-full shadow-inner"
-                  style={{ backgroundColor: colorTheme }}
-                />
-                <span className="text-[11px] font-bold uppercase tracking-wider">
-                  Accent
-                </span>
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-48 p-3 rounded-2xl bg-background/95 backdrop-blur-xl border-border/50 shadow-2xl">
-              <div className="grid grid-cols-4 gap-2">
-                {COLORS.map((color) => (
-                  <button
-                    key={color}
-                    className={cn(
-                      "w-9 h-9 rounded-full border-2 transition-all hover:scale-110 hover:shadow-lg",
-                      colorTheme === color
-                        ? "border-primary"
-                        : "border-transparent",
-                    )}
-                    style={{ backgroundColor: color }}
-                    onClick={() => setColorTheme(color)}
+            {/* Accent Color */}
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="gap-2 rounded-full h-9 px-3 hover:bg-muted/50"
+                >
+                  <div
+                    className="w-3.5 h-3.5 rounded-full border border-black/5 shadow-sm"
+                    style={{ backgroundColor: colorTheme }}
                   />
-                ))}
-              </div>
-            </PopoverContent>
-          </Popover>
-
-          {/* Download Action */}
-          <AnimatePresence mode="wait">
-            <motion.div key={JSON.stringify(data) + colorTheme}>
-              <PDFDownloadLink
-                document={<ResumePDF data={data} colorTheme={colorTheme} />}
-                fileName={`curriculo-${data.personalInfo.name || "lume"}.pdf`}
+                  <span className="text-xs font-bold tracking-tight">
+                    Estilo
+                  </span>
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent
+                className="w-48 p-3 rounded-2xl bg-background/95 backdrop-blur-xl border border-border/40 shadow-2xl"
+                align="end"
               >
-                {({ loading }) => (
-                  <Button
-                    size="sm"
-                    className="gap-2 rounded-full px-6 h-9 font-black shadow-xl shadow-primary/10 transition-all hover:shadow-primary/20 active:scale-95"
-                    disabled={loading}
-                  >
-                    <Printer size={18} weight="bold" />
-                    <span>{loading ? "GERANDO..." : "DOWNLOAD PDF"}</span>
-                  </Button>
-                )}
-              </PDFDownloadLink>
-            </motion.div>
-          </AnimatePresence>
+                <div className="grid grid-cols-4 gap-2">
+                  {COLORS.map((color) => (
+                    <button
+                      key={color}
+                      className={cn(
+                        "w-9 h-9 rounded-full border-2 transition-all hover:scale-110 active:scale-90",
+                        colorTheme === color
+                          ? "border-primary scale-105"
+                          : "border-transparent",
+                      )}
+                      style={{ backgroundColor: color }}
+                      onClick={() => setColorTheme(color)}
+                    />
+                  ))}
+                </div>
+              </PopoverContent>
+            </Popover>
+
+            {/* Download */}
+            <AnimatePresence mode="wait">
+              <motion.div key={JSON.stringify(data) + colorTheme}>
+                <PDFDownloadLink
+                  document={<ResumePDF data={data} colorTheme={colorTheme} />}
+                  fileName={`curriculo-${data.personalInfo.name || "lume"}.pdf`}
+                >
+                  {({ loading }) => (
+                    <Button
+                      size="sm"
+                      className="gap-2 rounded-full px-5 h-9 font-bold shadow-lg shadow-primary/5 hover:shadow-primary/10 transition-all active:scale-95"
+                      disabled={loading}
+                    >
+                      <Printer size={18} weight="bold" />
+                      <span>{loading ? "Gerando..." : "Exportar PDF"}</span>
+                    </Button>
+                  )}
+                </PDFDownloadLink>
+              </motion.div>
+            </AnimatePresence>
+          </div>
         </div>
       </header>
 
       {/* Main Content Area */}
       <div className="flex-1 flex overflow-hidden">
         {/* Left Side: Professional Editor */}
-        <div className="w-full lg:w-[500px] xl:w-[600px] shrink-0 border-r bg-card/20 overflow-hidden relative flex flex-col">
+        <div className="w-full lg:w-[480px] xl:w-[540px] shrink-0 border-r bg-card/10 overflow-hidden relative flex flex-col">
           <ResumeForm
             initialData={data}
             resumeId={resumeId}
@@ -245,7 +235,7 @@ export default function Home() {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
-                  className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground bg-background/80 backdrop-blur-xl border px-4 py-2 rounded-full shadow-sm"
+                  className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground bg-background/90 backdrop-blur-md border px-4 py-2 rounded-full shadow-sm"
                 >
                   <ArrowsClockwise
                     size={12}
@@ -258,10 +248,10 @@ export default function Home() {
                   key="saved"
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-emerald-500 bg-background/80 backdrop-blur-xl border border-emerald-500/20 px-4 py-2 rounded-full shadow-sm"
+                  className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-emerald-600 bg-background/90 backdrop-blur-md border border-emerald-500/20 px-4 py-2 rounded-full shadow-sm"
                 >
                   <CloudCheck size={16} weight="bold" />
-                  Documento Salvo
+                  Salvo Localmente
                 </motion.div>
               )}
             </AnimatePresence>
@@ -269,22 +259,25 @@ export default function Home() {
         </div>
 
         {/* Right Side: Preview Stage */}
-        <div className="hidden lg:flex flex-1 bg-muted/10 relative overflow-hidden items-center justify-center">
-          <div className="absolute inset-0 overflow-auto custom-scrollbar flex items-start justify-center p-16 mesh-bg">
+        <div className="hidden lg:flex flex-1 bg-muted/5 relative overflow-hidden items-center justify-center">
+          <div className="absolute inset-0 overflow-auto custom-scrollbar flex items-start justify-center p-12 canvas-grid">
             <motion.div
               animate={{ scale: zoom }}
-              className="origin-top"
-              transition={{ type: "spring", stiffness: 200, damping: 25 }}
+              className="origin-top my-8"
+              transition={{ type: "spring", stiffness: 150, damping: 20 }}
             >
-              <div className="shadow-[0_50px_150px_-30px_rgba(0,0,0,0.5)] rounded-sm overflow-hidden bg-white">
+              <div className="shadow-[0_25px_70px_-15px_rgba(0,0,0,0.3)] dark:shadow-[0_25px_70px_-15px_rgba(0,0,0,0.6)] rounded-sm overflow-hidden bg-white">
                 <ResumeView data={data} colorTheme={colorTheme} />
               </div>
             </motion.div>
           </div>
 
-          <div className="absolute bottom-8 right-8 flex items-center gap-3 px-5 py-2.5 bg-background/40 backdrop-blur-2xl border border-white/5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground shadow-2xl">
-            <span className="w-2 h-2 rounded-full bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.5)] animate-pulse" />
-            Live Preview Engine
+          <div className="absolute bottom-8 right-8 flex items-center gap-2 px-4 py-2 bg-background/50 backdrop-blur-md border border-border/50 rounded-full text-[11px] font-medium text-muted-foreground shadow-xl">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+            </span>
+            Visualização em Tempo Real
           </div>
         </div>
       </div>
