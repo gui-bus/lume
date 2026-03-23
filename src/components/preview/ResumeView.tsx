@@ -13,7 +13,9 @@ export function ResumeView({ data, colorTheme = "#18181b" }: ResumeViewProps) {
   const [pages, setPages] = useState<React.ReactNode[][]>([]);
   const measureRef = useRef<HTMLDivElement>(null);
 
-  const SAFE_PAGE_HEIGHT = 880;
+  // A4 a 96 DPI: 794px x 1123px. Margens 25mm = 94.5px.
+  // Altura útil: 1123 - (94.5 * 2) = 934px. Usamos 900px por segurança.
+  const SAFE_PAGE_HEIGHT = 900;
 
   const {
     personalInfo,
@@ -30,116 +32,119 @@ export function ResumeView({ data, colorTheme = "#18181b" }: ResumeViewProps) {
     const blocks: React.ReactNode[] = [];
 
     const wrap = (node: React.ReactNode, key: string, padding = "pb-6") => (
-      <div key={key} className={padding}>
+      <div
+        key={key}
+        className={padding}
+        style={{ width: "100%", boxSizing: "border-box" }}
+      >
         {node}
       </div>
     );
 
-    // Cabeçalho
+    // 1. Cabeçalho (Design Limpo ATS)
     blocks.push(
       wrap(
-        <header
-          className="flex flex-col gap-3 border-b-2 pb-6"
-          style={{ borderColor: colorTheme }}
-        >
+        <div className="flex flex-col gap-2">
           <h1
-            className="text-4xl font-black uppercase tracking-tighter leading-none"
+            className="text-[28px] font-bold tracking-tight leading-tight"
             style={{ color: colorTheme }}
           >
             {personalInfo.name || "Seu Nome"}
           </h1>
-          <div className="flex flex-wrap gap-x-5 gap-y-1.5 text-[11px] font-bold text-slate-600 uppercase tracking-wider">
+          <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] font-medium text-slate-500">
             {personalInfo.email && (
-              <span className="lowercase">{personalInfo.email}</span>
+              <span className="text-slate-800">{personalInfo.email}</span>
             )}
-            {personalInfo.phone && <span>{personalInfo.phone}</span>}
-            {personalInfo.location && <span>{personalInfo.location}</span>}
+            {personalInfo.phone && (
+              <>
+                <span className="text-slate-300">•</span>
+                <span>{personalInfo.phone}</span>
+              </>
+            )}
+            {personalInfo.location && (
+              <>
+                <span className="text-slate-300">•</span>
+                <span>{personalInfo.location}</span>
+              </>
+            )}
             {personalInfo.linkedin && (
-              <a
-                href={personalInfo.linkedin}
-                target="_blank"
-                className="text-blue-600 hover:underline"
-              >
-                LINKEDIN
-              </a>
+              <>
+                <span className="text-slate-300">•</span>
+                <a
+                  href={personalInfo.linkedin}
+                  target="_blank"
+                  className="text-blue-600 font-bold uppercase tracking-wider"
+                >
+                  LinkedIn
+                </a>
+              </>
             )}
             {personalInfo.website && (
-              <a
-                href={personalInfo.website}
-                target="_blank"
-                className="text-blue-600 hover:underline"
-              >
-                PORTFOLIO
-              </a>
+              <>
+                <span className="text-slate-300">•</span>
+                <a
+                  href={personalInfo.website}
+                  target="_blank"
+                  className="text-blue-600 font-bold uppercase tracking-wider"
+                >
+                  Portfólio
+                </a>
+              </>
             )}
           </div>
           {personalInfo.summary && (
-            <p className="text-[13px] text-slate-700 leading-relaxed font-medium mt-2">
+            <p className="text-[12px] text-slate-600 leading-relaxed mt-2">
               {personalInfo.summary}
             </p>
           )}
-        </header>,
+        </div>,
         "header-block",
+        "pb-8",
       ),
     );
 
-    // Experiência
+    const sectionTitle = (title: string) => (
+      <div className="flex items-center gap-4 mb-4">
+        <h2
+          className="text-[10px] font-bold uppercase tracking-[0.2em]"
+          style={{ color: colorTheme }}
+        >
+          {title}
+        </h2>
+        <div className="flex-1 h-[0.5px] bg-slate-200" />
+      </div>
+    );
+
+    // 2. Experiência
     if (experiences?.length > 0) {
       blocks.push(
-        wrap(
-          <div
-            className="border-b pb-1"
-            style={{ borderColor: `${colorTheme}30` }}
-          >
-            <h2
-              className="text-sm font-black uppercase tracking-[0.15em]"
-              style={{ color: colorTheme }}
-            >
-              Experiência Profissional
-            </h2>
-          </div>,
-          "exp-title-block",
-          "pb-4",
-        ),
+        wrap(sectionTitle("Experiência Profissional"), "title-exp", "pb-0"),
       );
       experiences.forEach((exp, i) => {
         blocks.push(
           wrap(
-            <div className="flex flex-col gap-1.5">
+            <div className="flex flex-col gap-1">
               <div className="flex justify-between items-baseline">
-                <h3 className="font-bold text-[15px] text-slate-900">
+                <h3 className="font-bold text-[14px] text-slate-900">
                   {exp.position}
                 </h3>
-                <span className="text-[10px] text-slate-500 font-black uppercase whitespace-nowrap ml-4">
+                <span className="text-[10px] text-slate-400 font-bold uppercase">
                   {exp.startDate} — {exp.current ? "Presente" : exp.endDate}
                 </span>
               </div>
               <div className="flex justify-between items-baseline">
-                <span className="text-slate-700 font-bold text-sm">
+                <span className="text-slate-600 font-semibold text-[13px]">
                   {exp.company}
                 </span>
                 {exp.location && (
-                  <span className="text-slate-400 text-[11px] italic font-medium">
+                  <span className="text-slate-400 text-[10px]">
                     {exp.location}
                   </span>
                 )}
               </div>
               {exp.description && (
-                <div className="text-[12.5px] text-slate-600 leading-relaxed prose prose-sm max-w-none">
-                  <ReactMarkdown
-                    components={{
-                      ul: (props) => (
-                        <ul
-                          className="list-disc ml-4 space-y-1 mt-1"
-                          {...props}
-                        />
-                      ),
-                      li: (props) => <li className="pl-1" {...props} />,
-                      p: (props) => <p className="mb-1" {...props} />,
-                    }}
-                  >
-                    {exp.description}
-                  </ReactMarkdown>
+                <div className="text-[12px] text-slate-600 leading-relaxed prose prose-sm max-w-none mt-1">
+                  <ReactMarkdown>{exp.description}</ReactMarkdown>
                 </div>
               )}
             </div>,
@@ -149,40 +154,24 @@ export function ResumeView({ data, colorTheme = "#18181b" }: ResumeViewProps) {
       });
     }
 
-    // Educação
+    // 3. Educação
     if (educations?.length > 0) {
       blocks.push(
-        wrap(
-          <div
-            className="border-b pb-1 mt-2"
-            style={{ borderColor: `${colorTheme}30` }}
-          >
-            <h2
-              className="text-sm font-black uppercase tracking-[0.15em]"
-              style={{ color: colorTheme }}
-            >
-              Formação Acadêmica
-            </h2>
-          </div>,
-          "edu-title-block",
-          "pb-4",
-        ),
+        wrap(sectionTitle("Formação Acadêmica"), "title-edu", "pb-0"),
       );
       educations.forEach((edu, i) => {
         blocks.push(
           wrap(
-            <div className="flex justify-between items-baseline">
-              <div>
-                <h3 className="font-bold text-slate-900 text-sm">
+            <div className="flex flex-col gap-0.5">
+              <div className="flex justify-between items-baseline">
+                <h3 className="font-bold text-[13px] text-slate-900">
                   {edu.degree} em {edu.field}
                 </h3>
-                <p className="text-slate-600 text-[13px] font-medium">
-                  {edu.school}
-                </p>
+                <span className="text-[10px] text-slate-400 font-bold uppercase">
+                  {edu.graduationDate}
+                </span>
               </div>
-              <span className="text-[10px] text-slate-500 font-black uppercase whitespace-nowrap ml-4">
-                {edu.graduationDate}
-              </span>
+              <p className="text-slate-600 text-[12px]">{edu.school}</p>
             </div>,
             `edu-${i}`,
             "pb-4",
@@ -191,111 +180,61 @@ export function ResumeView({ data, colorTheme = "#18181b" }: ResumeViewProps) {
       });
     }
 
-    // Skills (Design Original Restaurado)
+    // 4. Habilidades (Coluna Única)
     if (skills?.length > 0) {
+      blocks.push(wrap(sectionTitle("Habilidades"), "title-skills", "pb-0"));
       blocks.push(
         wrap(
-          <div
-            className="border-b pb-1 mt-2"
-            style={{ borderColor: `${colorTheme}30` }}
-          >
-            <h2
-              className="text-sm font-black uppercase tracking-[0.15em]"
-              style={{ color: colorTheme }}
-            >
-              Habilidades Técnicas
-            </h2>
-          </div>,
-          "skills-title-block",
-          "pb-4",
-        ),
-      );
-      blocks.push(
-        wrap(
-          <div className="flex flex-wrap gap-x-2 gap-y-2">
-            {skills.map((skill, i) => (
+          <div className="flex flex-wrap gap-1.5">
+            {skills.map((s, i) => (
               <span
                 key={i}
-                className="px-2.5 py-1 bg-slate-50 border border-slate-200 text-slate-700 text-[11px] font-bold rounded uppercase tracking-tighter"
+                className="px-2 py-0.5 bg-slate-50 border border-slate-200 text-slate-600 text-[10px] font-bold rounded"
               >
-                {skill}
+                {s}
               </span>
             ))}
           </div>,
-          "skills-list-block",
+          "list-skills",
         ),
       );
     }
 
-    // Idiomas (Design Original Restaurado)
+    // 5. Idiomas (Coluna Única)
     if (languages?.length > 0) {
+      blocks.push(wrap(sectionTitle("Idiomas"), "title-langs", "pb-0"));
       blocks.push(
         wrap(
-          <div
-            className="border-b pb-1 mt-2"
-            style={{ borderColor: `${colorTheme}30` }}
-          >
-            <h2
-              className="text-sm font-black uppercase tracking-[0.15em]"
-              style={{ color: colorTheme }}
-            >
-              Idiomas
-            </h2>
-          </div>,
-          "lang-title-block",
-          "pb-4",
-        ),
-      );
-      blocks.push(
-        wrap(
-          <div className="flex flex-wrap gap-x-6 gap-y-2">
-            {languages.map((lang, i) => (
-              <div key={i} className="flex flex-col">
-                <span className="text-sm font-bold text-slate-900">
-                  {lang.name}
-                </span>
-                <span className="text-[10px] text-slate-500 uppercase font-black">
-                  {lang.level}
+          <div className="flex flex-col gap-1.5">
+            {languages.map((l, i) => (
+              <div key={i} className="flex gap-2 items-center text-[11px]">
+                <span className="font-bold text-slate-700">{l.name}:</span>
+                <span className="text-slate-400 uppercase font-medium">
+                  {l.level}
                 </span>
               </div>
             ))}
           </div>,
-          "lang-list-block",
+          "list-langs",
         ),
       );
     }
 
-    // Certificações (Design Original Restaurado)
+    // 6. Certificações
     if (certifications?.length > 0) {
-      blocks.push(
-        wrap(
-          <div
-            className="border-b pb-1 mt-2"
-            style={{ borderColor: `${colorTheme}30` }}
-          >
-            <h2
-              className="text-sm font-black uppercase tracking-[0.15em]"
-              style={{ color: colorTheme }}
-            >
-              Certificações
-            </h2>
-          </div>,
-          "cert-title-block",
-          "pb-4",
-        ),
-      );
-      certifications.forEach((cert, i) => {
+      blocks.push(wrap(sectionTitle("Certificações"), "title-certs", "pb-0"));
+      certifications.forEach((c, i) => {
         blocks.push(
           wrap(
             <div className="flex justify-between items-baseline">
               <div>
-                <h3 className="font-bold text-slate-900 text-sm">
-                  {cert.name}
+                <h3 className="font-bold text-[12px] text-slate-900">
+                  {c.name}
                 </h3>
-                <p className="text-slate-600 text-[12px]">{cert.issuer}</p>
+                <p className="text-slate-600 text-[11px]">{c.issuer}</p>
               </div>
-              <span className="text-[10px] text-slate-500 font-black uppercase">
-                {cert.date}
+              <span className="text-[10px] text-slate-400 font-bold uppercase">
+                {c.date}
               </span>
             </div>,
             `cert-${i}`,
@@ -305,98 +244,41 @@ export function ResumeView({ data, colorTheme = "#18181b" }: ResumeViewProps) {
       });
     }
 
-    // Voluntariado (Design Original Restaurado)
-    if (volunteering?.length > 0) {
-      blocks.push(
-        wrap(
-          <div
-            className="border-b pb-1 mt-2"
-            style={{ borderColor: `${colorTheme}30` }}
-          >
-            <h2
-              className="text-sm font-black uppercase tracking-[0.15em]"
-              style={{ color: colorTheme }}
-            >
-              Voluntariado
-            </h2>
-          </div>,
-          "vol-title-block",
-          "pb-4",
-        ),
-      );
-      volunteering.forEach((vol, i) => {
-        blocks.push(
-          wrap(
-            <div className="flex flex-col gap-1">
-              <div className="flex justify-between items-baseline">
-                <h3 className="font-bold text-slate-900 text-sm">
-                  {vol.organization}
-                </h3>
-                <span className="text-sm text-slate-700 font-medium">
-                  {vol.role}
-                </span>
-              </div>
-              {vol.description && (
-                <p className="text-[12px] text-slate-600">{vol.description}</p>
-              )}
-            </div>,
-            `vol-${i}`,
-          ),
-        );
-      });
-    }
-
-    // Projetos
+    // 7. Projetos
     if (projects?.length > 0) {
-      blocks.push(
-        wrap(
-          <div
-            className="border-b pb-1 mt-2"
-            style={{ borderColor: `${colorTheme}30` }}
-          >
-            <h2
-              className="text-sm font-black uppercase tracking-[0.15em]"
-              style={{ color: colorTheme }}
-            >
-              Projetos
-            </h2>
-          </div>,
-          "proj-title-block",
-          "pb-4",
-        ),
-      );
-      projects.forEach((proj, i) => {
+      blocks.push(wrap(sectionTitle("Projetos"), "title-proj", "pb-0"));
+      projects.forEach((p, i) => {
         blocks.push(
           wrap(
             <div className="flex flex-col gap-1">
               <div className="flex justify-between items-center">
-                <h3 className="font-bold text-slate-900 text-sm">
-                  {proj.name}
+                <h3 className="font-bold text-[13px] text-slate-900">
+                  {p.name}
                 </h3>
-                <div className="flex gap-3 text-[10px] font-bold uppercase tracking-tighter">
-                  {proj.github && (
+                <div className="flex gap-3 text-[9px] font-bold uppercase">
+                  {p.github && (
                     <a
-                      href={proj.github}
+                      href={p.github}
                       target="_blank"
-                      className="text-blue-600 hover:underline"
+                      className="text-blue-600"
                     >
-                      REPO
+                      Repositório
                     </a>
                   )}
-                  {proj.deploy && (
+                  {p.deploy && (
                     <a
-                      href={proj.deploy}
+                      href={p.deploy}
                       target="_blank"
-                      className="text-blue-600 hover:underline"
+                      className="text-blue-600"
                     >
-                      LIVE
+                      Demo
                     </a>
                   )}
                 </div>
               </div>
-              {proj.description && (
-                <p className="text-[12.5px] text-slate-600 leading-relaxed font-medium">
-                  {proj.description}
+              {p.description && (
+                <p className="text-[11.5px] text-slate-600 leading-relaxed">
+                  {p.description}
                 </p>
               )}
             </div>,
@@ -412,7 +294,6 @@ export function ResumeView({ data, colorTheme = "#18181b" }: ResumeViewProps) {
   useEffect(() => {
     const distribute = () => {
       if (!measureRef.current) return;
-
       const children = Array.from(measureRef.current.children) as HTMLElement[];
       const distributedPages: React.ReactNode[][] = [[]];
       let currentIdx = 0;
@@ -420,7 +301,6 @@ export function ResumeView({ data, colorTheme = "#18181b" }: ResumeViewProps) {
 
       children.forEach((child, index) => {
         const height = child.offsetHeight;
-
         if (
           currentHeight + height > SAFE_PAGE_HEIGHT &&
           distributedPages[currentIdx].length > 0
@@ -429,16 +309,12 @@ export function ResumeView({ data, colorTheme = "#18181b" }: ResumeViewProps) {
           distributedPages[currentIdx] = [];
           currentHeight = 0;
         }
-
         distributedPages[currentIdx].push(contentBlocks[index]);
         currentHeight += height;
       });
-
       setPages(distributedPages);
     };
-
-    const timeout = setTimeout(distribute, 100);
-    return () => clearTimeout(timeout);
+    setTimeout(distribute, 100);
   }, [contentBlocks]);
 
   const pagesToRender = pages.length > 0 ? pages : [contentBlocks];
@@ -455,7 +331,7 @@ export function ResumeView({ data, colorTheme = "#18181b" }: ResumeViewProps) {
           style={{
             padding: "25mm",
             width: "100%",
-            fontFamily: "Inter, sans-serif",
+            fontFamily: "Helvetica, sans-serif",
           }}
         >
           {contentBlocks}
@@ -465,22 +341,18 @@ export function ResumeView({ data, colorTheme = "#18181b" }: ResumeViewProps) {
       {pagesToRender.map((pageContent, idx) => (
         <div
           key={idx}
-          className="a4-page relative flex flex-col bg-white overflow-hidden shadow-2xl transition-all"
+          className="a4-page relative flex flex-col bg-white overflow-hidden shadow-2xl"
           style={{
             width: "210mm",
             height: "297mm",
             padding: "25mm",
             color: "#1e293b",
-            fontFamily: "Inter, sans-serif",
+            fontFamily: "Helvetica, sans-serif",
           }}
         >
-          <div
-            className="flex flex-col relative"
-            style={{ height: `${SAFE_PAGE_HEIGHT}px` }}
-          >
+          <div className="flex flex-col relative" style={{ height: "100%" }}>
             {pageContent}
           </div>
-
           <div className="absolute bottom-8 right-10 text-[7px] font-bold text-slate-200 uppercase tracking-[0.3em] pointer-events-none">
             LUME / {idx + 1} DE {pagesToRender.length}
           </div>

@@ -9,6 +9,9 @@ import {
 } from "@react-pdf/renderer";
 import { ResumeData } from "@/types/resume";
 
+// Fator de conversão PX para PT: 1px = 0.75pt
+const PX = 0.75;
+
 const styles = StyleSheet.create({
   page: {
     padding: "25mm",
@@ -16,132 +19,154 @@ const styles = StyleSheet.create({
     fontFamily: "Helvetica",
     color: "#1e293b",
   },
+  // 1. Cabeçalho
   header: {
-    marginBottom: 24,
-    borderBottomWidth: 2,
-    paddingBottom: 24,
+    marginBottom: 24 * PX,
   },
   name: {
-    fontSize: 30,
+    fontSize: 28 * PX,
     fontWeight: "bold",
-    textTransform: "uppercase",
-    letterSpacing: -1,
-    marginBottom: 8,
+    letterSpacing: -0.5,
+    marginBottom: 6 * PX,
   },
   contactRow: {
     flexDirection: "row",
     flexWrap: "wrap",
-    gap: 15,
-    marginBottom: 12,
+    alignItems: "center",
+    gap: 2,
+    marginBottom: 8 * PX,
   },
   contactText: {
-    fontSize: 8.5,
-    color: "#475569",
-    fontWeight: "bold",
-    textTransform: "uppercase",
-    letterSpacing: 0.5,
+    fontSize: 11 * PX,
+    color: "#64748b",
+  },
+  contactTextMain: {
+    fontSize: 11 * PX,
+    color: "#1e293b",
+  },
+  bullet: {
+    fontSize: 11 * PX,
+    color: "#cbd5e1",
+    marginHorizontal: 4 * PX,
   },
   link: {
-    fontSize: 8.5,
-    color: "#2563EB",
+    fontSize: 11 * PX,
+    color: "#2563eb",
     textDecoration: "none",
     fontWeight: "bold",
-    textTransform: "uppercase",
+  },
+  linkSmall: {
+    fontSize: 9 * PX,
+    color: "#2563eb",
+    textDecoration: "none",
+    fontWeight: "bold",
   },
   summary: {
-    fontSize: 10,
+    fontSize: 12 * PX,
     lineHeight: 1.5,
-    color: "#334155",
-    marginTop: 8,
+    color: "#475569",
+    marginTop: 8 * PX,
   },
-  sectionTitleBox: {
-    borderBottomWidth: 1,
-    paddingBottom: 4,
-    marginBottom: 16,
-    marginTop: 8,
+  // Seções
+  sectionTitleContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12 * PX,
+    marginBottom: 16 * PX,
+    marginTop: 4 * PX,
   },
   sectionTitle: {
-    fontSize: 10.5,
+    fontSize: 10 * PX,
     fontWeight: "bold",
     textTransform: "uppercase",
     letterSpacing: 1.5,
   },
+  sectionLine: {
+    flex: 1,
+    height: 0.5 * PX,
+    backgroundColor: "#e2e8f0",
+  },
+  // Itens
   item: {
-    marginBottom: 24,
+    marginBottom: 18 * PX,
   },
   itemHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "baseline",
-    marginBottom: 4,
+    marginBottom: 2 * PX,
   },
   itemTitle: {
-    fontSize: 11.5,
+    fontSize: 14 * PX,
     fontWeight: "bold",
     color: "#0f172a",
   },
   itemDate: {
-    fontSize: 7.5,
+    fontSize: 10 * PX,
     fontWeight: "bold",
-    color: "#64748b",
+    color: "#94a3b8",
     textTransform: "uppercase",
   },
   itemSubHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 6,
+    marginBottom: 4 * PX,
   },
   company: {
-    fontSize: 10.5,
+    fontSize: 13 * PX,
     fontWeight: "bold",
-    color: "#334155",
-  },
-  location: {
-    fontSize: 8.5,
-    color: "#94a3b8",
-    fontStyle: "italic",
-  },
-  description: {
-    fontSize: 9.5,
-    lineHeight: 1.5,
     color: "#475569",
   },
+  location: {
+    fontSize: 10 * PX,
+    color: "#94a3b8",
+  },
+  description: {
+    fontSize: 12 * PX,
+    lineHeight: 1.5,
+    color: "#475569",
+    marginTop: 4 * PX,
+  },
+  // Habilidades
   skillsGrid: {
     flexDirection: "row",
     flexWrap: "wrap",
-    gap: 6,
+    gap: 6 * PX,
+    marginBottom: 24 * PX,
   },
   skillTag: {
-    fontSize: 8.5,
+    fontSize: 10 * PX,
     fontWeight: "bold",
-    backgroundColor: "#F8FAFC",
-    borderWidth: 1,
-    borderColor: "#E2E8F0",
-    padding: "3 8",
-    borderRadius: 4,
-    color: "#334155",
-    textTransform: "uppercase",
+    backgroundColor: "#f8fafc",
+    borderWidth: 0.5 * PX,
+    borderColor: "#e2e8f0",
+    padding: "2 6",
+    borderRadius: 4 * PX,
+    color: "#475569",
   },
-  languageList: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 25,
-  },
+  // Idiomas
   languageItem: {
-    flexDirection: "column",
-    marginBottom: 5,
+    flexDirection: "row",
+    gap: 6 * PX,
+    alignItems: "center",
+    marginBottom: 6 * PX,
   },
   langName: {
-    fontSize: 10.5,
+    fontSize: 11 * PX,
     fontWeight: "bold",
-    color: "#0F172A",
+    color: "#334155",
   },
   langLevel: {
-    fontSize: 7.5,
-    color: "#64748B",
-    fontWeight: "bold",
+    fontSize: 10 * PX,
+    color: "#94a3b8",
     textTransform: "uppercase",
-    marginTop: 1,
+  },
+  // Projetos
+  projectHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 4 * PX,
   },
 });
 
@@ -163,7 +188,12 @@ export const ResumePDF = ({
     volunteering,
   } = data;
 
-  const softBorderColor = colorTheme + "4D";
+  const renderSectionTitle = (title: string) => (
+    <View style={styles.sectionTitleContainer} wrap={false}>
+      <Text style={[styles.sectionTitle, { color: colorTheme }]}>{title}</Text>
+      <View style={styles.sectionLine} />
+    </View>
+  );
 
   return (
     <Document
@@ -171,30 +201,42 @@ export const ResumePDF = ({
       author="Lume"
     >
       <Page size="A4" style={styles.page}>
-        {/* Cabeçalho */}
-        <View style={[styles.header, { borderBottomColor: colorTheme }]}>
+        {/* 1. Cabeçalho */}
+        <View style={styles.header}>
           <Text style={[styles.name, { color: colorTheme }]}>
             {personalInfo.name || "Seu Nome"}
           </Text>
           <View style={styles.contactRow}>
             {personalInfo.email && (
-              <Text style={styles.contactText}>{personalInfo.email}</Text>
+              <Text style={styles.contactTextMain}>{personalInfo.email}</Text>
             )}
             {personalInfo.phone && (
-              <Text style={styles.contactText}>{personalInfo.phone}</Text>
+              <>
+                <Text style={styles.bullet}>•</Text>
+                <Text style={styles.contactText}>{personalInfo.phone}</Text>
+              </>
             )}
             {personalInfo.location && (
-              <Text style={styles.contactText}>{personalInfo.location}</Text>
+              <>
+                <Text style={styles.bullet}>•</Text>
+                <Text style={styles.contactText}>{personalInfo.location}</Text>
+              </>
             )}
             {personalInfo.linkedin && (
-              <Link style={styles.link} src={personalInfo.linkedin}>
-                LINKEDIN
-              </Link>
+              <>
+                <Text style={styles.bullet}>•</Text>
+                <Link style={styles.link} src={personalInfo.linkedin}>
+                  LINKEDIN
+                </Link>
+              </>
             )}
             {personalInfo.website && (
-              <Link style={styles.link} src={personalInfo.website}>
-                PORTFOLIO
-              </Link>
+              <>
+                <Text style={styles.bullet}>•</Text>
+                <Link style={styles.link} src={personalInfo.website}>
+                  PORTFÓLIO
+                </Link>
+              </>
             )}
           </View>
           {personalInfo.summary && (
@@ -202,19 +244,10 @@ export const ResumePDF = ({
           )}
         </View>
 
-        {/* Experiência */}
+        {/* 2. Experiência */}
         {experiences?.length > 0 && (
-          <View wrap={false}>
-            <View
-              style={[
-                styles.sectionTitleBox,
-                { borderBottomColor: softBorderColor },
-              ]}
-            >
-              <Text style={[styles.sectionTitle, { color: colorTheme }]}>
-                Experiência Profissional
-              </Text>
-            </View>
+          <View>
+            {renderSectionTitle("Experiência Profissional")}
             {experiences.map((exp, i) => (
               <View key={i} style={styles.item} wrap={false}>
                 <View style={styles.itemHeader}>
@@ -239,23 +272,14 @@ export const ResumePDF = ({
           </View>
         )}
 
-        {/* Educação */}
+        {/* 3. Educação */}
         {educations?.length > 0 && (
-          <View wrap={false}>
-            <View
-              style={[
-                styles.sectionTitleBox,
-                { borderBottomColor: softBorderColor },
-              ]}
-            >
-              <Text style={[styles.sectionTitle, { color: colorTheme }]}>
-                Formação Acadêmica
-              </Text>
-            </View>
+          <View>
+            {renderSectionTitle("Formação Acadêmica")}
             {educations.map((edu, i) => (
-              <View key={i} style={{ marginBottom: 16 }} wrap={false}>
+              <View key={i} style={{ marginBottom: 12 * PX }} wrap={false}>
                 <View style={styles.itemHeader}>
-                  <Text style={styles.itemTitle}>
+                  <Text style={[styles.itemTitle, { fontSize: 13 * PX }]}>
                     {edu.degree} em {edu.field}
                   </Text>
                   <Text style={styles.itemDate}>{edu.graduationDate}</Text>
@@ -266,19 +290,10 @@ export const ResumePDF = ({
           </View>
         )}
 
-        {/* Skills */}
+        {/* 4. Habilidades */}
         {skills?.length > 0 && (
-          <View wrap={false}>
-            <View
-              style={[
-                styles.sectionTitleBox,
-                { borderBottomColor: softBorderColor },
-              ]}
-            >
-              <Text style={[styles.sectionTitle, { color: colorTheme }]}>
-                Habilidades Técnicas
-              </Text>
-            </View>
+          <View>
+            {renderSectionTitle("Habilidades")}
             <View style={styles.skillsGrid}>
               {skills.map((s, i) => (
                 <Text key={i} style={styles.skillTag}>
@@ -289,23 +304,14 @@ export const ResumePDF = ({
           </View>
         )}
 
-        {/* Idiomas */}
+        {/* 5. Idiomas */}
         {languages?.length > 0 && (
-          <View wrap={false} style={{ marginTop: 10 }}>
-            <View
-              style={[
-                styles.sectionTitleBox,
-                { borderBottomColor: softBorderColor },
-              ]}
-            >
-              <Text style={[styles.sectionTitle, { color: colorTheme }]}>
-                Idiomas
-              </Text>
-            </View>
-            <View style={styles.languageList}>
+          <View>
+            {renderSectionTitle("Idiomas")}
+            <View style={{ marginBottom: 24 * PX }}>
               {languages.map((l, i) => (
-                <View key={i} style={styles.languageItem}>
-                  <Text style={styles.langName}>{l.name}</Text>
+                <View key={i} style={styles.languageItem} wrap={false}>
+                  <Text style={styles.langName}>{l.name}:</Text>
                   <Text style={styles.langLevel}>{l.level}</Text>
                 </View>
               ))}
@@ -313,82 +319,69 @@ export const ResumePDF = ({
           </View>
         )}
 
-        {/* Certificações */}
+        {/* 6. Certificações */}
         {certifications?.length > 0 && (
-          <View wrap={false} style={{ marginTop: 10 }}>
-            <View
-              style={[
-                styles.sectionTitleBox,
-                { borderBottomColor: softBorderColor },
-              ]}
-            >
-              <Text style={[styles.sectionTitle, { color: colorTheme }]}>
-                Certificações
-              </Text>
-            </View>
-            {certifications.map((cert, i) => (
-              <View key={i} style={{ marginBottom: 12 }}>
+          <View>
+            {renderSectionTitle("Certificações")}
+            {certifications.map((c, i) => (
+              <View key={i} style={{ marginBottom: 12 * PX }} wrap={false}>
                 <View style={styles.itemHeader}>
-                  <Text style={styles.itemTitle}>{cert.name}</Text>
-                  <Text style={styles.itemDate}>{cert.date}</Text>
+                  <Text style={[styles.itemTitle, { fontSize: 12 * PX }]}>
+                    {c.name}
+                  </Text>
+                  <Text style={styles.itemDate}>{c.date}</Text>
                 </View>
-                <Text style={styles.company}>{cert.issuer}</Text>
+                <Text style={styles.company}>{c.issuer}</Text>
               </View>
             ))}
           </View>
         )}
 
-        {/* Voluntariado */}
-        {volunteering?.length > 0 && (
-          <View wrap={false} style={{ marginTop: 10 }}>
-            <View
-              style={[
-                styles.sectionTitleBox,
-                { borderBottomColor: softBorderColor },
-              ]}
-            >
-              <Text style={[styles.sectionTitle, { color: colorTheme }]}>
-                Voluntariado
-              </Text>
-            </View>
-            {volunteering.map((vol, i) => (
-              <View key={i} style={{ marginBottom: 12 }}>
-                <View style={styles.itemHeader}>
-                  <Text style={styles.itemTitle}>{vol.organization}</Text>
-                  <Text style={styles.itemDate}>{vol.role}</Text>
+        {/* 7. Projetos */}
+        {projects?.length > 0 && (
+          <View>
+            {renderSectionTitle("Projetos")}
+            {projects.map((proj, i) => (
+              <View key={i} style={styles.item} wrap={false}>
+                <View style={styles.projectHeader}>
+                  <Text style={[styles.itemTitle, { fontSize: 13 * PX }]}>
+                    {proj.name}
+                  </Text>
+                  <View style={{ flexDirection: "row", gap: 12 * PX }}>
+                    {proj.github && (
+                      <Link style={styles.linkSmall} src={proj.github}>
+                        Repositório
+                      </Link>
+                    )}
+                    {proj.deploy && (
+                      <Link style={styles.linkSmall} src={proj.deploy}>
+                        Demo
+                      </Link>
+                    )}
+                  </View>
                 </View>
-                {vol.description && (
-                  <Text style={styles.description}>{vol.description}</Text>
+                {proj.description && (
+                  <Text style={styles.description}>{proj.description}</Text>
                 )}
               </View>
             ))}
           </View>
         )}
 
-        {/* Projetos */}
-        {projects?.length > 0 && (
-          <View wrap={false} style={{ marginTop: 10 }}>
-            <View
-              style={[
-                styles.sectionTitleBox,
-                { borderBottomColor: softBorderColor },
-              ]}
-            >
-              <Text style={[styles.sectionTitle, { color: colorTheme }]}>
-                Projetos
-              </Text>
-            </View>
-            {projects.map((proj, i) => (
-              <View key={i} style={styles.item} wrap={false}>
+        {/* 8. Voluntariado */}
+        {volunteering?.length > 0 && (
+          <View>
+            {renderSectionTitle("Voluntariado")}
+            {volunteering.map((v, i) => (
+              <View key={i} style={{ marginBottom: 12 * PX }} wrap={false}>
                 <View style={styles.itemHeader}>
-                  <Text style={styles.itemTitle}>{proj.name}</Text>
-                  <View style={{ flexDirection: "row", gap: 10 }}>
-                    {proj.github && <Text style={styles.link}>REPO</Text>}
-                    {proj.deploy && <Text style={styles.link}>LIVE</Text>}
-                  </View>
+                  <Text style={[styles.itemTitle, { fontSize: 13 * PX }]}>
+                    {v.organization}
+                  </Text>
+                  <Text style={styles.itemDate}>{v.role}</Text>
                 </View>
-                {proj.description && (
-                  <Text style={styles.description}>{proj.description}</Text>
+                {v.description && (
+                  <Text style={styles.description}>{v.description}</Text>
                 )}
               </View>
             ))}
