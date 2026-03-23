@@ -33,10 +33,33 @@ export interface Project {
   description?: string;
 }
 
+export interface Language {
+  name: string;
+  level: "Básico" | "Intermediário" | "Avançado" | "Fluente" | "Nativo";
+}
+
+export interface Certification {
+  name: string;
+  issuer: string;
+  date: string;
+}
+
+export interface Volunteer {
+  organization: string;
+  role: string;
+  startDate: string;
+  endDate?: string;
+  current: boolean;
+  description?: string;
+}
+
 export interface ResumeData {
   personalInfo: PersonalInfo;
   experiences: Experience[];
   educations: Education[];
   skills: string[];
   projects: Project[];
+  languages: Language[];
+  certifications: Certification[];
+  volunteering: Volunteer[];
 }

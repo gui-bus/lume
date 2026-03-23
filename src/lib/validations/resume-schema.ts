@@ -35,10 +35,33 @@ export const ProjectsSchema = z.object({
   description: z.string().optional(),
 });
 
+export const LanguageSchema = z.object({
+  name: z.string().min(1, "Idioma é obrigatório"),
+  level: z.enum(["Básico", "Intermediário", "Avançado", "Fluente", "Nativo"]),
+});
+
+export const CertificationSchema = z.object({
+  name: z.string().min(1, "Nome é obrigatório"),
+  issuer: z.string().min(1, "Emissor é obrigatório"),
+  date: z.string().min(1, "Data é obrigatória"),
+});
+
+export const VolunteerSchema = z.object({
+  organization: z.string().min(1, "Organização é obrigatória"),
+  role: z.string().min(1, "Papel é obrigatório"),
+  startDate: z.string().min(1, "Data de início é obrigatória"),
+  endDate: z.string().optional(),
+  current: z.boolean(),
+  description: z.string().optional(),
+});
+
 export const ResumeSchema = z.object({
   personalInfo: PersonalInfoSchema,
   experiences: z.array(ExperienceSchema),
   educations: z.array(EducationSchema),
   skills: z.array(z.string()),
   projects: z.array(ProjectsSchema),
+  languages: z.array(LanguageSchema),
+  certifications: z.array(CertificationSchema),
+  volunteering: z.array(VolunteerSchema),
 });
