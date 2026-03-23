@@ -16,12 +16,21 @@ export function ResumeView({ data, colorTheme = "#000000" }: ResumeViewProps) {
   const A4_HEIGHT_PX = 1122;
   const PAGE_MARGIN_TOTAL_PX = 150;
 
-  const { personalInfo, experiences, educations, skills, projects } = data;
+  const {
+    personalInfo,
+    experiences,
+    educations,
+    skills,
+    projects,
+    languages,
+    certifications,
+    volunteering,
+  } = data;
 
   const contentBlocks = useMemo(() => {
     const blocks: React.ReactNode[] = [];
 
-    // Header com links clicáveis
+    // Header
     blocks.push(
       <header
         key="header"
@@ -35,15 +44,16 @@ export function ResumeView({ data, colorTheme = "#000000" }: ResumeViewProps) {
           {personalInfo.name || "Seu Nome"}
         </h1>
         <div className="flex flex-wrap gap-x-5 gap-y-1.5 text-[11px] font-bold text-slate-600 uppercase tracking-wider">
-          {personalInfo.email && <span>{personalInfo.email}</span>}
+          {personalInfo.email && (
+            <span className="lowercase">{personalInfo.email}</span>
+          )}
           {personalInfo.phone && <span>{personalInfo.phone}</span>}
           {personalInfo.location && <span>{personalInfo.location}</span>}
           {personalInfo.linkedin && (
             <a
               href={personalInfo.linkedin}
               target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-600 hover:underline decoration-2 underline-offset-2"
+              className="text-blue-600 hover:underline"
             >
               LINKEDIN
             </a>
@@ -52,8 +62,7 @@ export function ResumeView({ data, colorTheme = "#000000" }: ResumeViewProps) {
             <a
               href={personalInfo.website}
               target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-600 hover:underline decoration-2 underline-offset-2"
+              className="text-blue-600 hover:underline"
             >
               PORTFOLIO
             </a>
@@ -67,11 +76,12 @@ export function ResumeView({ data, colorTheme = "#000000" }: ResumeViewProps) {
       </header>,
     );
 
-    if (experiences.length > 0) {
+    // Experiência
+    if (experiences?.length > 0) {
       blocks.push(
         <div
           key="exp-title"
-          className="flex items-center border-b pb-1 mb-4"
+          className="border-b pb-1 mb-4"
           style={{ borderColor: `${colorTheme}30` }}
         >
           <h2
@@ -84,10 +94,7 @@ export function ResumeView({ data, colorTheme = "#000000" }: ResumeViewProps) {
       );
       experiences.forEach((exp, i) => {
         blocks.push(
-          <div
-            key={`exp-${i}`}
-            className="experience-item flex flex-col gap-1.5 mb-6"
-          >
+          <div key={`exp-${i}`} className="flex flex-col gap-1.5 mb-6">
             <div className="flex justify-between items-baseline">
               <h3 className="font-bold text-[15px] text-slate-900">
                 {exp.position}
@@ -129,11 +136,12 @@ export function ResumeView({ data, colorTheme = "#000000" }: ResumeViewProps) {
       });
     }
 
-    if (educations.length > 0) {
+    // Educação
+    if (educations?.length > 0) {
       blocks.push(
         <div
           key="edu-title"
-          className="flex items-center border-b pb-1 mb-4 mt-2"
+          className="border-b pb-1 mb-4 mt-2"
           style={{ borderColor: `${colorTheme}30` }}
         >
           <h2
@@ -166,11 +174,12 @@ export function ResumeView({ data, colorTheme = "#000000" }: ResumeViewProps) {
       });
     }
 
-    if (skills.length > 0) {
+    // Skills
+    if (skills?.length > 0) {
       blocks.push(
         <div
           key="skills-title"
-          className="flex items-center border-b pb-1 mb-4 mt-2"
+          className="border-b pb-1 mb-4 mt-2"
           style={{ borderColor: `${colorTheme}30` }}
         >
           <h2
@@ -195,11 +204,113 @@ export function ResumeView({ data, colorTheme = "#000000" }: ResumeViewProps) {
       );
     }
 
-    if (projects.length > 0) {
+    // Idiomas
+    if (languages?.length > 0) {
+      blocks.push(
+        <div
+          key="lang-title"
+          className="border-b pb-1 mb-4 mt-2"
+          style={{ borderColor: `${colorTheme}30` }}
+        >
+          <h2
+            className="text-sm font-black uppercase tracking-[0.15em]"
+            style={{ color: colorTheme }}
+          >
+            Idiomas
+          </h2>
+        </div>,
+      );
+      blocks.push(
+        <div key="lang-list" className="flex flex-wrap gap-x-6 gap-y-2 mb-6">
+          {languages.map((lang, i) => (
+            <div key={i} className="flex flex-col">
+              <span className="text-sm font-bold text-slate-900">
+                {lang.name}
+              </span>
+              <span className="text-[10px] text-slate-500 uppercase font-black">
+                {lang.level}
+              </span>
+            </div>
+          ))}
+        </div>,
+      );
+    }
+
+    // Certificações
+    if (certifications?.length > 0) {
+      blocks.push(
+        <div
+          key="cert-title"
+          className="border-b pb-1 mb-4 mt-2"
+          style={{ borderColor: `${colorTheme}30` }}
+        >
+          <h2
+            className="text-sm font-black uppercase tracking-[0.15em]"
+            style={{ color: colorTheme }}
+          >
+            Certificações
+          </h2>
+        </div>,
+      );
+      certifications.forEach((cert, i) => {
+        blocks.push(
+          <div
+            key={`cert-${i}`}
+            className="flex justify-between items-baseline mb-3"
+          >
+            <div>
+              <h3 className="font-bold text-slate-900 text-sm">{cert.name}</h3>
+              <p className="text-slate-600 text-[12px]">{cert.issuer}</p>
+            </div>
+            <span className="text-[10px] text-slate-500 font-black uppercase">
+              {cert.date}
+            </span>
+          </div>,
+        );
+      });
+    }
+
+    // Voluntariado
+    if (volunteering?.length > 0) {
+      blocks.push(
+        <div
+          key="vol-title"
+          className="border-b pb-1 mb-4 mt-2"
+          style={{ borderColor: `${colorTheme}30` }}
+        >
+          <h2
+            className="text-sm font-black uppercase tracking-[0.15em]"
+            style={{ color: colorTheme }}
+          >
+            Voluntariado
+          </h2>
+        </div>,
+      );
+      volunteering.forEach((vol, i) => {
+        blocks.push(
+          <div key={`vol-${i}`} className="flex flex-col gap-1 mb-4">
+            <div className="flex justify-between items-baseline">
+              <h3 className="font-bold text-slate-900 text-sm">
+                {vol.organization}
+              </h3>
+              <span className="text-sm text-slate-700 font-medium">
+                {vol.role}
+              </span>
+            </div>
+            {vol.description && (
+              <p className="text-[12px] text-slate-600">{vol.description}</p>
+            )}
+          </div>,
+        );
+      });
+    }
+
+    // Projetos
+    if (projects?.length > 0) {
       blocks.push(
         <div
           key="proj-title"
-          className="flex items-center border-b pb-1 mb-4 mt-2"
+          className="border-b pb-1 mb-4 mt-2"
           style={{ borderColor: `${colorTheme}30` }}
         >
           <h2
@@ -210,29 +321,25 @@ export function ResumeView({ data, colorTheme = "#000000" }: ResumeViewProps) {
           </h2>
         </div>,
       );
-      projects.forEach((project, i) => {
+      projects.forEach((proj, i) => {
         blocks.push(
           <div key={`proj-${i}`} className="flex flex-col gap-1 mb-5">
             <div className="flex justify-between items-center">
-              <h3 className="font-bold text-slate-900 text-sm">
-                {project.name}
-              </h3>
+              <h3 className="font-bold text-slate-900 text-sm">{proj.name}</h3>
               <div className="flex gap-3 text-[10px] font-bold uppercase tracking-tighter">
-                {project.github && (
+                {proj.github && (
                   <a
-                    href={project.github}
+                    href={proj.github}
                     target="_blank"
-                    rel="noopener noreferrer"
                     className="text-blue-600 hover:underline"
                   >
                     REPO
                   </a>
                 )}
-                {project.deploy && (
+                {proj.deploy && (
                   <a
-                    href={project.deploy}
+                    href={proj.deploy}
                     target="_blank"
-                    rel="noopener noreferrer"
                     className="text-blue-600 hover:underline"
                   >
                     LIVE
@@ -240,9 +347,9 @@ export function ResumeView({ data, colorTheme = "#000000" }: ResumeViewProps) {
                 )}
               </div>
             </div>
-            {project.description && (
+            {proj.description && (
               <p className="text-[12.5px] text-slate-600 leading-relaxed font-medium">
-                {project.description}
+                {proj.description}
               </p>
             )}
           </div>,
