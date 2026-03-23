@@ -98,18 +98,14 @@ export default function Home() {
     <main className="h-screen flex flex-col bg-background text-foreground overflow-hidden">
       {/* Header Minimalista Premium */}
       <header className="no-print h-16 border-b border-border/40 bg-background/50 backdrop-blur-xl flex items-center justify-between px-8 shrink-0 z-50">
-        <div className="flex items-center gap-3 group cursor-default">
-          <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center transition-all duration-500 group-hover:rotate-90 shadow-lg shadow-primary/10">
-            <Aperture
-              size={24}
-              weight="bold"
-              className="text-primary-foreground"
-            />
-          </div>
-          <span className="text-2xl font-black tracking-tighter uppercase">
+        <motion.div
+          className="flex items-center group cursor-pointer select-none"
+          whileHover="hover"
+        >
+          <span className="text-3xl font-black tracking-[0.2em] uppercase bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/60 transition-all duration-500 group-hover:from-primary group-hover:to-primary/70">
             Lume
           </span>
-        </div>
+        </motion.div>
 
         <div className="flex items-center gap-6">
           {/* Controles de Zoom Simplificados */}
