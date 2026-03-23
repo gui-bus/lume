@@ -44,6 +44,9 @@ const defaultData: ResumeData = {
   educations: [],
   skills: [],
   projects: [],
+  languages: [],
+  certifications: [],
+  volunteering: [],
 };
 
 const COLORS = [

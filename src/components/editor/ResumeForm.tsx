@@ -19,8 +19,12 @@ import {
   GitBranch,
   CaretRight,
   CaretLeft,
+  Translate,
+  Certificate,
+  HandHeart,
+  PlusCircle,
 } from "@phosphor-icons/react";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { useDebounce } from "@/hooks/use-debounce";
 import { saveResume } from "@/app/actions/resume-actions";
 import { motion, AnimatePresence } from "framer-motion";
@@ -47,6 +51,9 @@ const defaultValues: ResumeData = {
   educations: [],
   skills: [],
   projects: [],
+  languages: [],
+  certifications: [],
+  volunteering: [],
 };
 
 const STEPS = [
@@ -55,6 +62,7 @@ const STEPS = [
   { id: "jornada", label: "Jornada", icon: Briefcase },
   { id: "formacao", label: "Formação", icon: GraduationCap },
   { id: "projetos", label: "Projetos", icon: GitBranch },
+  { id: "extra", label: "Extra", icon: PlusCircle },
 ];
 
 export function ResumeForm({
@@ -92,21 +100,33 @@ export function ResumeForm({
     append: appendProj,
     remove: removeProj,
   } = useFieldArray({ control, name: "projects" });
+  const {
+    fields: langFields,
+    append: appendLang,
+    remove: removeLang,
+  } = useFieldArray({ control, name: "languages" });
+  const {
+    fields: certFields,
+    append: appendCert,
+    remove: removeCert,
+  } = useFieldArray({ control, name: "certifications" });
+  const {
+    fields: volFields,
+    append: appendVol,
+    remove: removeVol,
+  } = useFieldArray({ control, name: "volunteering" });
 
   const watchedData = watch();
   const debouncedData = useDebounce(watchedData, 1000);
-
-  // CRÍTICO: Usar JSON.stringify para evitar loops infinitos de referência
   const dataString = JSON.stringify(watchedData);
 
   useEffect(() => {
     onDataChange(watchedData);
-  }, [dataString, onDataChange]); // Só dispara se os VALORES mudarem
+  }, [dataString, onDataChange]);
 
   useEffect(() => {
     if (debouncedData) {
       localStorage.setItem("resume-draft", JSON.stringify(debouncedData));
-
       const performSave = async () => {
         try {
           const result = await saveResume(resumeId, debouncedData);
@@ -115,7 +135,7 @@ export function ResumeForm({
             onIdGenerated?.(result.id);
           }
         } catch (error) {
-          console.error("Auto-save error:", error);
+          console.error(error);
         }
       };
       performSave();
@@ -124,7 +144,6 @@ export function ResumeForm({
 
   return (
     <div className="flex flex-col h-full bg-background overflow-hidden">
-      {/* Step Indicator */}
       <div className="px-8 pt-8 pb-4 flex justify-between items-center border-b bg-muted/5 shrink-0">
         <div className="flex gap-2">
           {STEPS.map((step, i) => (
@@ -150,7 +169,6 @@ export function ResumeForm({
         </span>
       </div>
 
-      {/* Scrollable Content Area */}
       <div className="flex-1 overflow-y-auto custom-scrollbar px-8 py-10 pb-32">
         <AnimatePresence mode="wait">
           <motion.div
@@ -166,7 +184,7 @@ export function ResumeForm({
                 {STEPS[activeStep].label}
               </h2>
               <p className="text-sm text-muted-foreground">
-                Mantenha seu currículo sempre atualizado.
+                Preencha as informações com atenção.
               </p>
             </div>
 
@@ -177,16 +195,14 @@ export function ResumeForm({
                     <Label>Nome Completo</Label>
                     <Input
                       {...register("personalInfo.name")}
-                      placeholder="Ex: Linus Torvalds"
-                      className="input-glow h-11 bg-card/50"
+                      className="input-glow h-11"
                     />
                   </div>
                   <div className="space-y-2">
                     <Label>E-mail</Label>
                     <Input
                       {...register("personalInfo.email")}
-                      placeholder="linus@linux.org"
-                      className="input-glow h-11 bg-card/50"
+                      className="input-glow h-11"
                     />
                   </div>
                 </div>
@@ -195,16 +211,14 @@ export function ResumeForm({
                     <Label>Telefone</Label>
                     <Input
                       {...register("personalInfo.phone")}
-                      placeholder="(11) 99999-9999"
-                      className="input-glow h-11 bg-card/50"
+                      className="input-glow h-11"
                     />
                   </div>
                   <div className="space-y-2">
                     <Label>Localização</Label>
                     <Input
                       {...register("personalInfo.location")}
-                      placeholder="São Paulo, SP"
-                      className="input-glow h-11 bg-card/50"
+                      className="input-glow h-11"
                     />
                   </div>
                 </div>
@@ -213,16 +227,14 @@ export function ResumeForm({
                     <Label>LinkedIn</Label>
                     <Input
                       {...register("personalInfo.linkedin")}
-                      placeholder="URL completa"
-                      className="input-glow h-11 bg-card/50"
+                      className="input-glow h-11"
                     />
                   </div>
                   <div className="space-y-2">
                     <Label>Portfólio</Label>
                     <Input
                       {...register("personalInfo.website")}
-                      placeholder="URL completa"
-                      className="input-glow h-11 bg-card/50"
+                      className="input-glow h-11"
                     />
                   </div>
                 </div>
@@ -230,8 +242,7 @@ export function ResumeForm({
                   <Label>Resumo Profissional</Label>
                   <Textarea
                     {...register("personalInfo.summary")}
-                    placeholder="Uma breve introdução sobre sua jornada..."
-                    className="min-h-[120px] input-glow bg-card/50"
+                    className="min-h-[120px] input-glow"
                   />
                 </div>
               </div>
@@ -252,13 +263,9 @@ export function ResumeForm({
                             .filter((s) => s !== "")
                         : v,
                   })}
-                  placeholder="React, Node.js, TypeScript, Docker..."
-                  className="min-h-[300px] input-glow text-lg font-mono leading-relaxed bg-card/50"
+                  placeholder="React, Node.js, TypeScript..."
+                  className="min-h-[250px] input-glow text-lg font-mono leading-relaxed"
                 />
-                <p className="text-xs text-muted-foreground italic">
-                  Dica: Separe as tecnologias utilizando vírgulas para uma
-                  melhor organização.
-                </p>
               </div>
             )}
 
@@ -267,7 +274,7 @@ export function ResumeForm({
                 {expFields.map((field, i) => (
                   <Card
                     key={field.id}
-                    className="border-border/50 bg-card/30 relative overflow-hidden group"
+                    className="border-border/50 bg-muted/5 relative overflow-hidden group"
                   >
                     <Button
                       variant="ghost"
@@ -282,31 +289,29 @@ export function ResumeForm({
                         <Label>Empresa</Label>
                         <Input
                           {...register(`experiences.${i}.company`)}
-                          className="input-glow h-10 bg-background/50"
+                          className="input-glow h-10"
                         />
                       </div>
                       <div className="space-y-2">
                         <Label>Cargo</Label>
                         <Input
                           {...register(`experiences.${i}.position`)}
-                          className="input-glow h-10 bg-background/50"
+                          className="input-glow h-10"
                         />
                       </div>
                       <div className="space-y-2">
                         <Label>Início</Label>
                         <Input
                           {...register(`experiences.${i}.startDate`)}
-                          placeholder="Jan 2020"
-                          className="input-glow h-10 bg-background/50"
+                          className="input-glow h-10"
                         />
                       </div>
                       <div className="space-y-2">
                         <Label>Fim</Label>
                         <Input
                           {...register(`experiences.${i}.endDate`)}
-                          placeholder="Atualmente"
                           disabled={watch(`experiences.${i}.current`)}
-                          className="input-glow h-10 bg-background/50"
+                          className="input-glow h-10"
                         />
                       </div>
                       <div className="col-span-2 flex items-center gap-2">
@@ -316,18 +321,15 @@ export function ResumeForm({
                           {...register(`experiences.${i}.current`)}
                           className="rounded accent-primary"
                         />
-                        <Label
-                          htmlFor={`exp-cur-${i}`}
-                          className="text-xs font-medium"
-                        >
+                        <Label htmlFor={`exp-cur-${i}`} className="text-xs">
                           Trabalho atual
                         </Label>
                       </div>
                       <div className="col-span-2 space-y-2">
-                        <Label>Descrição (Markdown)</Label>
+                        <Label>Descrição</Label>
                         <Textarea
                           {...register(`experiences.${i}.description`)}
-                          className="min-h-[120px] input-glow text-sm bg-background/50"
+                          className="min-h-[100px] input-glow text-sm"
                         />
                       </div>
                     </CardContent>
@@ -335,7 +337,7 @@ export function ResumeForm({
                 ))}
                 <Button
                   variant="outline"
-                  className="w-full h-14 border-dashed border-2 bg-card/20 hover:bg-card/40 transition-all"
+                  className="w-full h-14 border-dashed border-2"
                   onClick={() =>
                     appendExp({
                       company: "",
@@ -357,7 +359,7 @@ export function ResumeForm({
                 {eduFields.map((field, i) => (
                   <Card
                     key={field.id}
-                    className="border-border/50 bg-card/30 relative group"
+                    className="border-border/50 bg-muted/5 relative group"
                   >
                     <Button
                       variant="ghost"
@@ -372,29 +374,21 @@ export function ResumeForm({
                         <Label>Instituição</Label>
                         <Input
                           {...register(`educations.${i}.school`)}
-                          className="input-glow h-10 bg-background/50"
+                          className="input-glow h-10"
                         />
                       </div>
                       <div className="space-y-2">
                         <Label>Grau</Label>
                         <Input
                           {...register(`educations.${i}.degree`)}
-                          className="input-glow h-10 bg-background/50"
+                          className="input-glow h-10"
                         />
                       </div>
                       <div className="space-y-2">
                         <Label>Área</Label>
                         <Input
                           {...register(`educations.${i}.field`)}
-                          className="input-glow h-10 bg-background/50"
-                        />
-                      </div>
-                      <div className="col-span-2 space-y-2">
-                        <Label>Data de Graduação</Label>
-                        <Input
-                          {...register(`educations.${i}.graduationDate`)}
-                          placeholder="2019"
-                          className="input-glow h-10 bg-background/50"
+                          className="input-glow h-10"
                         />
                       </div>
                     </CardContent>
@@ -402,7 +396,7 @@ export function ResumeForm({
                 ))}
                 <Button
                   variant="outline"
-                  className="w-full h-14 border-dashed border-2 bg-card/20 hover:bg-card/40 transition-all"
+                  className="w-full h-14 border-dashed border-2"
                   onClick={() =>
                     appendEdu({
                       school: "",
@@ -422,7 +416,7 @@ export function ResumeForm({
                 {projFields.map((field, i) => (
                   <Card
                     key={field.id}
-                    className="border-border/50 bg-card/30 relative group"
+                    className="border-border/50 bg-muted/5 relative group"
                   >
                     <Button
                       variant="ghost"
@@ -437,7 +431,7 @@ export function ResumeForm({
                         <Label>Nome do Projeto</Label>
                         <Input
                           {...register(`projects.${i}.name`)}
-                          className="input-glow h-10 bg-background/50"
+                          className="input-glow h-10"
                         />
                       </div>
                       <div className="grid grid-cols-2 gap-4">
@@ -445,14 +439,14 @@ export function ResumeForm({
                           <Label>GitHub</Label>
                           <Input
                             {...register(`projects.${i}.github`)}
-                            className="input-glow h-10 bg-background/50"
+                            className="input-glow h-10"
                           />
                         </div>
                         <div className="space-y-2">
                           <Label>Deploy</Label>
                           <Input
                             {...register(`projects.${i}.deploy`)}
-                            className="input-glow h-10 bg-background/50"
+                            className="input-glow h-10"
                           />
                         </div>
                       </div>
@@ -460,7 +454,7 @@ export function ResumeForm({
                         <Label>Descrição</Label>
                         <Textarea
                           {...register(`projects.${i}.description`)}
-                          className="min-h-[100px] input-glow text-sm bg-background/50"
+                          className="min-h-[80px] input-glow text-sm"
                         />
                       </div>
                     </CardContent>
@@ -468,7 +462,7 @@ export function ResumeForm({
                 ))}
                 <Button
                   variant="outline"
-                  className="w-full h-14 border-dashed border-2 bg-card/20 hover:bg-card/40 transition-all"
+                  className="w-full h-14 border-dashed border-2"
                   onClick={() =>
                     appendProj({
                       name: "",
@@ -482,12 +476,189 @@ export function ResumeForm({
                 </Button>
               </div>
             )}
+
+            {activeStep === 5 && (
+              <div className="space-y-10">
+                {/* Idiomas */}
+                <div className="space-y-4">
+                  <div className="flex items-center gap-2">
+                    <Translate size={20} className="text-primary" />{" "}
+                    <Label className="text-lg font-bold">Idiomas</Label>
+                  </div>
+                  <div className="grid gap-4">
+                    {langFields.map((field, i) => (
+                      <div key={field.id} className="flex gap-2 items-end">
+                        <div className="flex-1 space-y-2">
+                          <Label className="text-xs">Idioma</Label>
+                          <Input
+                            {...register(`languages.${i}.name`)}
+                            className="h-9"
+                            placeholder="Inglês"
+                          />
+                        </div>
+                        <div className="w-40 space-y-2">
+                          <Label className="text-xs">Nível</Label>
+                          <select
+                            {...register(`languages.${i}.level`)}
+                            className="w-full h-9 rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                          >
+                            <option value="Básico">Básico</option>
+                            <option value="Intermediário">Intermediário</option>
+                            <option value="Avançado">Avançado</option>
+                            <option value="Fluente">Fluente</option>
+                            <option value="Nativo">Nativo</option>
+                          </select>
+                        </div>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="text-destructive h-9 w-9"
+                          onClick={() => removeLang(i)}
+                        >
+                          <Trash size={16} />
+                        </Button>
+                      </div>
+                    ))}
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="w-fit"
+                      onClick={() => appendLang({ name: "", level: "Básico" })}
+                    >
+                      <Plus weight="bold" className="mr-2" /> Adicionar Idioma
+                    </Button>
+                  </div>
+                </div>
+
+                {/* Certificações */}
+                <div className="space-y-4">
+                  <div className="flex items-center gap-2">
+                    <Certificate size={20} className="text-primary" />{" "}
+                    <Label className="text-lg font-bold">Certificações</Label>
+                  </div>
+                  <div className="grid gap-4">
+                    {certFields.map((field, i) => (
+                      <div
+                        key={field.id}
+                        className="flex gap-2 items-end border-b pb-4 border-dashed border-border/50"
+                      >
+                        <div className="flex-1 space-y-2">
+                          <Label className="text-xs">Certificado</Label>
+                          <Input
+                            {...register(`certifications.${i}.name`)}
+                            className="h-9"
+                          />
+                        </div>
+                        <div className="flex-1 space-y-2">
+                          <Label className="text-xs">Emissor</Label>
+                          <Input
+                            {...register(`certifications.${i}.issuer`)}
+                            className="h-9"
+                          />
+                        </div>
+                        <div className="w-32 space-y-2">
+                          <Label className="text-xs">Data</Label>
+                          <Input
+                            {...register(`certifications.${i}.date`)}
+                            className="h-9"
+                            placeholder="2023"
+                          />
+                        </div>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="text-destructive h-9 w-9"
+                          onClick={() => removeCert(i)}
+                        >
+                          <Trash size={16} />
+                        </Button>
+                      </div>
+                    ))}
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="w-fit"
+                      onClick={() =>
+                        appendCert({ name: "", issuer: "", date: "" })
+                      }
+                    >
+                      <Plus weight="bold" className="mr-2" /> Adicionar
+                      Certificação
+                    </Button>
+                  </div>
+                </div>
+
+                {/* Trabalho Voluntário */}
+                <div className="space-y-4">
+                  <div className="flex items-center gap-2">
+                    <HandHeart size={20} className="text-primary" />{" "}
+                    <Label className="text-lg font-bold">Voluntariado</Label>
+                  </div>
+                  <div className="grid gap-4">
+                    {volFields.map((field, i) => (
+                      <Card
+                        key={field.id}
+                        className="border-border/50 bg-muted/5 relative overflow-hidden group"
+                      >
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="absolute top-2 right-2 text-destructive opacity-0 group-hover:opacity-100"
+                          onClick={() => removeVol(i)}
+                        >
+                          <Trash size={16} />
+                        </Button>
+                        <CardContent className="p-4 pt-8 grid grid-cols-2 gap-4">
+                          <div className="space-y-2">
+                            <Label className="text-xs">Organização</Label>
+                            <Input
+                              {...register(`volunteering.${i}.organization`)}
+                              className="h-9"
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <Label className="text-xs">Papel</Label>
+                            <Input
+                              {...register(`volunteering.${i}.role`)}
+                              className="h-9"
+                            />
+                          </div>
+                          <div className="col-span-2 space-y-2">
+                            <Label className="text-xs">Descrição</Label>
+                            <Textarea
+                              {...register(`volunteering.${i}.description`)}
+                              className="text-xs min-h-[60px]"
+                            />
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="w-fit"
+                      onClick={() =>
+                        appendVol({
+                          organization: "",
+                          role: "",
+                          startDate: "",
+                          current: false,
+                          description: "",
+                        })
+                      }
+                    >
+                      <Plus weight="bold" className="mr-2" /> Adicionar
+                      Voluntariado
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            )}
           </motion.div>
         </AnimatePresence>
       </div>
 
-      {/* Navigation Footer */}
-      <div className="p-6 border-t bg-background/80 backdrop-blur-md shrink-0 flex justify-between items-center">
+      <div className="p-6 border-t bg-background shrink-0 flex justify-between items-center">
         <Button
           variant="ghost"
           disabled={activeStep === 0}
@@ -501,7 +672,7 @@ export function ResumeForm({
             activeStep < STEPS.length - 1 && setActiveStep((s) => s + 1)
           }
           disabled={activeStep === STEPS.length - 1}
-          className="rounded-xl px-8 shadow-lg shadow-primary/10 transition-transform hover:scale-105 active:scale-95"
+          className="rounded-xl px-8 shadow-lg transition-transform hover:scale-105 active:scale-95"
         >
           Próximo <CaretRight weight="bold" className="ml-2" />
         </Button>
