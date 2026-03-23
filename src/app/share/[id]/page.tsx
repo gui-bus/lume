@@ -1,5 +1,6 @@
-import { getResume } from "@/app/actions/resume-actions";
+import { getResume, incrementView } from "@/app/actions/resume-actions";
 import { ResumeView } from "@/components/preview/ResumeView";
+import { PortfolioView } from "@/components/preview/PortfolioView";
 import { ResumeData } from "@/types/resume";
 import { notFound } from "next/navigation";
 
@@ -15,7 +16,23 @@ export default async function SharePage({ params }: SharePageProps) {
     notFound();
   }
 
+  // Incrementa a visualização de forma assíncrona (fire and forget)
+  incrementView(id);
+
   const data = resume.content as unknown as ResumeData;
+
+  if (resume.isPortfolio) {
+    return (
+      <main className="min-h-screen w-full bg-background overflow-x-hidden">
+        <PortfolioView data={data} colorTheme={resume.colorTheme} />
+        <div className="flex justify-center pb-8 animate-in fade-in duration-1000">
+          <div className="bg-muted/50 border px-6 py-2.5 rounded-full text-[11px] font-black uppercase tracking-[0.2em] text-muted-foreground">
+            Criado com <span className="text-primary">Lume</span>
+          </div>
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main className="min-h-screen w-full bg-muted/30 py-20 canvas-grid overflow-x-hidden">

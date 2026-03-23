@@ -17,6 +17,10 @@ import {
   FileArrowUp,
   FileArrowDown,
   ShieldCheck,
+  LinkedinLogo,
+  ChartLineUp,
+  Browser,
+  MagicWand,
 } from "@phosphor-icons/react";
 import {
   Popover,
@@ -24,13 +28,18 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { toast } from "sonner";
-import { saveResume } from "@/app/actions/resume-actions";
+import { saveResume, getResume } from "@/app/actions/resume-actions";
 import { useTheme } from "next-themes";
 import { motion, AnimatePresence } from "framer-motion";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import { ResumePDF } from "@/components/pdf/ResumePDF";
 import { cn } from "@/lib/utils";
 import { validateATS, ATSResult } from "@/lib/validations/ats-validator";
+import {
+  checkStrongVerbs,
+  SpellCheckResult,
+} from "@/lib/validations/spellchecker";
+import { parseLinkedInPDF } from "@/lib/validations/linkedin-parser";
 
 const defaultData: ResumeData = {
   personalInfo: {
@@ -70,6 +79,9 @@ export default function Home() {
   const [isSyncing, setIsSyncing] = useState(false);
   const [zoom, setZoom] = useState(0.8);
   const [atsResult, setAtsResult] = useState<ATSResult | null>(null);
+  const [spellResult, setSpellResult] = useState<SpellCheckResult | null>(null);
+  const [isPortfolio, setIsPortfolio] = useState(false);
+  const [analytics, setAnalytics] = useState({ views: 0, downloads: 0 });
 
   const { theme, setTheme } = useTheme();
 
@@ -81,18 +93,26 @@ export default function Home() {
     if (saved) {
       try {
         setData(JSON.parse(saved));
-      } catch (e) {
-        console.error(e);
-      }
+      } catch (e) {}
     }
-    if (savedId) setResumeId(savedId);
     if (savedColor) setColorTheme(savedColor);
+
+    if (savedId) {
+      setResumeId(savedId);
+      getResume(savedId).then((res) => {
+        if (res) {
+          setIsPortfolio(res.isPortfolio);
+          setAnalytics({ views: res.views, downloads: res.downloads });
+        }
+      });
+    }
   }, []);
 
   useEffect(() => {
     if (mounted) {
       localStorage.setItem("resume-color", colorTheme);
       setAtsResult(validateATS(data));
+      setSpellResult(checkStrongVerbs(data));
     }
   }, [colorTheme, data, mounted]);
 
@@ -106,9 +126,8 @@ export default function Home() {
     const reader = new FileReader();
     reader.onload = (event) => {
       try {
-        const json = JSON.parse(event.target?.result as string);
-        setData(json);
-        toast.success("Dados importados com sucesso");
+        setData(JSON.parse(event.target?.result as string));
+        toast.success("JSON importado com sucesso!");
       } catch (error) {
         toast.error("Erro ao ler o arquivo JSON");
       }
@@ -116,9 +135,28 @@ export default function Home() {
     reader.readAsText(file);
   };
 
+  const handleLinkedInImport = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    try {
+      toast.info("Processando PDF do LinkedIn...");
+      const partialData = await parseLinkedInPDF(file);
+      setData((prev) => ({
+        ...prev,
+        personalInfo: { ...prev.personalInfo, ...partialData.personalInfo },
+      }));
+      toast.success("Dados do LinkedIn extraídos!");
+    } catch (error) {
+      toast.error("Erro ao processar o PDF do LinkedIn.");
+    }
+  };
+
   const handleExportJSON = () => {
-    const jsonString = JSON.stringify(data, null, 2);
-    const blob = new Blob([jsonString], { type: "application/json" });
+    const blob = new Blob([JSON.stringify(data, null, 2)], {
+      type: "application/json",
+    });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
@@ -127,23 +165,39 @@ export default function Home() {
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
-    toast.success("JSON exportado com sucesso");
+    toast.success("JSON exportado!");
   };
 
   const handleShare = async () => {
     try {
       setIsSyncing(true);
-      const result = await saveResume(resumeId, data);
+      const result = await saveResume(
+        resumeId,
+        data,
+        "Meu Currículo",
+        isPortfolio,
+      );
       setIsSyncing(false);
-
-      const shareUrl = `${window.location.origin}/share/${result.id}`;
-      await navigator.clipboard.writeText(shareUrl);
       setResumeId(result.id);
       localStorage.setItem("resume-id", result.id);
+      await navigator.clipboard.writeText(
+        `${window.location.origin}/share/${result.id}`,
+      );
       toast.success("Link copiado para a área de transferência!");
     } catch (error) {
       setIsSyncing(false);
-      toast.error("Falha ao gerar link de compartilhamento");
+      toast.error("Falha ao gerar link.");
+    }
+  };
+
+  const togglePortfolio = async () => {
+    const newValue = !isPortfolio;
+    setIsPortfolio(newValue);
+    if (resumeId) {
+      await saveResume(resumeId, data, "Meu Currículo", newValue);
+      toast.success(
+        newValue ? "Modo Portfólio Ativado!" : "Modo Currículo Padrão Ativado!",
+      );
     }
   };
 
@@ -151,7 +205,7 @@ export default function Home() {
 
   return (
     <main className="h-screen flex flex-col bg-background text-foreground overflow-hidden">
-      <header className="no-print h-16 border-b border-border/40 bg-background/50 backdrop-blur-xl flex items-center justify-between px-8 shrink-0 z-50">
+      <header className="no-print h-16 border-b border-border/40 bg-background/50 backdrop-blur-xl flex items-center justify-between px-6 shrink-0 z-50">
         <motion.div
           className="flex items-center group cursor-pointer select-none"
           whileHover="hover"
@@ -161,145 +215,227 @@ export default function Home() {
           </span>
         </motion.div>
 
-        <div className="flex items-center gap-6">
-          {atsResult && (
-            <Popover>
-              <PopoverTrigger asChild>
-                <button className="flex items-center gap-2 px-3 py-1.5 bg-primary/5 hover:bg-primary/10 border border-primary/10 rounded-full transition-all">
-                  <ShieldCheck
-                    size={18}
-                    weight="bold"
-                    className={cn(
-                      atsResult.score > 70
-                        ? "text-emerald-500"
-                        : "text-amber-500",
-                    )}
-                  />
-                  <span className="text-[11px] font-black uppercase tracking-widest">
-                    Score: {atsResult.score}
-                  </span>
-                </button>
-              </PopoverTrigger>
-              <PopoverContent
-                className="w-72 p-4 rounded-2xl bg-background/95 backdrop-blur-xl border border-border/40 shadow-2xl"
-                align="end"
-              >
-                <h3 className="text-xs font-black uppercase tracking-widest mb-3 flex items-center gap-2 text-primary">
-                  <ShieldCheck size={16} /> Análise de ATS
-                </h3>
-                <div className="space-y-3">
-                  {atsResult.suggestions.length > 0 ? (
-                    atsResult.suggestions.map((s, i) => (
+        <div className="flex items-center gap-4">
+          {/* Validador ATS e Spellchecker */}
+          <Popover>
+            <PopoverTrigger asChild>
+              <button className="flex items-center gap-2 px-3 py-1.5 bg-primary/5 hover:bg-primary/10 border border-primary/10 rounded-full transition-all">
+                <MagicWand
+                  size={16}
+                  weight="bold"
+                  className={cn(
+                    spellResult?.hasIssues
+                      ? "text-amber-500"
+                      : "text-emerald-500",
+                  )}
+                />
+                <ShieldCheck
+                  size={16}
+                  weight="bold"
+                  className={cn(
+                    (atsResult?.score || 0) > 70
+                      ? "text-emerald-500"
+                      : "text-amber-500",
+                  )}
+                />
+                <span className="text-[10px] font-black uppercase tracking-widest hidden md:inline">
+                  Score: {atsResult?.score}
+                </span>
+              </button>
+            </PopoverTrigger>
+            <PopoverContent
+              className="w-80 p-4 rounded-2xl bg-background/95 backdrop-blur-xl border border-border/40 shadow-2xl"
+              align="center"
+            >
+              <div className="space-y-4 max-h-[60vh] overflow-y-auto custom-scrollbar pr-2">
+                <div>
+                  <h3 className="text-[10px] font-black uppercase tracking-widest mb-2 flex items-center gap-2 text-primary">
+                    <ShieldCheck size={14} /> Otimização ATS
+                  </h3>
+                  <div className="space-y-2">
+                    {atsResult?.suggestions.map((s, i) => (
                       <div
                         key={i}
-                        className="text-[11px] text-muted-foreground flex gap-2"
+                        className="text-[10px] text-muted-foreground flex gap-2"
                       >
-                        <span className="text-primary font-bold">•</span> {s}
+                        <span className="text-amber-500">•</span>
+                        {s}
                       </div>
-                    ))
-                  ) : (
-                    <div className="text-[11px] text-emerald-500 font-bold text-center py-2">
-                      ✨ Seu currículo está otimizado!
-                    </div>
-                  )}
+                    ))}
+                  </div>
                 </div>
-              </PopoverContent>
-            </Popover>
-          )}
+                {spellResult?.hasIssues && (
+                  <div>
+                    <h3 className="text-[10px] font-black uppercase tracking-widest mb-2 flex items-center gap-2 text-primary mt-4 border-t pt-4">
+                      <MagicWand size={14} /> Corretor Estratégico
+                    </h3>
+                    <div className="space-y-3">
+                      {spellResult.suggestions.map((s, i) => (
+                        <div
+                          key={i}
+                          className="bg-muted/30 p-2 rounded-lg border border-border/50 text-[10px]"
+                        >
+                          <span className="font-bold text-foreground">
+                            {s.section}:
+                          </span>
+                          <span className="text-muted-foreground block italic mb-1">
+                            "{s.text}"
+                          </span>
+                          <span className="text-amber-500 font-bold block">
+                            Encontrado: {s.found.join(", ")}
+                          </span>
+                          <span className="text-emerald-500 font-bold">
+                            {s.recommendation}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </PopoverContent>
+          </Popover>
 
           <div className="h-4 w-[1px] bg-border/40" />
 
-          <div className="flex items-center gap-2">
-            <div className="relative">
+          {/* Importações / LinkedIn */}
+          <div className="flex items-center gap-1 bg-muted/20 rounded-full p-1 border border-border/30">
+            <div className="relative" title="Importar PDF do LinkedIn">
+              <input
+                type="file"
+                accept=".pdf"
+                onChange={handleLinkedInImport}
+                className="absolute inset-0 opacity-0 cursor-pointer"
+              />
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-7 w-7 rounded-full hover:bg-background/80 text-[#0A66C2]"
+              >
+                <LinkedinLogo size={16} weight="fill" />
+              </Button>
+            </div>
+            <div className="relative" title="Importar Backup JSON">
               <input
                 type="file"
                 accept=".json"
                 onChange={handleImportJSON}
                 className="absolute inset-0 opacity-0 cursor-pointer"
-                title="Importar JSON"
               />
               <Button
                 variant="ghost"
                 size="icon"
-                className="rounded-full"
-                title="Importar JSON"
+                className="h-7 w-7 rounded-full hover:bg-background/80"
               >
-                <FileArrowUp size={20} weight="duotone" />
+                <FileArrowUp size={16} />
               </Button>
             </div>
-
             <Button
               variant="ghost"
               size="icon"
               onClick={handleExportJSON}
-              className="rounded-full"
-              title="Exportar JSON"
+              className="h-7 w-7 rounded-full hover:bg-background/80"
+              title="Exportar Backup JSON"
             >
-              <FileArrowDown size={20} weight="duotone" />
+              <FileArrowDown size={16} />
             </Button>
+          </div>
 
+          {/* Share & Analytics */}
+          <div className="flex items-center gap-1 bg-muted/20 rounded-full p-1 border border-border/30">
             <Button
               variant="ghost"
               size="icon"
               onClick={handleShare}
-              className="rounded-full"
-              title="Compartilhar link público"
+              className="h-7 w-7 rounded-full hover:bg-background/80"
+              title="Gerar Link Público"
             >
-              <ShareNetwork size={20} weight="duotone" />
+              <ShareNetwork size={16} />
+            </Button>
+            {resumeId && (
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-7 w-7 rounded-full hover:bg-background/80"
+                    title="Analytics"
+                  >
+                    <ChartLineUp size={16} className="text-emerald-500" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent
+                  className="w-56 p-4 rounded-2xl bg-background/95 backdrop-blur-xl border border-border/40 shadow-2xl"
+                  align="center"
+                >
+                  <h3 className="text-[10px] font-black uppercase tracking-widest mb-3 text-muted-foreground text-center">
+                    Analytics do Link
+                  </h3>
+                  <div className="grid grid-cols-2 gap-2 text-center">
+                    <div className="bg-muted/30 rounded-xl p-3 border border-border/50">
+                      <span className="block text-2xl font-black text-primary">
+                        {analytics.views}
+                      </span>
+                      <span className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground">
+                        Views
+                      </span>
+                    </div>
+                    <div className="bg-muted/30 rounded-xl p-3 border border-border/50">
+                      <span className="block text-2xl font-black text-emerald-500">
+                        {analytics.downloads}
+                      </span>
+                      <span className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground">
+                        Downloads
+                      </span>
+                    </div>
+                  </div>
+                </PopoverContent>
+              </Popover>
+            )}
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={togglePortfolio}
+              className={cn(
+                "h-7 w-7 rounded-full hover:bg-background/80",
+                isPortfolio && "bg-primary/20 text-primary",
+              )}
+              title={
+                isPortfolio
+                  ? "Modo Portfólio Ativado"
+                  : "Ativar Modo Portfólio no Link"
+              }
+            >
+              <Browser size={16} weight={isPortfolio ? "fill" : "regular"} />
             </Button>
           </div>
 
           <div className="h-4 w-[1px] bg-border/40" />
 
-          <div className="hidden md:flex items-center bg-muted/20 rounded-full px-1 py-1 border border-border/30">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setZoom((prev) => Math.max(0.4, prev - 0.1))}
-              className="h-7 w-7 rounded-full hover:bg-background/80"
-            >
-              <MagnifyingGlassMinus size={14} weight="bold" />
-            </Button>
-            <span className="text-[10px] font-black w-10 text-center text-muted-foreground/70 tracking-tighter">
-              {Math.round(zoom * 100)}%
-            </span>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setZoom((prev) => Math.min(1.2, prev + 0.1))}
-              className="h-7 w-7 rounded-full hover:bg-background/80"
-            >
-              <MagnifyingGlassPlus size={14} weight="bold" />
-            </Button>
-          </div>
-
-          <div className="flex items-center gap-3">
+          {/* Theme & Export */}
+          <div className="flex items-center gap-2">
             <Button
               variant="ghost"
               size="icon"
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              className="rounded-full hover:bg-muted/50 transition-colors"
+              className="rounded-full"
             >
-              {theme === "dark" ? (
-                <Sun size={20} weight="duotone" />
-              ) : (
-                <Moon size={20} weight="duotone" />
-              )}
+              {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
             </Button>
 
             <Popover>
               <PopoverTrigger asChild>
                 <Button
-                  variant="ghost"
+                  variant="outline"
                   size="sm"
-                  className="gap-2 rounded-full h-9 px-3 hover:bg-muted/50"
+                  className="gap-2 rounded-full h-8 px-3"
                 >
                   <div
-                    className="w-3.5 h-3.5 rounded-full border border-black/5 shadow-sm"
+                    className="w-3 h-3 rounded-full shadow-sm"
                     style={{ backgroundColor: colorTheme }}
                   />
-                  <span className="text-xs font-bold tracking-tight">
-                    Estilo
+                  <span className="text-[10px] font-bold uppercase tracking-wider">
+                    Cor
                   </span>
                 </Button>
               </PopoverTrigger>
@@ -312,7 +448,7 @@ export default function Home() {
                     <button
                       key={color}
                       className={cn(
-                        "w-9 h-9 rounded-full border-2 transition-all hover:scale-110 active:scale-90",
+                        "w-9 h-9 rounded-full border-2 transition-all hover:scale-110",
                         colorTheme === color
                           ? "border-primary scale-105"
                           : "border-transparent",
@@ -334,11 +470,11 @@ export default function Home() {
                   {({ loading }) => (
                     <Button
                       size="sm"
-                      className="gap-2 rounded-full px-5 h-9 font-bold shadow-lg shadow-primary/5 hover:shadow-primary/10 transition-all active:scale-95"
+                      className="gap-2 rounded-full px-5 h-8 text-xs font-bold shadow-lg shadow-primary/5 active:scale-95 transition-all"
                       disabled={loading}
                     >
-                      <Printer size={18} weight="bold" />
-                      <span>{loading ? "Gerando..." : "Exportar PDF"}</span>
+                      <Printer size={16} weight="bold" />
+                      {loading ? "..." : "PDF"}
                     </Button>
                   )}
                 </PDFDownloadLink>
@@ -370,7 +506,7 @@ export default function Home() {
                   <ArrowsClockwise
                     size={12}
                     className="animate-spin text-primary"
-                  />
+                  />{" "}
                   Sincronizando...
                 </motion.div>
               ) : (
@@ -380,8 +516,7 @@ export default function Home() {
                   animate={{ opacity: 1, y: 0 }}
                   className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-emerald-600 bg-background/90 backdrop-blur-md border border-emerald-500/20 px-4 py-2 rounded-full shadow-sm"
                 >
-                  <CloudCheck size={16} weight="bold" />
-                  Salvo Localmente
+                  <CloudCheck size={16} weight="bold" /> Salvo
                 </motion.div>
               )}
             </AnimatePresence>
@@ -389,6 +524,28 @@ export default function Home() {
         </div>
 
         <div className="hidden lg:flex flex-1 bg-muted/5 relative overflow-hidden items-center justify-center">
+          <div className="absolute top-4 right-8 z-50 flex items-center bg-muted/20 rounded-full px-1 py-1 border border-border/30 backdrop-blur-md">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setZoom((prev) => Math.max(0.4, prev - 0.1))}
+              className="h-7 w-7 rounded-full hover:bg-background/80"
+            >
+              <MagnifyingGlassMinus size={14} weight="bold" />
+            </Button>
+            <span className="text-[10px] font-black w-10 text-center text-muted-foreground/70 tracking-tighter">
+              {Math.round(zoom * 100)}%
+            </span>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setZoom((prev) => Math.min(1.2, prev + 0.1))}
+              className="h-7 w-7 rounded-full hover:bg-background/80"
+            >
+              <MagnifyingGlassPlus size={14} weight="bold" />
+            </Button>
+          </div>
+
           <div className="absolute inset-0 overflow-auto custom-scrollbar flex items-start justify-center p-12 canvas-grid">
             <motion.div
               animate={{ scale: zoom }}
@@ -399,14 +556,6 @@ export default function Home() {
                 <ResumeView data={data} colorTheme={colorTheme} />
               </div>
             </motion.div>
-          </div>
-
-          <div className="absolute bottom-8 right-8 flex items-center gap-2 px-4 py-2 bg-background/50 backdrop-blur-md border border-border/50 rounded-full text-[11px] font-medium text-muted-foreground shadow-xl">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
-            </span>
-            Visualização em Tempo Real
           </div>
         </div>
       </div>
