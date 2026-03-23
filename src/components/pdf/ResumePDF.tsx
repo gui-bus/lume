@@ -11,27 +11,28 @@ import { ResumeData } from "@/types/resume";
 
 const styles = StyleSheet.create({
   page: {
-    padding: "20mm",
+    padding: "25mm",
     backgroundColor: "#FFFFFF",
     fontFamily: "Helvetica",
+    color: "#1e293b",
   },
   header: {
-    marginBottom: 15,
+    marginBottom: 24,
     borderBottomWidth: 2,
-    paddingBottom: 20,
+    paddingBottom: 24,
   },
   name: {
-    fontSize: 32,
-    fontWeight: 900,
+    fontSize: 30,
+    fontWeight: "bold",
     textTransform: "uppercase",
-    letterSpacing: -1.5,
+    letterSpacing: -1,
     marginBottom: 8,
   },
   contactRow: {
     flexDirection: "row",
     flexWrap: "wrap",
     gap: 15,
-    marginBottom: 10,
+    marginBottom: 12,
   },
   contactText: {
     fontSize: 8.5,
@@ -46,54 +47,49 @@ const styles = StyleSheet.create({
     textDecoration: "none",
     fontWeight: "bold",
     textTransform: "uppercase",
-    letterSpacing: 0.5,
   },
   summary: {
     fontSize: 10,
     lineHeight: 1.5,
     color: "#334155",
-    fontWeight: "medium",
+    marginTop: 8,
   },
-  section: {
-    marginTop: 25,
-  },
-  sectionHeader: {
-    flexDirection: "row",
-    alignItems: "center",
+  sectionTitleBox: {
     borderBottomWidth: 1,
-    paddingBottom: 3,
-    marginBottom: 15,
+    paddingBottom: 4,
+    marginBottom: 16,
+    marginTop: 8,
   },
   sectionTitle: {
     fontSize: 10.5,
-    fontWeight: 900,
+    fontWeight: "bold",
     textTransform: "uppercase",
     letterSpacing: 1.5,
   },
   item: {
-    marginBottom: 18,
+    marginBottom: 24,
   },
-  itemMain: {
+  itemHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "baseline",
-    marginBottom: 2,
+    marginBottom: 4,
   },
   itemTitle: {
     fontSize: 11.5,
     fontWeight: "bold",
-    color: "#0F172A",
+    color: "#0f172a",
   },
   itemDate: {
     fontSize: 7.5,
-    fontWeight: 900,
-    color: "#64748B",
+    fontWeight: "bold",
+    color: "#64748b",
     textTransform: "uppercase",
   },
-  itemSub: {
+  itemSubHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 4,
+    marginBottom: 6,
   },
   company: {
     fontSize: 10.5,
@@ -102,7 +98,7 @@ const styles = StyleSheet.create({
   },
   location: {
     fontSize: 8.5,
-    color: "#94A3B8",
+    color: "#94a3b8",
     fontStyle: "italic",
   },
   description: {
@@ -126,8 +122,7 @@ const styles = StyleSheet.create({
     color: "#334155",
     textTransform: "uppercase",
   },
-  // Disposição lado a lado para idiomas e certificações
-  horizontalList: {
+  languageList: {
     flexDirection: "row",
     flexWrap: "wrap",
     gap: 25,
@@ -144,25 +139,15 @@ const styles = StyleSheet.create({
   langLevel: {
     fontSize: 7.5,
     color: "#64748B",
-    fontWeight: 900,
+    fontWeight: "bold",
     textTransform: "uppercase",
     marginTop: 1,
-  },
-  projectHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 4,
-  },
-  projectLinks: {
-    flexDirection: "row",
-    gap: 10,
   },
 });
 
 export const ResumePDF = ({
   data,
-  colorTheme = "#000000",
+  colorTheme = "#18181b",
 }: {
   data: ResumeData;
   colorTheme?: string;
@@ -178,13 +163,15 @@ export const ResumePDF = ({
     volunteering,
   } = data;
 
-  // Cor de borda suave (30% opacidade aproximada)
   const softBorderColor = colorTheme + "4D";
 
   return (
-    <Document title={`Curriculo - ${personalInfo.name}`} author="Lume">
+    <Document
+      title={`Currículo - ${personalInfo.name || "Lume"}`}
+      author="Lume"
+    >
       <Page size="A4" style={styles.page}>
-        {/* Header */}
+        {/* Cabeçalho */}
         <View style={[styles.header, { borderBottomColor: colorTheme }]}>
           <Text style={[styles.name, { color: colorTheme }]}>
             {personalInfo.name || "Seu Nome"}
@@ -197,9 +184,7 @@ export const ResumePDF = ({
               <Text style={styles.contactText}>{personalInfo.phone}</Text>
             )}
             {personalInfo.location && (
-              <Text style={styles.contactText}>
-                {personalInfo.location.toUpperCase()}
-              </Text>
+              <Text style={styles.contactText}>{personalInfo.location}</Text>
             )}
             {personalInfo.linkedin && (
               <Link style={styles.link} src={personalInfo.linkedin}>
@@ -218,11 +203,11 @@ export const ResumePDF = ({
         </View>
 
         {/* Experiência */}
-        {experiences && experiences.length > 0 && (
-          <View style={styles.section}>
+        {experiences?.length > 0 && (
+          <View wrap={false}>
             <View
               style={[
-                styles.sectionHeader,
+                styles.sectionTitleBox,
                 { borderBottomColor: softBorderColor },
               ]}
             >
@@ -232,13 +217,13 @@ export const ResumePDF = ({
             </View>
             {experiences.map((exp, i) => (
               <View key={i} style={styles.item} wrap={false}>
-                <View style={styles.itemMain}>
+                <View style={styles.itemHeader}>
                   <Text style={styles.itemTitle}>{exp.position}</Text>
                   <Text style={styles.itemDate}>
                     {exp.startDate} — {exp.current ? "Presente" : exp.endDate}
                   </Text>
                 </View>
-                <View style={styles.itemSub}>
+                <View style={styles.itemSubHeader}>
                   <Text style={styles.company}>{exp.company}</Text>
                   {exp.location && (
                     <Text style={styles.location}>{exp.location}</Text>
@@ -255,11 +240,11 @@ export const ResumePDF = ({
         )}
 
         {/* Educação */}
-        {educations && educations.length > 0 && (
-          <View style={styles.section}>
+        {educations?.length > 0 && (
+          <View wrap={false}>
             <View
               style={[
-                styles.sectionHeader,
+                styles.sectionTitleBox,
                 { borderBottomColor: softBorderColor },
               ]}
             >
@@ -268,8 +253,8 @@ export const ResumePDF = ({
               </Text>
             </View>
             {educations.map((edu, i) => (
-              <View key={i} style={styles.item} wrap={false}>
-                <View style={styles.itemMain}>
+              <View key={i} style={{ marginBottom: 16 }} wrap={false}>
+                <View style={styles.itemHeader}>
                   <Text style={styles.itemTitle}>
                     {edu.degree} em {edu.field}
                   </Text>
@@ -281,36 +266,12 @@ export const ResumePDF = ({
           </View>
         )}
 
-        {/* Idiomas - Lado a Lado como no Preview */}
-        {languages && languages.length > 0 && (
-          <View style={styles.section}>
-            <View
-              style={[
-                styles.sectionHeader,
-                { borderBottomColor: softBorderColor },
-              ]}
-            >
-              <Text style={[styles.sectionTitle, { color: colorTheme }]}>
-                Idiomas
-              </Text>
-            </View>
-            <View style={styles.horizontalList}>
-              {languages.map((lang, i) => (
-                <View key={i} style={styles.languageItem}>
-                  <Text style={styles.langName}>{lang.name}</Text>
-                  <Text style={styles.langLevel}>{lang.level}</Text>
-                </View>
-              ))}
-            </View>
-          </View>
-        )}
-
         {/* Skills */}
-        {skills && skills.length > 0 && (
-          <View style={styles.section}>
+        {skills?.length > 0 && (
+          <View wrap={false}>
             <View
               style={[
-                styles.sectionHeader,
+                styles.sectionTitleBox,
                 { borderBottomColor: softBorderColor },
               ]}
             >
@@ -319,21 +280,45 @@ export const ResumePDF = ({
               </Text>
             </View>
             <View style={styles.skillsGrid}>
-              {skills.map((skill, i) => (
+              {skills.map((s, i) => (
                 <Text key={i} style={styles.skillTag}>
-                  {skill}
+                  {s}
                 </Text>
               ))}
             </View>
           </View>
         )}
 
-        {/* Certificações */}
-        {certifications && certifications.length > 0 && (
-          <View style={styles.section}>
+        {/* Idiomas */}
+        {languages?.length > 0 && (
+          <View wrap={false} style={{ marginTop: 10 }}>
             <View
               style={[
-                styles.sectionHeader,
+                styles.sectionTitleBox,
+                { borderBottomColor: softBorderColor },
+              ]}
+            >
+              <Text style={[styles.sectionTitle, { color: colorTheme }]}>
+                Idiomas
+              </Text>
+            </View>
+            <View style={styles.languageList}>
+              {languages.map((l, i) => (
+                <View key={i} style={styles.languageItem}>
+                  <Text style={styles.langName}>{l.name}</Text>
+                  <Text style={styles.langLevel}>{l.level}</Text>
+                </View>
+              ))}
+            </View>
+          </View>
+        )}
+
+        {/* Certificações */}
+        {certifications?.length > 0 && (
+          <View wrap={false} style={{ marginTop: 10 }}>
+            <View
+              style={[
+                styles.sectionTitleBox,
                 { borderBottomColor: softBorderColor },
               ]}
             >
@@ -341,33 +326,51 @@ export const ResumePDF = ({
                 Certificações
               </Text>
             </View>
-            <View style={styles.horizontalList}>
-              {certifications.map((cert, i) => (
-                <View key={i} style={{ width: "45%" }}>
-                  <Text
-                    style={{
-                      fontSize: 10.5,
-                      fontWeight: "bold",
-                      color: "#0F172A",
-                    }}
-                  >
-                    {cert.name}
-                  </Text>
-                  <Text style={{ fontSize: 8, color: "#64748B" }}>
-                    {cert.issuer} • {cert.date}
-                  </Text>
+            {certifications.map((cert, i) => (
+              <View key={i} style={{ marginBottom: 12 }}>
+                <View style={styles.itemHeader}>
+                  <Text style={styles.itemTitle}>{cert.name}</Text>
+                  <Text style={styles.itemDate}>{cert.date}</Text>
                 </View>
-              ))}
+                <Text style={styles.company}>{cert.issuer}</Text>
+              </View>
+            ))}
+          </View>
+        )}
+
+        {/* Voluntariado */}
+        {volunteering?.length > 0 && (
+          <View wrap={false} style={{ marginTop: 10 }}>
+            <View
+              style={[
+                styles.sectionTitleBox,
+                { borderBottomColor: softBorderColor },
+              ]}
+            >
+              <Text style={[styles.sectionTitle, { color: colorTheme }]}>
+                Voluntariado
+              </Text>
             </View>
+            {volunteering.map((vol, i) => (
+              <View key={i} style={{ marginBottom: 12 }}>
+                <View style={styles.itemHeader}>
+                  <Text style={styles.itemTitle}>{vol.organization}</Text>
+                  <Text style={styles.itemDate}>{vol.role}</Text>
+                </View>
+                {vol.description && (
+                  <Text style={styles.description}>{vol.description}</Text>
+                )}
+              </View>
+            ))}
           </View>
         )}
 
         {/* Projetos */}
-        {projects && projects.length > 0 && (
-          <View style={styles.section}>
+        {projects?.length > 0 && (
+          <View wrap={false} style={{ marginTop: 10 }}>
             <View
               style={[
-                styles.sectionHeader,
+                styles.sectionTitleBox,
                 { borderBottomColor: softBorderColor },
               ]}
             >
@@ -377,19 +380,11 @@ export const ResumePDF = ({
             </View>
             {projects.map((proj, i) => (
               <View key={i} style={styles.item} wrap={false}>
-                <View style={styles.projectHeader}>
+                <View style={styles.itemHeader}>
                   <Text style={styles.itemTitle}>{proj.name}</Text>
-                  <View style={styles.projectLinks}>
-                    {proj.github && (
-                      <Link style={styles.link} src={proj.github}>
-                        REPO GITHUB
-                      </Link>
-                    )}
-                    {proj.deploy && (
-                      <Link style={styles.link} src={proj.deploy}>
-                        LIVE DEMO
-                      </Link>
-                    )}
+                  <View style={{ flexDirection: "row", gap: 10 }}>
+                    {proj.github && <Text style={styles.link}>REPO</Text>}
+                    {proj.deploy && <Text style={styles.link}>LIVE</Text>}
                   </View>
                 </View>
                 {proj.description && (
