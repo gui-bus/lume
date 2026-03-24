@@ -154,9 +154,16 @@ export function ResumeForm({
     }),
   );
 
-  const { register, control, watch, reset } = useForm<ResumeData>({
+  const {
+    register,
+    control,
+    watch,
+    reset,
+    formState: { errors },
+  } = useForm<ResumeData>({
     resolver: zodResolver(ResumeSchema),
     defaultValues: initialData || defaultValues,
+    mode: "onChange",
   });
 
   const watchedData = watch();
@@ -385,8 +392,17 @@ export function ResumeForm({
                     <Input
                       {...register("personalInfo.name")}
                       placeholder={t("editor.personalInfo.fullNamePlaceholder")}
-                      className="input-glow h-12 bg-muted/20 border-border/50 font-bold"
+                      className={cn(
+                        "input-glow h-12 bg-muted/20 border-border/50 font-bold",
+                        errors.personalInfo?.name &&
+                          "border-destructive/50 focus-visible:ring-destructive/20",
+                      )}
                     />
+                    {errors.personalInfo?.name && (
+                      <span className="text-[10px] text-destructive font-bold uppercase tracking-widest ml-1">
+                        {errors.personalInfo.name.message}
+                      </span>
+                    )}
                   </div>
                   <div className="space-y-2.5">
                     <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
@@ -395,8 +411,17 @@ export function ResumeForm({
                     <Input
                       {...register("personalInfo.email")}
                       placeholder={t("editor.personalInfo.emailPlaceholder")}
-                      className="input-glow h-12 bg-muted/20 border-border/50"
+                      className={cn(
+                        "input-glow h-12 bg-muted/20 border-border/50",
+                        errors.personalInfo?.email &&
+                          "border-destructive/50 focus-visible:ring-destructive/20",
+                      )}
                     />
+                    {errors.personalInfo?.email && (
+                      <span className="text-[10px] text-destructive font-bold uppercase tracking-widest ml-1">
+                        {errors.personalInfo.email.message}
+                      </span>
+                    )}
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-6">
@@ -407,8 +432,17 @@ export function ResumeForm({
                     <Input
                       {...register("personalInfo.phone")}
                       placeholder={t("editor.personalInfo.phonePlaceholder")}
-                      className="input-glow h-12 bg-muted/20 border-border/50"
+                      className={cn(
+                        "input-glow h-12 bg-muted/20 border-border/50",
+                        errors.personalInfo?.phone &&
+                          "border-destructive/50 focus-visible:ring-destructive/20",
+                      )}
                     />
+                    {errors.personalInfo?.phone && (
+                      <span className="text-[10px] text-destructive font-bold uppercase tracking-widest ml-1">
+                        {errors.personalInfo.phone.message}
+                      </span>
+                    )}
                   </div>
                   <div className="space-y-2.5">
                     <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
@@ -417,8 +451,17 @@ export function ResumeForm({
                     <Input
                       {...register("personalInfo.location")}
                       placeholder={t("editor.personalInfo.locationPlaceholder")}
-                      className="input-glow h-12 bg-muted/20 border-border/50"
+                      className={cn(
+                        "input-glow h-12 bg-muted/20 border-border/50",
+                        errors.personalInfo?.location &&
+                          "border-destructive/50 focus-visible:ring-destructive/20",
+                      )}
                     />
+                    {errors.personalInfo?.location && (
+                      <span className="text-[10px] text-destructive font-bold uppercase tracking-widest ml-1">
+                        {errors.personalInfo.location.message}
+                      </span>
+                    )}
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-6">
@@ -428,8 +471,17 @@ export function ResumeForm({
                     </Label>
                     <Input
                       {...register("personalInfo.linkedin")}
-                      className="input-glow h-12 bg-muted/20 border-border/50"
+                      className={cn(
+                        "input-glow h-12 bg-muted/20 border-border/50",
+                        errors.personalInfo?.linkedin &&
+                          "border-destructive/50 focus-visible:ring-destructive/20",
+                      )}
                     />
+                    {errors.personalInfo?.linkedin && (
+                      <span className="text-[10px] text-destructive font-bold uppercase tracking-widest ml-1">
+                        {errors.personalInfo.linkedin.message}
+                      </span>
+                    )}
                   </div>
                   <div className="space-y-2.5">
                     <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
@@ -437,8 +489,17 @@ export function ResumeForm({
                     </Label>
                     <Input
                       {...register("personalInfo.website")}
-                      className="input-glow h-12 bg-muted/20 border-border/50"
+                      className={cn(
+                        "input-glow h-12 bg-muted/20 border-border/50",
+                        errors.personalInfo?.website &&
+                          "border-destructive/50 focus-visible:ring-destructive/20",
+                      )}
                     />
+                    {errors.personalInfo?.website && (
+                      <span className="text-[10px] text-destructive font-bold uppercase tracking-widest ml-1">
+                        {errors.personalInfo.website.message}
+                      </span>
+                    )}
                   </div>
                 </div>
                 <div className="space-y-2.5">
@@ -448,8 +509,17 @@ export function ResumeForm({
                   <Textarea
                     {...register("personalInfo.summary")}
                     placeholder={t("editor.personalInfo.summaryPlaceholder")}
-                    className="min-h-[150px] input-glow bg-muted/20 border-border/50 leading-relaxed py-4"
+                    className={cn(
+                      "min-h-[150px] input-glow bg-muted/20 border-border/50 leading-relaxed py-4",
+                      errors.personalInfo?.summary &&
+                        "border-destructive/50 focus-visible:ring-destructive/20",
+                    )}
                   />
+                  {errors.personalInfo?.summary && (
+                    <span className="text-[10px] text-destructive font-bold uppercase tracking-widest ml-1">
+                      {errors.personalInfo.summary.message}
+                    </span>
+                  )}
                 </div>
               </div>
             )}
@@ -470,8 +540,17 @@ export function ResumeForm({
                         : v,
                   })}
                   placeholder={t("editor.stack.placeholder")}
-                  className="min-h-[350px] input-glow text-xl font-mono leading-relaxed bg-muted/20 border-border/50 p-8"
+                  className={cn(
+                    "min-h-[350px] input-glow text-xl font-mono leading-relaxed bg-muted/20 border-border/50 p-8",
+                    errors.skills &&
+                      "border-destructive/50 focus-visible:ring-destructive/20",
+                  )}
                 />
+                {errors.skills && (
+                  <span className="text-[10px] text-destructive font-bold uppercase tracking-widest text-center block">
+                    {errors.skills.message}
+                  </span>
+                )}
                 <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest text-center">
                   {t("editor.stack.hint")}
                 </p>
@@ -497,26 +576,44 @@ export function ResumeForm({
                       >
                         <Card className="border-border/50 bg-muted/10 relative overflow-hidden group shadow-none hover:bg-muted/20 transition-all duration-500">
                           <CardContent className="p-8 pt-12 grid grid-cols-2 gap-6 text-left">
-                            <div className="space-y-2">
-                              <Label className="text-[10px] font-black uppercase tracking-widest">
+                            <div className="space-y-2 text-left">
+                              <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
                                 {t("editor.experience.company")}
                               </Label>
                               <Input
                                 {...register(`experiences.${i}.company`)}
-                                className="h-11 bg-background/50 border-border/50 font-bold"
+                                className={cn(
+                                  "h-11 bg-background/50 border-border/50 font-bold",
+                                  errors.experiences?.[i]?.company &&
+                                    "border-destructive/50 focus-visible:ring-destructive/20",
+                                )}
                               />
+                              {errors.experiences?.[i]?.company && (
+                                <span className="text-[10px] text-destructive font-bold uppercase tracking-widest ml-1">
+                                  {errors.experiences[i].company.message}
+                                </span>
+                              )}
                             </div>
-                            <div className="space-y-2">
-                              <Label className="text-[10px] font-black uppercase tracking-widest">
+                            <div className="space-y-2 text-left">
+                              <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
                                 {t("editor.experience.position")}
                               </Label>
                               <Input
                                 {...register(`experiences.${i}.position`)}
-                                className="h-11 bg-background/50 border-border/50"
+                                className={cn(
+                                  "h-11 bg-background/50 border-border/50",
+                                  errors.experiences?.[i]?.position &&
+                                    "border-destructive/50 focus-visible:ring-destructive/20",
+                                )}
                               />
+                              {errors.experiences?.[i]?.position && (
+                                <span className="text-[10px] text-destructive font-bold uppercase tracking-widest ml-1">
+                                  {errors.experiences[i].position.message}
+                                </span>
+                              )}
                             </div>
-                            <div className="space-y-2">
-                              <Label className="text-[10px] font-black uppercase tracking-widest">
+                            <div className="space-y-2 text-left">
+                              <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
                                 {t("editor.experience.startDate")}
                               </Label>
                               <Input
@@ -524,18 +621,36 @@ export function ResumeForm({
                                 placeholder={t(
                                   "editor.experience.placeholder.startDate",
                                 )}
-                                className="h-11 bg-background/50 border-border/50"
+                                className={cn(
+                                  "h-11 bg-background/50 border-border/50",
+                                  errors.experiences?.[i]?.startDate &&
+                                    "border-destructive/50 focus-visible:ring-destructive/20",
+                                )}
                               />
+                              {errors.experiences?.[i]?.startDate && (
+                                <span className="text-[10px] text-destructive font-bold uppercase tracking-widest ml-1">
+                                  {errors.experiences[i].startDate.message}
+                                </span>
+                              )}
                             </div>
-                            <div className="space-y-2">
-                              <Label className="text-[10px] font-black uppercase tracking-widest">
+                            <div className="space-y-2 text-left">
+                              <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
                                 {t("editor.experience.endDate")}
                               </Label>
                               <Input
                                 {...register(`experiences.${i}.endDate`)}
                                 disabled={watch(`experiences.${i}.current`)}
-                                className="h-11 bg-background/50 border-border/50"
+                                className={cn(
+                                  "h-11 bg-background/50 border-border/50",
+                                  errors.experiences?.[i]?.endDate &&
+                                    "border-destructive/50 focus-visible:ring-destructive/20",
+                                )}
                               />
+                              {errors.experiences?.[i]?.endDate && (
+                                <span className="text-[10px] text-destructive font-bold uppercase tracking-widest ml-1">
+                                  {errors.experiences[i].endDate.message}
+                                </span>
+                              )}
                             </div>
                             <div className="col-span-2 flex items-center gap-3 bg-background/30 p-3 rounded-lg border border-border/30">
                               <input
@@ -552,13 +667,22 @@ export function ResumeForm({
                               </Label>
                             </div>
                             <div className="col-span-2 space-y-2 text-left">
-                              <Label className="text-[10px] font-black uppercase tracking-widest">
+                              <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
                                 {t("editor.experience.description")}
                               </Label>
                               <Textarea
                                 {...register(`experiences.${i}.description`)}
-                                className="min-h-[150px] text-sm bg-background/50 border-border/50 leading-relaxed text-left"
+                                className={cn(
+                                  "min-h-[150px] text-sm bg-background/50 border-border/50 leading-relaxed text-left",
+                                  errors.experiences?.[i]?.description &&
+                                    "border-destructive/50 focus-visible:ring-destructive/20",
+                                )}
                               />
+                              {errors.experiences?.[i]?.description && (
+                                <span className="text-[10px] text-destructive font-bold uppercase tracking-widest ml-1">
+                                  {errors.experiences[i].description.message}
+                                </span>
+                              )}
                             </div>
                           </CardContent>
                         </Card>
@@ -611,35 +735,62 @@ export function ResumeForm({
                       >
                         <Card className="border-border/50 bg-muted/10 relative overflow-hidden group shadow-none hover:bg-muted/20 transition-all duration-500">
                           <CardContent className="p-8 pt-12 grid grid-cols-2 gap-6 text-left">
-                            <div className="space-y-2 col-span-2">
-                              <Label className="text-[10px] font-black uppercase tracking-widest">
+                            <div className="space-y-2 col-span-2 text-left">
+                              <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
                                 {t("editor.education.school")}
                               </Label>
                               <Input
                                 {...register(`educations.${i}.school`)}
-                                className="h-11 bg-background/50 border-border/50 font-bold"
+                                className={cn(
+                                  "h-11 bg-background/50 border-border/50 font-bold",
+                                  errors.educations?.[i]?.school &&
+                                    "border-destructive/50 focus-visible:ring-destructive/20",
+                                )}
                               />
+                              {errors.educations?.[i]?.school && (
+                                <span className="text-[10px] text-destructive font-bold uppercase tracking-widest ml-1">
+                                  {errors.educations[i].school.message}
+                                </span>
+                              )}
                             </div>
-                            <div className="space-y-2">
-                              <Label className="text-[10px] font-black uppercase tracking-widest">
+                            <div className="space-y-2 text-left">
+                              <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
                                 {t("editor.education.degree")}
                               </Label>
                               <Input
                                 {...register(`educations.${i}.degree`)}
-                                className="h-11 bg-background/50 border-border/50"
+                                className={cn(
+                                  "h-11 bg-background/50 border-border/50",
+                                  errors.educations?.[i]?.degree &&
+                                    "border-destructive/50 focus-visible:ring-destructive/20",
+                                )}
                               />
+                              {errors.educations?.[i]?.degree && (
+                                <span className="text-[10px] text-destructive font-bold uppercase tracking-widest ml-1">
+                                  {errors.educations[i].degree.message}
+                                </span>
+                              )}
                             </div>
-                            <div className="space-y-2">
-                              <Label className="text-[10px] font-black uppercase tracking-widest">
+                            <div className="space-y-2 text-left">
+                              <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
                                 {t("editor.education.field")}
                               </Label>
                               <Input
                                 {...register(`educations.${i}.field`)}
-                                className="h-11 bg-background/50 border-border/50"
+                                className={cn(
+                                  "h-11 bg-background/50 border-border/50",
+                                  errors.educations?.[i]?.field &&
+                                    "border-destructive/50 focus-visible:ring-destructive/20",
+                                )}
                               />
+                              {errors.educations?.[i]?.field && (
+                                <span className="text-[10px] text-destructive font-bold uppercase tracking-widest ml-1">
+                                  {errors.educations[i].field.message}
+                                </span>
+                              )}
                             </div>
-                            <div className="space-y-2 col-span-2">
-                              <Label className="text-[10px] font-black uppercase tracking-widest">
+                            <div className="space-y-2 col-span-2 text-left">
+                              <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
                                 {t("editor.education.graduationDate")}
                               </Label>
                               <Input
@@ -647,8 +798,17 @@ export function ResumeForm({
                                 placeholder={t(
                                   "editor.education.placeholder.graduationDate",
                                 )}
-                                className="h-11 bg-background/50 border-border/50"
+                                className={cn(
+                                  "h-11 bg-background/50 border-border/50",
+                                  errors.educations?.[i]?.graduationDate &&
+                                    "border-destructive/50 focus-visible:ring-destructive/20",
+                                )}
                               />
+                              {errors.educations?.[i]?.graduationDate && (
+                                <span className="text-[10px] text-destructive font-bold uppercase tracking-widest ml-1">
+                                  {errors.educations[i].graduationDate.message}
+                                </span>
+                              )}
                             </div>
                           </CardContent>
                         </Card>
@@ -699,41 +859,77 @@ export function ResumeForm({
                       >
                         <Card className="border-border/50 bg-muted/10 relative overflow-hidden group shadow-none hover:bg-muted/20 transition-all duration-500">
                           <CardContent className="p-8 pt-12 grid grid-cols-2 gap-6 text-left">
-                            <div className="space-y-2 col-span-2">
-                              <Label className="text-[10px] font-black uppercase tracking-widest">
+                            <div className="space-y-2 col-span-2 text-left">
+                              <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
                                 {t("editor.projects.name")}
                               </Label>
                               <Input
                                 {...register(`projects.${i}.name`)}
-                                className="h-11 bg-background/50 border-border/50 font-bold"
+                                className={cn(
+                                  "h-11 bg-background/50 border-border/50 font-bold",
+                                  errors.projects?.[i]?.name &&
+                                    "border-destructive/50 focus-visible:ring-destructive/20",
+                                )}
                               />
+                              {errors.projects?.[i]?.name && (
+                                <span className="text-[10px] text-destructive font-bold uppercase tracking-widest ml-1">
+                                  {errors.projects[i].name.message}
+                                </span>
+                              )}
                             </div>
-                            <div className="space-y-2">
-                              <Label className="text-[10px] font-black uppercase tracking-widest">
+                            <div className="space-y-2 text-left">
+                              <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
                                 {t("editor.projects.github")}
                               </Label>
                               <Input
                                 {...register(`projects.${i}.github`)}
-                                className="h-11 bg-background/50 border-border/50 font-mono text-xs"
+                                className={cn(
+                                  "h-11 bg-background/50 border-border/50 font-mono text-xs",
+                                  errors.projects?.[i]?.github &&
+                                    "border-destructive/50 focus-visible:ring-destructive/20",
+                                )}
                               />
+                              {errors.projects?.[i]?.github && (
+                                <span className="text-[10px] text-destructive font-bold uppercase tracking-widest ml-1">
+                                  {errors.projects[i].github.message}
+                                </span>
+                              )}
                             </div>
-                            <div className="space-y-2">
-                              <Label className="text-[10px] font-black uppercase tracking-widest">
+                            <div className="space-y-2 text-left">
+                              <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
                                 {t("editor.projects.deploy")}
                               </Label>
                               <Input
                                 {...register(`projects.${i}.deploy`)}
-                                className="h-11 bg-background/50 border-border/50 font-mono text-xs"
+                                className={cn(
+                                  "h-11 bg-background/50 border-border/50 font-mono text-xs",
+                                  errors.projects?.[i]?.deploy &&
+                                    "border-destructive/50 focus-visible:ring-destructive/20",
+                                )}
                               />
+                              {errors.projects?.[i]?.deploy && (
+                                <span className="text-[10px] text-destructive font-bold uppercase tracking-widest ml-1">
+                                  {errors.projects[i].deploy.message}
+                                </span>
+                              )}
                             </div>
                             <div className="col-span-2 space-y-2 text-left">
-                              <Label className="text-[10px] font-black uppercase tracking-widest">
+                              <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
                                 {t("editor.projects.description")}
                               </Label>
                               <Textarea
                                 {...register(`projects.${i}.description`)}
-                                className="min-h-[120px] text-sm bg-background/50 border-border/50 leading-relaxed text-left"
+                                className={cn(
+                                  "min-h-[120px] text-sm bg-background/50 border-border/50 leading-relaxed text-left",
+                                  errors.projects?.[i]?.description &&
+                                    "border-destructive/50 focus-visible:ring-destructive/20",
+                                )}
                               />
+                              {errors.projects?.[i]?.description && (
+                                <span className="text-[10px] text-destructive font-bold uppercase tracking-widest ml-1">
+                                  {errors.projects[i].description.message}
+                                </span>
+                              )}
                             </div>
                           </CardContent>
                         </Card>
@@ -780,51 +976,81 @@ export function ResumeForm({
                   </div>
                   <div className="grid gap-4">
                     {langFields.map((field, i) => (
-                      <div key={field.id} className="flex gap-4 items-end">
-                        <div className="flex-1 space-y-2">
-                          <Label className="text-[10px] font-black uppercase tracking-widest">
-                            {t("editor.extras.languages.label")}
-                          </Label>
-                          <Input
-                            {...register(`languages.${i}.name`)}
-                            className="h-11 bg-muted/20 border-border/50"
-                          />
-                        </div>
-                        <div className="flex-1 space-y-2">
-                          <Label className="text-[10px] font-black uppercase tracking-widest">
-                            {t("editor.extras.languages.proficiency")}
-                          </Label>
-                          <select
-                            {...register(`languages.${i}.level`)}
-                            className="w-full h-11 px-3 rounded-md bg-muted/20 border border-border/50 text-sm focus:outline-none focus:ring-1 focus:ring-primary"
-                          >
-                            <option value="Básico">
-                              {t("editor.extras.languages.levels.basico")}
-                            </option>
-                            <option value="Intermediário">
-                              {t(
-                                "editor.extras.languages.levels.intermediario",
+                      <div key={field.id} className="space-y-1">
+                        <div className="flex gap-4 items-end">
+                          <div className="flex-1 space-y-2 text-left">
+                            <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                              {t("editor.extras.languages.label")}
+                            </Label>
+                            <Input
+                              {...register(`languages.${i}.name`)}
+                              className={cn(
+                                "h-11 bg-muted/20 border-border/50",
+                                errors.languages?.[i]?.name &&
+                                  "border-destructive/50 focus-visible:ring-destructive/20",
                               )}
-                            </option>
-                            <option value="Avançado">
-                              {t("editor.extras.languages.levels.avancado")}
-                            </option>
-                            <option value="Fluente">
-                              {t("editor.extras.languages.levels.fluente")}
-                            </option>
-                            <option value="Nativo">
-                              {t("editor.extras.languages.levels.nativo")}
-                            </option>
-                          </select>
+                            />
+                          </div>
+                          <div className="flex-1 space-y-2 text-left">
+                            <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                              {t("editor.extras.languages.proficiency")}
+                            </Label>
+                            <select
+                              {...register(`languages.${i}.level`)}
+                              className={cn(
+                                "w-full h-11 px-3 rounded-md bg-muted/20 border border-border/50 text-sm focus:outline-none focus:ring-1 focus:ring-primary",
+                                errors.languages?.[i]?.level &&
+                                  "border-destructive/50 focus:ring-destructive/20",
+                              )}
+                            >
+                              <option value="Básico">
+                                {t("editor.extras.languages.levels.basico")}
+                              </option>
+                              <option value="Intermediário">
+                                {t(
+                                  "editor.extras.languages.levels.intermediario",
+                                )}
+                              </option>
+                              <option value="Avançado">
+                                {t("editor.extras.languages.levels.avancado")}
+                              </option>
+                              <option value="Fluente">
+                                {t("editor.extras.languages.levels.fluente")}
+                              </option>
+                              <option value="Nativo">
+                                {t("editor.extras.languages.levels.nativo")}
+                              </option>
+                            </select>
+                          </div>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => removeLang(i)}
+                            className="h-11 w-11 text-muted-foreground hover:text-destructive"
+                          >
+                            <Trash size={18} weight="duotone" />
+                          </Button>
                         </div>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => removeLang(i)}
-                          className="h-11 w-11 text-muted-foreground hover:text-destructive"
-                        >
-                          <Trash size={18} weight="duotone" />
-                        </Button>
+                        {(errors.languages?.[i]?.name ||
+                          errors.languages?.[i]?.level) && (
+                          <div className="flex gap-4">
+                            <div className="flex-1">
+                              {errors.languages?.[i]?.name && (
+                                <span className="text-[10px] text-destructive font-bold uppercase tracking-widest ml-1">
+                                  {errors.languages[i].name.message}
+                                </span>
+                              )}
+                            </div>
+                            <div className="flex-1">
+                              {errors.languages?.[i]?.level && (
+                                <span className="text-[10px] text-destructive font-bold uppercase tracking-widest ml-1">
+                                  {errors.languages[i].level.message}
+                                </span>
+                              )}
+                            </div>
+                            <div className="w-11" />
+                          </div>
+                        )}
                       </div>
                     ))}
                     <Button
@@ -865,26 +1091,44 @@ export function ResumeForm({
                           <Trash size={16} weight="duotone" />
                         </Button>
                         <div className="grid grid-cols-2 gap-4">
-                          <div className="space-y-2">
-                            <Label className="text-[10px] font-black uppercase tracking-widest">
+                          <div className="space-y-2 text-left">
+                            <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
                               {t("editor.extras.certifications.name")}
                             </Label>
                             <Input
                               {...register(`certifications.${i}.name`)}
-                              className="h-10 bg-background/50"
+                              className={cn(
+                                "h-10 bg-background/50",
+                                errors.certifications?.[i]?.name &&
+                                  "border-destructive/50 focus-visible:ring-destructive/20",
+                              )}
                             />
+                            {errors.certifications?.[i]?.name && (
+                              <span className="text-[10px] text-destructive font-bold uppercase tracking-widest ml-1">
+                                {errors.certifications[i].name.message}
+                              </span>
+                            )}
                           </div>
-                          <div className="space-y-2">
-                            <Label className="text-[10px] font-black uppercase tracking-widest">
+                          <div className="space-y-2 text-left">
+                            <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
                               {t("editor.extras.certifications.issuer")}
                             </Label>
                             <Input
                               {...register(`certifications.${i}.issuer`)}
-                              className="h-10 bg-background/50"
+                              className={cn(
+                                "h-10 bg-background/50",
+                                errors.certifications?.[i]?.issuer &&
+                                  "border-destructive/50 focus-visible:ring-destructive/20",
+                              )}
                             />
+                            {errors.certifications?.[i]?.issuer && (
+                              <span className="text-[10px] text-destructive font-bold uppercase tracking-widest ml-1">
+                                {errors.certifications[i].issuer.message}
+                              </span>
+                            )}
                           </div>
-                          <div className="space-y-2 col-span-2">
-                            <Label className="text-[10px] font-black uppercase tracking-widest">
+                          <div className="space-y-2 col-span-2 text-left">
+                            <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
                               {t("editor.extras.certifications.date")}
                             </Label>
                             <Input
@@ -892,8 +1136,17 @@ export function ResumeForm({
                               placeholder={t(
                                 "editor.extras.certifications.datePlaceholder",
                               )}
-                              className="h-10 bg-background/50"
+                              className={cn(
+                                "h-10 bg-background/50",
+                                errors.certifications?.[i]?.date &&
+                                  "border-destructive/50 focus-visible:ring-destructive/20",
+                              )}
                             />
+                            {errors.certifications?.[i]?.date && (
+                              <span className="text-[10px] text-destructive font-bold uppercase tracking-widest ml-1">
+                                {errors.certifications[i].date.message}
+                              </span>
+                            )}
                           </div>
                         </div>
                       </div>
@@ -938,32 +1191,59 @@ export function ResumeForm({
                           <Trash size={16} weight="duotone" />
                         </Button>
                         <div className="grid grid-cols-2 gap-4">
-                          <div className="space-y-2">
-                            <Label className="text-[10px] font-black uppercase tracking-widest">
+                          <div className="space-y-2 text-left">
+                            <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
                               {t("editor.extras.volunteering.organization")}
                             </Label>
                             <Input
                               {...register(`volunteering.${i}.organization`)}
-                              className="h-10 bg-background/50"
+                              className={cn(
+                                "h-10 bg-background/50",
+                                errors.volunteering?.[i]?.organization &&
+                                  "border-destructive/50 focus-visible:ring-destructive/20",
+                              )}
                             />
+                            {errors.volunteering?.[i]?.organization && (
+                              <span className="text-[10px] text-destructive font-bold uppercase tracking-widest ml-1">
+                                {errors.volunteering[i].organization.message}
+                              </span>
+                            )}
                           </div>
-                          <div className="space-y-2">
-                            <Label className="text-[10px] font-black uppercase tracking-widest">
+                          <div className="space-y-2 text-left">
+                            <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
                               {t("editor.extras.volunteering.role")}
                             </Label>
                             <Input
                               {...register(`volunteering.${i}.role`)}
-                              className="h-10 bg-background/50"
+                              className={cn(
+                                "h-10 bg-background/50",
+                                errors.volunteering?.[i]?.role &&
+                                  "border-destructive/50 focus-visible:ring-destructive/20",
+                              )}
                             />
+                            {errors.volunteering?.[i]?.role && (
+                              <span className="text-[10px] text-destructive font-bold uppercase tracking-widest ml-1">
+                                {errors.volunteering[i].role.message}
+                              </span>
+                            )}
                           </div>
-                          <div className="col-span-2 space-y-2">
-                            <Label className="text-[10px] font-black uppercase tracking-widest">
+                          <div className="col-span-2 space-y-2 text-left">
+                            <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
                               {t("editor.extras.volunteering.description")}
                             </Label>
                             <Textarea
                               {...register(`volunteering.${i}.description`)}
-                              className="min-h-[100px] bg-background/50"
+                              className={cn(
+                                "min-h-[100px] bg-background/50",
+                                errors.volunteering?.[i]?.description &&
+                                  "border-destructive/50 focus-visible:ring-destructive/20",
+                              )}
                             />
+                            {errors.volunteering?.[i]?.description && (
+                              <span className="text-[10px] text-destructive font-bold uppercase tracking-widest ml-1">
+                                {errors.volunteering[i].description.message}
+                              </span>
+                            )}
                           </div>
                         </div>
                       </div>
