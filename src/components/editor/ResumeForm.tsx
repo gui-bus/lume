@@ -359,7 +359,7 @@ export function ResumeForm({
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto custom-scrollbar px-10 py-12 pb-32">
+      <div className="flex-1 overflow-y-auto custom-scrollbar px-10 py-12">
         <AnimatePresence mode="wait" initial={false}>
           <motion.div
             key={activeStep}
