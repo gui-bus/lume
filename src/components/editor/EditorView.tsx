@@ -311,15 +311,7 @@ export function EditorView({
                   userButtonAvatarBox: "w-9 h-9 border border-border/40",
                 },
               }}
-            >
-              <UserButton.MenuItems>
-                <UserButton.Link
-                  label={t("header.auth.dashboard")}
-                  labelIcon={<ChartLineUp size={16} weight="duotone" />}
-                  href={`/${locale}/dashboard`}
-                />
-              </UserButton.MenuItems>
-            </UserButton>
+            />
           </Show>
 
           <PDFDownloadLink

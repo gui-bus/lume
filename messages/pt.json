@@ -73,8 +73,7 @@
       "auth": {
         "signIn": "Entrar",
         "signUp": "Criar Conta",
-        "profile": "Meu Perfil",
-        "dashboard": "Dashboard"
+        "profile": "Meu Perfil"
       }
     },
     "auth": {
@@ -94,25 +93,6 @@
         "pdf": "PDF em tempo real",
         "portfolio": "Modo Portfólio",
         "keywords": "Análise de Keywords"
-      }
-    },
-    "dashboard": {
-      "title": "Meus Currículos",
-      "description": "Gerencie e acompanhe a performance de seus perfis profissionais.",
-      "newResume": "Novo Currículo",
-      "empty": "Você ainda não criou nenhum currículo.",
-      "createFirst": "Criar meu primeiro currículo",
-      "lastUpdate": "Atualizado em {date}",
-      "actions": {
-        "edit": "Editar",
-        "share": "Compartilhar",
-        "delete": "Excluir",
-        "deleteConfirm": "Tem certeza?",
-        "copyLink": "Copiar Link"
-      },
-      "stats": {
-        "views": "Visualizações",
-        "downloads": "Downloads"
       }
     },
     "editor": {

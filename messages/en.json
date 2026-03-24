@@ -73,8 +73,7 @@
       "auth": {
         "signIn": "Sign In",
         "signUp": "Create Account",
-        "profile": "Profile",
-        "dashboard": "Dashboard"
+        "profile": "Profile"
       }
     },
     "auth": {
@@ -94,25 +93,6 @@
         "pdf": "Real-time PDF",
         "portfolio": "Portfolio Mode",
         "keywords": "Keyword Analysis"
-      }
-    },
-    "dashboard": {
-      "title": "My Resumes",
-      "description": "Manage and track the performance of your professional profiles.",
-      "newResume": "New Resume",
-      "empty": "You haven't created any resumes yet.",
-      "createFirst": "Create my first resume",
-      "lastUpdate": "Updated {date}",
-      "actions": {
-        "edit": "Edit",
-        "share": "Share",
-        "delete": "Delete",
-        "deleteConfirm": "Are you sure?",
-        "copyLink": "Copy Link"
-      },
-      "stats": {
-        "views": "Views",
-        "downloads": "Downloads"
       }
     },
     "editor": {
