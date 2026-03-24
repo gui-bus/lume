@@ -202,6 +202,21 @@ export function EditorView({
     }
   };
 
+  const toggleTheme = () => {
+    const nextTheme = theme === "dark" ? "light" : "dark";
+
+    // @ts-ignore - View Transitions API
+    if (!document.startViewTransition) {
+      setTheme(nextTheme);
+      return;
+    }
+
+    // @ts-ignore
+    document.startViewTransition(() => {
+      setTheme(nextTheme);
+    });
+  };
+
   if (!mounted) return null;
 
   return (
@@ -309,7 +324,7 @@ export function EditorView({
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+              onClick={toggleTheme}
               className="rounded-full h-9 w-9"
             >
               {theme === "dark" ? (
