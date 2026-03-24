@@ -111,29 +111,22 @@ export default function SignInPage() {
               routing="path"
               path={`/${locale}/sign-in`}
               signUpUrl={`/${locale}/sign-up`}
+              fallbackRedirectUrl={`/${locale}`}
               appearance={{
                 elements: {
                   rootBox: "w-full",
-                  card: "bg-transparent shadow-none border-none p-0 text-foreground",
-                  header: "hidden",
-                  main: "space-y-8",
+                  card: "bg-background shadow-xl border border-border/40 p-8 rounded-3xl text-foreground",
+                  headerTitle: "text-2xl font-black tracking-tight",
+                  headerSubtitle: "text-muted-foreground",
+                  main: "space-y-6",
                   formButtonPrimary:
-                    "bg-primary hover:bg-primary/90 text-sm font-bold h-14 rounded-2xl transition-all shadow-xl shadow-primary/10 active:scale-[0.98]",
+                    "bg-primary hover:bg-primary/90 text-sm font-bold h-12 rounded-xl transition-all shadow-lg shadow-primary/10",
                   formFieldInput:
-                    "h-13 rounded-2xl bg-muted/30 border-border/50 focus:ring-4 focus:ring-primary/10 transition-all text-base px-5 text-foreground font-medium",
-                  formFieldLabel:
-                    "text-[11px] font-bold text-muted-foreground/60 mb-2.5 ml-2",
-                  footer: "mt-12 border-t border-border/40 pt-10 px-0",
-                  footerActionLink:
-                    "text-primary font-bold hover:underline ml-1 text-sm",
+                    "h-11 rounded-xl bg-muted/20 border-border/50 focus:ring-4 focus:ring-primary/10 transition-all text-sm px-4",
+                  footer: "mt-8 border-t border-border/40 pt-6",
+                  footerActionLink: "text-primary font-bold hover:underline",
                   socialButtonsBlockButton:
-                    "h-14 rounded-2xl border-border/50 bg-background hover:bg-muted/50 transition-all font-bold text-sm shadow-sm text-foreground px-6",
-                  dividerLine: "bg-border/40",
-                  dividerText:
-                    "text-[11px] font-medium text-muted-foreground/30 px-5",
-                  identityPreviewText: "text-foreground font-bold",
-                  formFieldInputShowPasswordButton:
-                    "mr-3 text-muted-foreground hover:text-primary",
+                    "h-12 rounded-xl border-border/50 bg-background hover:bg-muted/50 transition-all font-bold text-sm",
                 },
               }}
             />
