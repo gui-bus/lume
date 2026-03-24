@@ -239,6 +239,14 @@ export const ResumePDF = ({
                 </Link>
               </>
             )}
+            {personalInfo.github && (
+              <>
+                <Text style={styles.bullet}>•</Text>
+                <Link style={styles.link} src={personalInfo.github}>
+                  GITHUB
+                </Link>
+              </>
+            )}
             {personalInfo.website && (
               <>
                 <Text style={styles.bullet}>•</Text>

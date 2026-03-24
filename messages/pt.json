@@ -115,7 +115,8 @@
         "location": "Localização",
         "locationPlaceholder": "Ex: São Paulo, SP",
         "linkedin": "LinkedIn (URL)",
-        "portfolio": "Site / Portfólio (URL)",
+        "github": "GitHub (URL)",
+        "portfolio": "Website / Portfólio (URL)",
         "summary": "Resumo Profissional",
         "summaryPlaceholder": "Conte um pouco sobre sua trajetória e objetivos..."
       },

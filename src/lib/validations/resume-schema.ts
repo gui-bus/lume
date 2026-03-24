@@ -6,6 +6,7 @@ export const PersonalInfoSchema = z.object({
   phone: z.string().optional(),
   location: z.string().optional(),
   linkedin: z.string().url("URL inválida").optional().or(z.literal("")),
+  github: z.string().url("URL inválida").optional().or(z.literal("")),
   website: z.string().url("URL inválida").optional().or(z.literal("")),
   summary: z.string().optional(),
 });

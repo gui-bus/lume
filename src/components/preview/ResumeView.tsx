@@ -71,6 +71,18 @@ export function ResumeView({ data, colorTheme = "#18181b" }: ResumeViewProps) {
                 </a>
               </>
             )}
+            {personalInfo.github && (
+              <>
+                <span className="text-slate-300">•</span>
+                <a
+                  href={personalInfo.github}
+                  target="_blank"
+                  className="text-lume-blue font-bold uppercase tracking-wider"
+                >
+                  GitHub
+                </a>
+              </>
+            )}
             {personalInfo.website && (
               <>
                 <span className="text-slate-300">•</span>

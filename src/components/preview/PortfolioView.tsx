@@ -99,6 +99,15 @@ export function PortfolioView({
                 <LinkIcon size={18} weight="duotone" /> LinkedIn
               </a>
             )}
+            {personalInfo.github && (
+              <a
+                href={personalInfo.github}
+                target="_blank"
+                className="flex items-center gap-2 text-sm font-medium text-lume-blue hover:opacity-80 transition-colors"
+              >
+                <GithubLogo size={18} weight="duotone" /> GitHub
+              </a>
+            )}
             {personalInfo.website && (
               <a
                 href={personalInfo.website}

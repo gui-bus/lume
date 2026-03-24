@@ -477,8 +477,8 @@ export function ResumeForm({
                     )}
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-6">
-                  <div className="space-y-2.5">
+                <div className="grid grid-cols-3 gap-6">
+                  <div className="space-y-2.5 text-left">
                     <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
                       {t("editor.personalInfo.linkedin")}
                     </Label>
@@ -496,7 +496,25 @@ export function ResumeForm({
                       </span>
                     )}
                   </div>
-                  <div className="space-y-2.5">
+                  <div className="space-y-2.5 text-left">
+                    <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                      {t("editor.personalInfo.github")}
+                    </Label>
+                    <Input
+                      {...register("personalInfo.github")}
+                      className={cn(
+                        "input-glow h-12 bg-muted/20 border-border/50",
+                        errors.personalInfo?.github &&
+                          "border-destructive/50 focus-visible:ring-destructive/20",
+                      )}
+                    />
+                    {errors.personalInfo?.github && (
+                      <span className="text-[10px] text-destructive font-bold uppercase tracking-widest ml-1">
+                        {errors.personalInfo.github.message}
+                      </span>
+                    )}
+                  </div>
+                  <div className="space-y-2.5 text-left">
                     <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
                       {t("editor.personalInfo.portfolio")}
                     </Label>
