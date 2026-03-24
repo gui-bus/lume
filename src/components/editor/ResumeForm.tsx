@@ -477,7 +477,7 @@ export function ResumeForm({
                     )}
                   </div>
                 </div>
-                <div className="grid grid-cols-3 gap-6">
+                <div className="grid grid-cols-2 gap-6">
                   <div className="space-y-2.5 text-left">
                     <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
                       {t("editor.personalInfo.linkedin")}
@@ -514,6 +514,8 @@ export function ResumeForm({
                       </span>
                     )}
                   </div>
+                </div>
+                <div className="grid grid-cols-2 gap-6">
                   <div className="space-y-2.5 text-left">
                     <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
                       {t("editor.personalInfo.portfolio")}
