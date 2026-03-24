@@ -205,236 +205,172 @@ export function EditorView({
   if (!mounted) return null;
 
   return (
-    <main className="h-screen flex flex-col bg-background text-foreground overflow-hidden text-left">
-      <header className="no-print h-16 border-b border-border/40 bg-background/50 backdrop-blur-xl flex items-center justify-between px-4 md:px-8 shrink-0 z-50">
-        <div className="flex items-center gap-4">
-          <span className="text-2xl md:text-3xl font-black tracking-[0.2em] uppercase text-primary">
-            Lume
-          </span>
-        </div>
+    <main className="h-screen flex bg-background text-foreground overflow-hidden text-left">
+      <div className="w-full lg:w-[480px] xl:w-[540px] shrink-0 border-r bg-card/10 overflow-hidden relative flex flex-col text-left">
+        <ResumeForm
+          key={locale}
+          initialData={initialData || defaultData}
+          resumeId={resumeId}
+          groupId={groupId}
+          onDataChange={handleDataChange}
+          onIdGenerated={handleIdGenerated}
+        />
+      </div>
 
-        <div className="flex items-center gap-2 md:gap-4">
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="gap-2 rounded-full px-4 h-9 font-bold bg-muted/40 hover:bg-muted/60 border border-border/40 transition-all text-muted-foreground hover:text-foreground"
-              >
-                <Target size={18} weight="duotone" />
-                <span className="hidden lg:inline uppercase tracking-widest text-[10px]">
-                  {t("header.jobMatch.button")}
-                </span>
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[500px] rounded-3xl bg-background/95 backdrop-blur-2xl border-border/40 shadow-2xl">
-              <DialogHeader>
-                <DialogTitle className="flex items-center gap-2 text-xl font-black uppercase tracking-tight">
-                  <Target size={24} weight="duotone" className="text-primary" />{" "}
-                  {t("header.jobMatch.title")}
-                </DialogTitle>
-                <DialogDescription className="text-xs text-muted-foreground uppercase tracking-widest font-bold">
-                  {t("header.jobMatch.description")}
-                </DialogDescription>
-              </DialogHeader>
-              <div className="space-y-6 pt-4">
-                <Textarea
-                  placeholder={t("header.jobMatch.placeholder")}
-                  className="h-[200px] rounded-2xl text-sm bg-muted/20 border-border/40 focus:ring-primary/20 transition-all resize-none p-4 custom-scrollbar"
-                  value={jobDescription}
-                  onChange={(e) => setJobDescription(e.target.value)}
-                />
-                {matchResult && (
-                  <div className="p-5 rounded-2xl bg-primary/5 border border-primary/10 flex items-center justify-between">
-                    <span className="text-4xl font-black tracking-tighter text-primary">
-                      {matchResult.score}%
-                    </span>
-                  </div>
-                )}
-              </div>
-            </DialogContent>
-          </Dialog>
+      <div className="hidden lg:flex flex-1 flex-col bg-muted/5 relative overflow-hidden">
+        <header className="no-print h-16 border-b border-border/40 bg-background/50 backdrop-blur-xl flex items-center justify-between px-8 shrink-0 z-50">
+          <div className="flex items-center gap-4">
+            <span className="text-2xl md:text-3xl font-black tracking-[0.2em] uppercase text-primary">
+              Lume
+            </span>
+          </div>
 
-          <Popover>
-            <PopoverTrigger asChild>
-              <button className="flex items-center gap-2.5 px-4 py-2 bg-muted/40 hover:bg-muted/60 border border-border/40 rounded-full transition-all duration-300 group shadow-sm text-muted-foreground hover:text-foreground">
-                <ShieldCheck
-                  size={18}
-                  weight="duotone"
-                  className={cn(
-                    (atsResult?.score || 0) > 70
-                      ? "text-emerald-500"
-                      : "text-amber-500",
+          <div className="flex items-center gap-2 md:gap-4">
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="gap-2 rounded-full px-4 h-9 font-bold bg-muted/40 hover:bg-muted/60 border border-border/40 transition-all text-muted-foreground hover:text-foreground"
+                >
+                  <Target size={18} weight="duotone" />
+                  <span className="hidden lg:inline uppercase tracking-widest text-[10px]">
+                    {t("header.jobMatch.button")}
+                  </span>
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[500px] rounded-3xl bg-background/95 backdrop-blur-2xl border-border/40 shadow-2xl">
+                <DialogHeader>
+                  <DialogTitle className="flex items-center gap-2 text-xl font-black uppercase tracking-tight">
+                    <Target
+                      size={24}
+                      weight="duotone"
+                      className="text-primary"
+                    />{" "}
+                    {t("header.jobMatch.title")}
+                  </DialogTitle>
+                  <DialogDescription className="text-xs text-muted-foreground uppercase tracking-widest font-bold">
+                    {t("header.jobMatch.description")}
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="space-y-6 pt-4">
+                  <Textarea
+                    placeholder={t("header.jobMatch.placeholder")}
+                    className="h-[200px] rounded-2xl text-sm bg-muted/20 border-border/40 focus:ring-primary/20 transition-all resize-none p-4 custom-scrollbar"
+                    value={jobDescription}
+                    onChange={(e) => setJobDescription(e.target.value)}
+                  />
+                  {matchResult && (
+                    <div className="p-5 rounded-2xl bg-primary/5 border border-primary/10 flex items-center justify-between">
+                      <span className="text-4xl font-black tracking-tighter text-primary">
+                        {matchResult.score}%
+                      </span>
+                    </div>
                   )}
-                />
-                <span className="text-[11px] font-black uppercase tracking-[0.1em]">
-                  {t("atsScore", { score: atsResult?.score ?? 0 })}
-                </span>
-              </button>
-            </PopoverTrigger>
-            <PopoverContent className="w-[340px] md:w-[380px] p-5 rounded-3xl bg-background/95 backdrop-blur-2xl border border-border/40 shadow-2xl">
-              <h3 className="text-xs font-black uppercase tracking-[0.2em] text-primary mb-4">
-                {t("header.healthCheck.title")}
-              </h3>
-              <div className="space-y-2 max-h-[40vh] overflow-y-auto custom-scrollbar">
-                {atsResult?.suggestions.map((s, i) => (
-                  <div
-                    key={i}
-                    className="p-3 bg-muted/30 rounded-xl text-[11px] text-muted-foreground border border-border/20"
-                  >
-                    {s}
-                  </div>
-                ))}
-              </div>
-            </PopoverContent>
-          </Popover>
-
-          <Separator orientation="vertical" className="h-6 hidden md:block" />
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-            className="rounded-full h-9 w-9"
-          >
-            {theme === "dark" ? (
-              <Sun size={20} weight="duotone" />
-            ) : (
-              <Moon size={20} weight="duotone" />
-            )}
-          </Button>
-          <LanguageSwitcher />
-
-          <Show when="signed-in">
-            <UserButton
-              appearance={{
-                elements: {
-                  userButtonAvatarBox: "w-9 h-9 border border-border/40",
-                },
-              }}
-            />
-          </Show>
-
-          <Sheet>
-            <SheetTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="rounded-full h-10 w-10 bg-muted/30"
-              >
-                <List size={22} weight="duotone" />
-              </Button>
-            </SheetTrigger>
-            <SheetContent
-              side="right"
-              className="w-[300px] sm:w-[400px] bg-background/95 backdrop-blur-xl p-0 flex flex-col"
-            >
-              <SheetHeader className="p-6 border-b border-border/20 bg-primary/5">
-                <SheetTitle className="text-sm font-black uppercase tracking-[0.2em] flex items-center gap-2">
-                  <Gear size={18} weight="duotone" /> {t("header.tools.title")}
-                </SheetTitle>
-                <SheetDescription className="sr-only">
-                  Menu de ferramentas e configurações
-                </SheetDescription>
-              </SheetHeader>
-
-              <div className="flex-1 overflow-y-auto custom-scrollbar p-6 space-y-8 text-left">
-                {/* LinkedIn Section */}
-                <div className="space-y-4">
-                  <h4 className="text-[10px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-2">
-                    <LinkedinLogo size={14} weight="duotone" /> LinkedIn Import
-                  </h4>
-                  <div className="relative w-full group">
-                    <input
-                      type="file"
-                      accept=".pdf"
-                      onChange={handleLinkedInImport}
-                      className="absolute inset-0 opacity-0 cursor-pointer z-20"
-                    />
-                    <div className="flex items-center gap-4 w-full p-4 rounded-2xl border border-border/40 bg-muted/5 transition-all duration-300 group-hover:bg-muted/20 group-hover:border-border/80">
-                      <div className="w-10 h-10 rounded-xl bg-muted/20 flex items-center justify-center shrink-0 transition-colors group-hover:bg-background">
-                        <LinkedinLogo
-                          size={22}
-                          weight="duotone"
-                          className="text-muted-foreground group-hover:text-foreground"
-                        />
-                      </div>
-                      <div className="flex flex-col items-start leading-tight gap-1">
-                        <span className="text-sm font-bold text-foreground">
-                          {t("header.tools.importLinkedIn")}
-                        </span>
-                        <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-tight">
-                          {t("header.tools.importLinkedInDesc")}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
                 </div>
+              </DialogContent>
+            </Dialog>
 
-                {/* Slug Section */}
-                <div className="space-y-4">
-                  <h4 className="text-[10px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-2">
-                    <Browser size={14} weight="duotone" />{" "}
-                    {t("header.tools.visibilityLink")}
-                  </h4>
-                  <div className="space-y-3">
-                    <div className="space-y-2">
-                      <Label
-                        htmlFor="slug"
-                        className="text-[10px] uppercase font-bold text-muted-foreground ml-1"
-                      >
-                        Custom URL
-                      </Label>
-                      <Input
-                        id="slug"
-                        value={slug}
-                        onChange={(e) =>
-                          setSlug(
-                            e.target.value.toLowerCase().replace(/\s+/g, "-"),
-                          )
-                        }
-                        placeholder="seu-nome"
-                        className="h-12 bg-muted/10 border-border/40 rounded-xl focus:ring-primary/20"
-                      />
-                    </div>
-                    <button
-                      onClick={handleShare}
-                      className="flex items-center gap-4 w-full p-4 rounded-2xl border border-border/40 bg-muted/5 transition-all duration-300 hover:bg-muted/20 hover:border-border/80 group text-left"
+            <Popover>
+              <PopoverTrigger asChild>
+                <button className="flex items-center gap-2.5 px-4 py-2 bg-muted/40 hover:bg-muted/60 border border-border/40 rounded-full transition-all duration-300 group shadow-sm text-muted-foreground hover:text-foreground">
+                  <ShieldCheck
+                    size={18}
+                    weight="duotone"
+                    className={cn(
+                      (atsResult?.score || 0) > 70
+                        ? "text-emerald-500"
+                        : "text-amber-500",
+                    )}
+                  />
+                  <span className="text-[11px] font-black uppercase tracking-[0.1em]">
+                    {t("atsScore", { score: atsResult?.score ?? 0 })}
+                  </span>
+                </button>
+              </PopoverTrigger>
+              <PopoverContent className="w-[340px] md:w-[380px] p-5 rounded-3xl bg-background/95 backdrop-blur-2xl border border-border/40 shadow-2xl">
+                <h3 className="text-xs font-black uppercase tracking-[0.2em] text-primary mb-4">
+                  {t("header.healthCheck.title")}
+                </h3>
+                <div className="space-y-2 max-h-[40vh] overflow-y-auto custom-scrollbar">
+                  {atsResult?.suggestions.map((s, i) => (
+                    <div
+                      key={i}
+                      className="p-3 bg-muted/30 rounded-xl text-[11px] text-muted-foreground border border-border/20"
                     >
-                      <div className="w-10 h-10 rounded-xl bg-muted/20 flex items-center justify-center shrink-0 transition-colors group-hover:bg-background">
-                        <ShareNetwork
-                          size={22}
-                          weight="duotone"
-                          className="text-muted-foreground group-hover:text-foreground"
-                        />
-                      </div>
-                      <div className="flex flex-col items-start leading-tight gap-1">
-                        <span className="text-sm font-bold text-foreground">
-                          {t("header.tools.generateLink")}
-                        </span>
-                        <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-tight">
-                          {t("header.tools.generateLinkDesc")}
-                        </span>
-                      </div>
-                    </button>
-                  </div>
+                      {s}
+                    </div>
+                  ))}
                 </div>
+              </PopoverContent>
+            </Popover>
 
-                {/* Import/Export Section */}
-                <div className="space-y-4">
-                  <h4 className="text-[10px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-2">
-                    <FileArrowUp size={14} weight="duotone" /> Backup & Restore
-                  </h4>
-                  <div className="grid grid-cols-1 gap-3">
+            <Separator orientation="vertical" className="h-6 hidden md:block" />
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+              className="rounded-full h-9 w-9"
+            >
+              {theme === "dark" ? (
+                <Sun size={20} weight="duotone" />
+              ) : (
+                <Moon size={20} weight="duotone" />
+              )}
+            </Button>
+            <LanguageSwitcher />
+
+            <Show when="signed-in">
+              <UserButton
+                appearance={{
+                  elements: {
+                    userButtonAvatarBox: "w-9 h-9 border border-border/40",
+                  },
+                }}
+              />
+            </Show>
+
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="rounded-full h-10 w-10 bg-muted/30"
+                >
+                  <List size={22} weight="duotone" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent
+                side="right"
+                className="w-[300px] sm:w-[400px] bg-background/95 backdrop-blur-xl p-0 flex flex-col text-left"
+              >
+                <SheetHeader className="p-6 border-b border-border/20 bg-primary/5">
+                  <SheetTitle className="text-sm font-black uppercase tracking-[0.2em] flex items-center gap-2">
+                    <Gear size={18} weight="duotone" />{" "}
+                    {t("header.tools.title")}
+                  </SheetTitle>
+                  <SheetDescription className="sr-only">
+                    Menu de ferramentas e configurações
+                  </SheetDescription>
+                </SheetHeader>
+
+                <div className="flex-1 overflow-y-auto custom-scrollbar p-6 space-y-8 text-left">
+                  {/* LinkedIn Section */}
+                  <div className="space-y-4">
+                    <h4 className="text-[10px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-2">
+                      <LinkedinLogo size={14} weight="duotone" /> LinkedIn
+                      Import
+                    </h4>
                     <div className="relative w-full group">
                       <input
                         type="file"
-                        accept=".json"
-                        onChange={handleImportJSON}
+                        accept=".pdf"
+                        onChange={handleLinkedInImport}
                         className="absolute inset-0 opacity-0 cursor-pointer z-20"
                       />
                       <div className="flex items-center gap-4 w-full p-4 rounded-2xl border border-border/40 bg-muted/5 transition-all duration-300 group-hover:bg-muted/20 group-hover:border-border/80">
                         <div className="w-10 h-10 rounded-xl bg-muted/20 flex items-center justify-center shrink-0 transition-colors group-hover:bg-background">
-                          <FileArrowUp
+                          <LinkedinLogo
                             size={22}
                             weight="duotone"
                             className="text-muted-foreground group-hover:text-foreground"
@@ -442,63 +378,134 @@ export function EditorView({
                         </div>
                         <div className="flex flex-col items-start leading-tight gap-1">
                           <span className="text-sm font-bold text-foreground">
-                            {t("header.tools.loadJson")}
+                            {t("header.tools.importLinkedIn")}
                           </span>
                           <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-tight">
-                            {t("header.tools.loadJsonDesc")}
+                            {t("header.tools.importLinkedInDesc")}
                           </span>
                         </div>
                       </div>
                     </div>
-                    <button
-                      onClick={handleExportJSON}
-                      className="flex items-center gap-4 w-full p-4 rounded-2xl border border-border/40 bg-muted/5 transition-all duration-300 hover:bg-muted/20 hover:border-border/80 group text-left"
-                    >
-                      <div className="w-10 h-10 rounded-xl bg-muted/20 flex items-center justify-center shrink-0 transition-colors group-hover:bg-background">
-                        <FileArrowDown
-                          size={22}
-                          weight="duotone"
-                          className="text-muted-foreground group-hover:text-foreground"
+                  </div>
+
+                  {/* Slug Section */}
+                  <div className="space-y-4">
+                    <h4 className="text-[10px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-2">
+                      <Browser size={14} weight="duotone" />{" "}
+                      {t("header.tools.visibilityLink")}
+                    </h4>
+                    <div className="space-y-3">
+                      <div className="space-y-2 text-left">
+                        <Label
+                          htmlFor="slug"
+                          className="text-[10px] uppercase font-bold text-muted-foreground ml-1"
+                        >
+                          Custom URL
+                        </Label>
+                        <Input
+                          id="slug"
+                          value={slug}
+                          onChange={(e) =>
+                            setSlug(
+                              e.target.value.toLowerCase().replace(/\s+/g, "-"),
+                            )
+                          }
+                          placeholder="seu-nome"
+                          className="h-12 bg-muted/10 border-border/40 rounded-xl focus:ring-primary/20"
                         />
                       </div>
-                      <div className="flex flex-col items-start leading-tight gap-1">
-                        <span className="text-sm font-bold text-foreground">
-                          {t("header.tools.saveBackup")}
-                        </span>
-                        <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-tight">
-                          {t("header.tools.saveBackupDesc")}
-                        </span>
+                      <button
+                        onClick={handleShare}
+                        className="flex items-center gap-4 w-full p-4 rounded-2xl border border-border/40 bg-muted/5 transition-all duration-300 hover:bg-muted/20 hover:border-border/80 group text-left"
+                      >
+                        <div className="w-10 h-10 rounded-xl bg-muted/20 flex items-center justify-center shrink-0 transition-colors group-hover:bg-background">
+                          <ShareNetwork
+                            size={22}
+                            weight="duotone"
+                            className="text-muted-foreground group-hover:text-foreground"
+                          />
+                        </div>
+                        <div className="flex flex-col items-start leading-tight gap-1">
+                          <span className="text-sm font-bold text-foreground">
+                            {t("header.tools.generateLink")}
+                          </span>
+                          <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-tight">
+                            {t("header.tools.generateLinkDesc")}
+                          </span>
+                        </div>
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Import/Export Section */}
+                  <div className="space-y-4">
+                    <h4 className="text-[10px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-2">
+                      <FileArrowUp size={14} weight="duotone" /> Backup &
+                      Restore
+                    </h4>
+                    <div className="grid grid-cols-1 gap-3">
+                      <div className="relative w-full group">
+                        <input
+                          type="file"
+                          accept=".json"
+                          onChange={handleImportJSON}
+                          className="absolute inset-0 opacity-0 cursor-pointer z-20"
+                        />
+                        <div className="flex items-center gap-4 w-full p-4 rounded-2xl border border-border/40 bg-muted/5 transition-all duration-300 group-hover:bg-muted/20 group-hover:border-border/80">
+                          <div className="w-10 h-10 rounded-xl bg-muted/20 flex items-center justify-center shrink-0 transition-colors group-hover:bg-background">
+                            <FileArrowUp
+                              size={22}
+                              weight="duotone"
+                              className="text-muted-foreground group-hover:text-foreground"
+                            />
+                          </div>
+                          <div className="flex flex-col items-start leading-tight gap-1">
+                            <span className="text-sm font-bold text-foreground">
+                              {t("header.tools.loadJson")}
+                            </span>
+                            <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-tight">
+                              {t("header.tools.loadJsonDesc")}
+                            </span>
+                          </div>
+                        </div>
                       </div>
-                    </button>
+                      <button
+                        onClick={handleExportJSON}
+                        className="flex items-center gap-4 w-full p-4 rounded-2xl border border-border/40 bg-muted/5 transition-all duration-300 hover:bg-muted/20 hover:border-border/80 group text-left"
+                      >
+                        <div className="w-10 h-10 rounded-xl bg-muted/20 flex items-center justify-center shrink-0 transition-colors group-hover:bg-background">
+                          <FileArrowDown
+                            size={22}
+                            weight="duotone"
+                            className="text-muted-foreground group-hover:text-foreground"
+                          />
+                        </div>
+                        <div className="flex flex-col items-start leading-tight gap-1">
+                          <span className="text-sm font-bold text-foreground">
+                            {t("header.tools.saveBackup")}
+                          </span>
+                          <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-tight">
+                            {t("header.tools.saveBackupDesc")}
+                          </span>
+                        </div>
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="pt-8 border-t border-border/20 text-center">
+                    <div className="inline-flex items-center gap-2 text-[10px] font-bold text-muted-foreground/50 uppercase tracking-widest">
+                      <Info size={14} weight="duotone" />{" "}
+                      {t("header.tools.version")}
+                    </div>
                   </div>
                 </div>
+              </SheetContent>
+            </Sheet>
+          </div>
+        </header>
 
-                <div className="pt-8 border-t border-border/20 text-center">
-                  <div className="inline-flex items-center gap-2 text-[10px] font-bold text-muted-foreground/50 uppercase tracking-widest">
-                    <Info size={14} weight="duotone" />{" "}
-                    {t("header.tools.version")}
-                  </div>
-                </div>
-              </div>
-            </SheetContent>
-          </Sheet>
-        </div>
-      </header>
-
-      <div className="flex-1 flex overflow-hidden">
-        <div className="w-full lg:w-[480px] xl:w-[540px] shrink-0 border-r bg-card/10 overflow-hidden relative flex flex-col text-left">
-          <ResumeForm
-            key={locale}
-            initialData={initialData || defaultData}
-            resumeId={resumeId}
-            groupId={groupId}
-            onDataChange={handleDataChange}
-            onIdGenerated={handleIdGenerated}
-          />
-        </div>
-
-        <div className="hidden lg:flex flex-1 bg-muted/5 relative overflow-hidden items-center justify-center">
-          <div className="absolute top-4 right-8 z-50 flex items-center bg-card/95 backdrop-blur-xl rounded-full px-2 py-1.5 border border-border/40 shadow-2xl gap-2">
+        <div className="flex-1 relative overflow-hidden items-center justify-center">
+          <div className="absolute top-4 right-8 z-40 flex items-center bg-card/95 backdrop-blur-xl rounded-full px-2 py-1.5 border border-border/40 shadow-2xl gap-2">
             <div className="flex items-center gap-1">
               <Button
                 variant="ghost"
