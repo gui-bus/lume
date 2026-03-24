@@ -28,7 +28,11 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { toast } from "sonner";
-import { saveResume, getResume } from "@/app/actions/resume-actions";
+import {
+  saveResume,
+  getResume,
+  incrementDownload,
+} from "@/app/actions/resume-actions";
 import { useTheme } from "next-themes";
 import { motion, AnimatePresence } from "framer-motion";
 import { PDFDownloadLink } from "@react-pdf/renderer";
@@ -219,79 +223,129 @@ export default function Home() {
           {/* Validador ATS e Spellchecker */}
           <Popover>
             <PopoverTrigger asChild>
-              <button className="flex items-center gap-2 px-3 py-1.5 bg-primary/5 hover:bg-primary/10 border border-primary/10 rounded-full transition-all">
-                <MagicWand
-                  size={16}
-                  weight="bold"
-                  className={cn(
-                    spellResult?.hasIssues
-                      ? "text-amber-500"
-                      : "text-emerald-500",
+              <button className="flex items-center gap-2.5 px-4 py-2 bg-primary/5 hover:bg-primary/10 border border-primary/10 rounded-full transition-all duration-300 group shadow-sm">
+                <div className="relative">
+                  <MagicWand
+                    size={18}
+                    weight="bold"
+                    className={cn(
+                      "transition-colors duration-500",
+                      spellResult?.hasIssues
+                        ? "text-amber-500 animate-pulse"
+                        : "text-emerald-500",
+                    )}
+                  />
+                  {spellResult?.hasIssues && (
+                    <span className="absolute -top-1 -right-1 w-2 h-2 bg-amber-500 rounded-full border-2 border-background" />
                   )}
-                />
-                <ShieldCheck
-                  size={16}
-                  weight="bold"
-                  className={cn(
-                    (atsResult?.score || 0) > 70
-                      ? "text-emerald-500"
-                      : "text-amber-500",
-                  )}
-                />
-                <span className="text-[10px] font-black uppercase tracking-widest hidden md:inline">
-                  Score: {atsResult?.score}
-                </span>
+                </div>
+                <div className="h-4 w-px bg-primary/20" />
+                <div className="flex items-center gap-1.5">
+                  <ShieldCheck
+                    size={18}
+                    weight="bold"
+                    className={cn(
+                      (atsResult?.score || 0) > 70
+                        ? "text-emerald-500"
+                        : "text-amber-500",
+                    )}
+                  />
+                  <span className="text-[11px] font-black uppercase tracking-[0.1em]">
+                    Score {atsResult?.score}
+                  </span>
+                </div>
               </button>
             </PopoverTrigger>
             <PopoverContent
-              className="w-80 p-4 rounded-2xl bg-background/95 backdrop-blur-xl border border-border/40 shadow-2xl"
+              className="w-[380px] p-0 rounded-3xl bg-background/95 backdrop-blur-2xl border border-border/40 shadow-2xl overflow-hidden"
               align="center"
             >
-              <div className="space-y-4 max-h-[60vh] overflow-y-auto custom-scrollbar pr-2">
-                <div>
-                  <h3 className="text-[10px] font-black uppercase tracking-widest mb-2 flex items-center gap-2 text-primary">
-                    <ShieldCheck size={14} /> Otimização ATS
-                  </h3>
-                  <div className="space-y-2">
+              <div className="bg-primary/5 p-4 border-b border-border/40">
+                <h3 className="text-xs font-black uppercase tracking-[0.2em] flex items-center gap-2 text-primary">
+                  <ShieldCheck size={16} weight="bold" /> Health Check
+                  Profissional
+                </h3>
+              </div>
+
+              <div className="p-5 space-y-6 max-h-[70vh] overflow-y-auto custom-scrollbar pr-3">
+                {/* ATS Suggestions */}
+                <div className="space-y-3">
+                  <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest px-1">
+                    Otimização de Leitura (ATS)
+                  </span>
+                  <div className="grid gap-2">
                     {atsResult?.suggestions.map((s, i) => (
                       <div
                         key={i}
-                        className="text-[10px] text-muted-foreground flex gap-2"
+                        className="flex gap-3 p-3 bg-muted/30 rounded-2xl border border-border/20 text-[11px] leading-relaxed text-muted-foreground"
                       >
-                        <span className="text-amber-500">•</span>
+                        <div className="w-1.5 h-1.5 rounded-full bg-amber-500/50 mt-1.5 shrink-0" />
                         {s}
                       </div>
                     ))}
+                    {atsResult?.suggestions.length === 0 && (
+                      <div className="p-4 bg-emerald-500/5 rounded-2xl border border-emerald-500/10 text-[11px] text-emerald-600 font-bold text-center">
+                        ✨ Sua estrutura está impecável para o ATS!
+                      </div>
+                    )}
                   </div>
                 </div>
+
+                {/* Spellchecker Contextual */}
                 {spellResult?.hasIssues && (
-                  <div>
-                    <h3 className="text-[10px] font-black uppercase tracking-widest mb-2 flex items-center gap-2 text-primary mt-4 border-t pt-4">
-                      <MagicWand size={14} /> Corretor Estratégico
-                    </h3>
-                    <div className="space-y-3">
+                  <div className="space-y-4">
+                    <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest px-1">
+                      Verbos de Ação e Impacto
+                    </span>
+                    <div className="space-y-4">
                       {spellResult.suggestions.map((s, i) => (
-                        <div
-                          key={i}
-                          className="bg-muted/30 p-2 rounded-lg border border-border/50 text-[10px]"
-                        >
-                          <span className="font-bold text-foreground">
-                            {s.section}:
-                          </span>
-                          <span className="text-muted-foreground block italic mb-1">
-                            "{s.text}"
-                          </span>
-                          <span className="text-amber-500 font-bold block">
-                            Encontrado: {s.found.join(", ")}
-                          </span>
-                          <span className="text-emerald-500 font-bold">
-                            {s.recommendation}
-                          </span>
+                        <div key={i} className="space-y-3">
+                          <div className="px-1 text-[10px] font-black text-primary/70 uppercase">
+                            {s.section}
+                          </div>
+                          {s.found.map((f, j) => (
+                            <div
+                              key={j}
+                              className="group relative p-4 bg-background border border-border/60 rounded-2xl shadow-sm hover:border-primary/30 transition-all"
+                            >
+                              <div className="text-[11px] text-muted-foreground mb-3 leading-relaxed">
+                                {f.context.split(f.word).map((part, k, arr) => (
+                                  <span key={k}>
+                                    {part}
+                                    {k < arr.length - 1 && (
+                                      <span className="px-1 py-0.5 bg-amber-500/10 text-amber-600 font-bold rounded mx-0.5">
+                                        {f.word}
+                                      </span>
+                                    )}
+                                  </span>
+                                ))}
+                              </div>
+                              <div className="flex flex-wrap gap-2 items-center">
+                                <span className="text-[9px] font-black text-emerald-500 uppercase tracking-tighter">
+                                  Sugestões:
+                                </span>
+                                {f.alternatives.map((alt, k) => (
+                                  <span
+                                    key={k}
+                                    className="px-2 py-0.5 bg-emerald-500/5 text-emerald-600 text-[10px] font-bold rounded-full border border-emerald-500/10"
+                                  >
+                                    {alt}
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
+                          ))}
                         </div>
                       ))}
                     </div>
                   </div>
                 )}
+              </div>
+
+              <div className="p-4 bg-muted/20 border-t border-border/40 text-center">
+                <p className="text-[9px] text-muted-foreground font-medium italic">
+                  Dica: Verbos fortes aumentam suas chances em até 40%
+                </p>
               </div>
             </PopoverContent>
           </Popover>
@@ -472,6 +526,7 @@ export default function Home() {
                       size="sm"
                       className="gap-2 rounded-full px-5 h-8 text-xs font-bold shadow-lg shadow-primary/5 active:scale-95 transition-all"
                       disabled={loading}
+                      onClick={() => incrementDownload(resumeId)}
                     >
                       <Printer size={16} weight="bold" />
                       {loading ? "..." : "PDF"}

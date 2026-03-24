@@ -8,8 +8,18 @@ export async function saveResume(
   id: string | undefined,
   data: ResumeData,
   title: string = "Meu Currículo",
-  isPortfolio: boolean = false,
+  isPortfolio?: boolean,
 ) {
+  // Busca o estado atual se não for provido, para não sobrescrever com o default da função
+  let currentPortfolio = isPortfolio;
+  if (id && currentPortfolio === undefined) {
+    const existing = await prisma.resume.findUnique({
+      where: { id },
+      select: { isPortfolio: true },
+    });
+    currentPortfolio = existing?.isPortfolio ?? false;
+  }
+
   const result = await prisma.resume.upsert({
     where: {
       id: id || "",
@@ -17,12 +27,12 @@ export async function saveResume(
     update: {
       content: data as any,
       title,
-      isPortfolio,
+      isPortfolio: currentPortfolio ?? false,
     },
     create: {
       content: data as any,
       title,
-      isPortfolio,
+      isPortfolio: currentPortfolio ?? false,
     },
   });
 
@@ -49,7 +59,8 @@ export async function incrementView(id: string) {
   }
 }
 
-export async function incrementDownload(id: string) {
+export async function incrementDownload(id: string | undefined) {
+  if (!id) return;
   try {
     await prisma.resume.update({
       where: { id },
