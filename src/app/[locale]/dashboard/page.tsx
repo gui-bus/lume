@@ -69,7 +69,7 @@ export default async function DashboardPage({
             className="rounded-full h-14 px-8 font-black uppercase tracking-widest shadow-xl shadow-primary/20 gap-2 transition-all hover:scale-105 active:scale-95"
           >
             <Link href={`/${locale}`}>
-              <Plus size={20} weight="bold" />
+              <Plus size={20} weight="duotone" />
               {t("newResume")}
             </Link>
           </Button>
@@ -126,7 +126,7 @@ export default async function DashboardPage({
                         size="icon"
                         className="rounded-full h-10 w-10 bg-muted/20 hover:bg-muted/40"
                       >
-                        <DotsThreeVertical size={20} weight="bold" />
+                        <DotsThreeVertical size={20} weight="duotone" />
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent
@@ -140,7 +140,7 @@ export default async function DashboardPage({
                         <Link href={`/${locale}?id=${resume.id}`}>
                           <PencilSimple
                             size={16}
-                            weight="bold"
+                            weight="duotone"
                             className="mr-2"
                           />
                           {t("actions.edit")}
@@ -154,7 +154,7 @@ export default async function DashboardPage({
                           href={`/${locale}/share/${resume.groupId || resume.id}`}
                           target="_blank"
                         >
-                          <Eye size={16} weight="bold" className="mr-2" />
+                          <Eye size={16} weight="duotone" className="mr-2" />
                           {commonT("preview")}
                         </Link>
                       </DropdownMenuItem>
@@ -166,7 +166,7 @@ export default async function DashboardPage({
                         }}
                       >
                         <button className="w-full text-left rounded-xl focus:bg-destructive/10 text-destructive cursor-pointer font-bold uppercase text-[10px] tracking-widest p-3 flex items-center transition-colors hover:bg-destructive/10">
-                          <Trash size={16} weight="bold" className="mr-2" />
+                          <Trash size={16} weight="duotone" className="mr-2" />
                           {t("actions.delete")}
                         </button>
                       </form>
@@ -178,7 +178,7 @@ export default async function DashboardPage({
                   <div className="grid grid-cols-2 gap-4">
                     <div className="bg-muted/20 rounded-3xl p-5 border border-border/20 transition-all group-hover:bg-primary/5 group-hover:border-primary/10">
                       <div className="flex items-center gap-2 mb-1 text-primary">
-                        <Eye size={16} weight="bold" />
+                        <Eye size={16} weight="duotone" />
                         <span className="text-[10px] font-black uppercase tracking-widest opacity-60">
                           Views
                         </span>
@@ -189,7 +189,7 @@ export default async function DashboardPage({
                     </div>
                     <div className="bg-muted/20 rounded-3xl p-5 border border-border/20 transition-all group-hover:bg-emerald-500/5 group-hover:border-emerald-500/10">
                       <div className="flex items-center gap-2 mb-1 text-emerald-500">
-                        <DownloadSimple size={16} weight="bold" />
+                        <DownloadSimple size={16} weight="duotone" />
                         <span className="text-[10px] font-black uppercase tracking-widest opacity-60">
                           Downloads
                         </span>
@@ -216,7 +216,7 @@ export default async function DashboardPage({
                     className="rounded-full h-12 px-6 border-border/40 hover:bg-muted/40 transition-all active:scale-95"
                     title={t("actions.copyLink")}
                   >
-                    <ShareNetwork size={20} weight="bold" />
+                    <ShareNetwork size={20} weight="duotone" />
                   </Button>
                 </CardFooter>
               </Card>

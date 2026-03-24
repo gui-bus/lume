@@ -113,7 +113,7 @@ function SortableItem({ id, children, onRemove }: SortableItemProps) {
         {...listeners}
         className="absolute top-4 left-3 z-10 p-1.5 rounded-lg hover:bg-background/50 text-muted-foreground/30 hover:text-primary transition-all cursor-grab active:cursor-grabbing opacity-0 group-hover:opacity-100"
       >
-        <DotsSixVertical size={18} weight="bold" />
+        <DotsSixVertical size={18} weight="duotone" />
       </div>
       <Button
         variant="ghost"
@@ -124,7 +124,7 @@ function SortableItem({ id, children, onRemove }: SortableItemProps) {
           onRemove();
         }}
       >
-        <Trash size={16} />
+        <Trash size={16} weight="duotone" />
       </Button>
       {children}
     </div>
@@ -329,11 +329,7 @@ export function ResumeForm({
                   : "text-muted-foreground hover:text-foreground hover:bg-background/40",
               )}
             >
-              <step.icon
-                size={20}
-                weight={activeStep === i ? "fill" : "duotone"}
-                className="shrink-0"
-              />
+              <step.icon size={20} weight="duotone" className="shrink-0" />
               {activeStep === i && (
                 <motion.span
                   initial={{ opacity: 0, x: -10 }}
@@ -827,7 +823,7 @@ export function ResumeForm({
                           onClick={() => removeLang(i)}
                           className="h-11 w-11 text-muted-foreground hover:text-destructive"
                         >
-                          <Trash size={18} />
+                          <Trash size={18} weight="duotone" />
                         </Button>
                       </div>
                     ))}
@@ -837,7 +833,7 @@ export function ResumeForm({
                       className="w-fit"
                       onClick={() => appendLang({ name: "", level: "Básico" })}
                     >
-                      <Plus size={16} className="mr-2" />{" "}
+                      <Plus size={16} weight="duotone" className="mr-2" />{" "}
                       {t("editor.extras.languages.add")}
                     </Button>
                   </div>
@@ -866,7 +862,7 @@ export function ResumeForm({
                           onClick={() => removeCert(i)}
                           className="absolute top-2 right-2 h-8 w-8 text-muted-foreground hover:text-destructive opacity-0 group-hover:opacity-100"
                         >
-                          <Trash size={16} />
+                          <Trash size={16} weight="duotone" />
                         </Button>
                         <div className="grid grid-cols-2 gap-4">
                           <div className="space-y-2">
@@ -910,7 +906,7 @@ export function ResumeForm({
                         appendCert({ name: "", issuer: "", date: "" })
                       }
                     >
-                      <Plus size={16} className="mr-2" />{" "}
+                      <Plus size={16} weight="duotone" className="mr-2" />{" "}
                       {t("editor.extras.certifications.add")}
                     </Button>
                   </div>
@@ -939,7 +935,7 @@ export function ResumeForm({
                           onClick={() => removeVol(i)}
                           className="absolute top-2 right-2 h-8 w-8 text-muted-foreground hover:text-destructive opacity-0 group-hover:opacity-100"
                         >
-                          <Trash size={16} />
+                          <Trash size={16} weight="duotone" />
                         </Button>
                         <div className="grid grid-cols-2 gap-4">
                           <div className="space-y-2">
@@ -986,7 +982,7 @@ export function ResumeForm({
                         })
                       }
                     >
-                      <Plus size={16} className="mr-2" />{" "}
+                      <Plus size={16} weight="duotone" className="mr-2" />{" "}
                       {t("editor.extras.volunteering.add")}
                     </Button>
                   </div>
@@ -1004,7 +1000,7 @@ export function ResumeForm({
           onClick={() => setActiveStep((s) => s - 1)}
           className="rounded-xl px-6 h-11 font-bold text-muted-foreground hover:text-foreground hover:bg-muted/50"
         >
-          <CaretLeft weight="bold" className="mr-2" /> {t("previous")}
+          <CaretLeft weight="duotone" className="mr-2" /> {t("previous")}
         </Button>
         <div className="flex gap-1.5">
           {[0, 1, 2, 3, 4, 5].map((i) => (
@@ -1022,7 +1018,7 @@ export function ResumeForm({
           disabled={activeStep === 5}
           className="rounded-xl px-10 h-11 shadow-xl shadow-primary/10 transition-all hover:scale-[1.03] active:scale-95 font-black uppercase tracking-widest text-xs"
         >
-          {t("next")} <CaretRight weight="bold" className="ml-2" />
+          {t("next")} <CaretRight weight="duotone" className="ml-2" />
         </Button>
       </div>
     </div>

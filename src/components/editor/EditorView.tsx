@@ -221,7 +221,7 @@ export function EditorView({
                 size="sm"
                 className="gap-2 rounded-full px-4 h-9 font-bold bg-muted/40 hover:bg-muted/60 border border-border/40 transition-all text-muted-foreground hover:text-foreground"
               >
-                <Target size={18} weight="bold" />
+                <Target size={18} weight="duotone" />
                 <span className="hidden lg:inline uppercase tracking-widest text-[10px]">
                   {t("header.jobMatch.button")}
                 </span>
@@ -230,7 +230,7 @@ export function EditorView({
             <DialogContent className="sm:max-w-[500px] rounded-3xl bg-background/95 backdrop-blur-2xl border-border/40 shadow-2xl">
               <DialogHeader>
                 <DialogTitle className="flex items-center gap-2 text-xl font-black uppercase tracking-tight">
-                  <Target size={24} weight="bold" className="text-primary" />{" "}
+                  <Target size={24} weight="duotone" className="text-primary" />{" "}
                   {t("header.jobMatch.title")}
                 </DialogTitle>
                 <DialogDescription className="text-xs text-muted-foreground uppercase tracking-widest font-bold">
@@ -260,7 +260,7 @@ export function EditorView({
               <button className="flex items-center gap-2.5 px-4 py-2 bg-muted/40 hover:bg-muted/60 border border-border/40 rounded-full transition-all duration-300 group shadow-sm text-muted-foreground hover:text-foreground">
                 <ShieldCheck
                   size={18}
-                  weight="bold"
+                  weight="duotone"
                   className={cn(
                     (atsResult?.score || 0) > 70
                       ? "text-emerald-500"
@@ -296,7 +296,11 @@ export function EditorView({
             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
             className="rounded-full h-9 w-9"
           >
-            {theme === "dark" ? <Sun size={20} /> : <Moon size={20} />}
+            {theme === "dark" ? (
+              <Sun size={20} weight="duotone" />
+            ) : (
+              <Moon size={20} weight="duotone" />
+            )}
           </Button>
           <LanguageSwitcher />
 
@@ -311,7 +315,7 @@ export function EditorView({
               <UserButton.MenuItems>
                 <UserButton.Link
                   label={t("header.auth.dashboard")}
-                  labelIcon={<ChartLineUp size={16} />}
+                  labelIcon={<ChartLineUp size={16} weight="duotone" />}
                   href={`/${locale}/dashboard`}
                 />
               </UserButton.MenuItems>
@@ -328,7 +332,7 @@ export function EditorView({
                 className="gap-2 rounded-full px-6 h-9 font-bold shadow-lg shadow-primary/10 active:scale-95 transition-all"
                 disabled={loading}
               >
-                <FileArrowDown size={18} weight="bold" />
+                <FileArrowDown size={18} weight="duotone" />
                 <span className="hidden sm:inline">
                   {loading
                     ? t("header.actions.generatingPdf")
@@ -345,7 +349,7 @@ export function EditorView({
                 size="icon"
                 className="rounded-full h-10 w-10 bg-muted/30"
               >
-                <List size={22} weight="bold" />
+                <List size={22} weight="duotone" />
               </Button>
             </SheetTrigger>
             <SheetContent
@@ -354,7 +358,7 @@ export function EditorView({
             >
               <SheetHeader className="p-6 border-b border-border/20 bg-primary/5">
                 <SheetTitle className="text-sm font-black uppercase tracking-[0.2em] flex items-center gap-2">
-                  <Gear size={18} /> {t("header.tools.title")}
+                  <Gear size={18} weight="duotone" /> {t("header.tools.title")}
                 </SheetTitle>
                 <SheetDescription className="sr-only">
                   Menu de ferramentas e configurações
@@ -365,7 +369,7 @@ export function EditorView({
                 {/* LinkedIn Section */}
                 <div className="space-y-4">
                   <h4 className="text-[10px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-2">
-                    <LinkedinLogo size={14} weight="fill" /> LinkedIn Import
+                    <LinkedinLogo size={14} weight="duotone" /> LinkedIn Import
                   </h4>
                   <div className="relative w-full">
                     <input
@@ -378,7 +382,7 @@ export function EditorView({
                       variant="outline"
                       className="w-full justify-start gap-3 rounded-xl py-6 border-border/40 hover:bg-[#0A66C2]/5 hover:text-[#0A66C2] transition-colors"
                     >
-                      <LinkedinLogo size={20} weight="fill" />
+                      <LinkedinLogo size={20} weight="duotone" />
                       <div className="flex flex-col items-start leading-tight">
                         <span className="text-sm font-bold">
                           {t("header.tools.importLinkedIn")}
@@ -394,7 +398,8 @@ export function EditorView({
                 {/* Slug Section */}
                 <div className="space-y-4">
                   <h4 className="text-[10px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-2">
-                    <Browser size={14} /> {t("header.tools.visibilityLink")}
+                    <Browser size={14} weight="duotone" />{" "}
+                    {t("header.tools.visibilityLink")}
                   </h4>
                   <div className="space-y-3">
                     <div className="space-y-2">
@@ -421,7 +426,11 @@ export function EditorView({
                       onClick={handleShare}
                       className="w-full justify-start gap-3 rounded-xl py-6 border-primary/20 hover:bg-primary/5 transition-all"
                     >
-                      <ShareNetwork size={20} className="text-primary" />
+                      <ShareNetwork
+                        size={20}
+                        weight="duotone"
+                        className="text-primary"
+                      />
                       <div className="flex flex-col items-start leading-tight">
                         <span className="text-sm font-bold">
                           {t("header.tools.generateLink")}
@@ -437,7 +446,7 @@ export function EditorView({
                 {/* Import/Export Section */}
                 <div className="space-y-4">
                   <h4 className="text-[10px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-2">
-                    <FileArrowUp size={14} /> Backup
+                    <FileArrowUp size={14} weight="duotone" /> Backup
                   </h4>
                   <div className="grid grid-cols-1 gap-2">
                     <div className="relative w-full">
@@ -451,7 +460,7 @@ export function EditorView({
                         variant="outline"
                         className="w-full justify-start gap-3 rounded-xl py-6 border-border/40"
                       >
-                        <FileArrowUp size={20} />
+                        <FileArrowUp size={20} weight="duotone" />
                         <span className="text-sm font-bold">
                           {t("header.tools.loadJson")}
                         </span>
@@ -462,7 +471,7 @@ export function EditorView({
                       onClick={handleExportJSON}
                       className="w-full justify-start gap-3 rounded-xl py-6 border-border/40"
                     >
-                      <FileArrowDown size={20} />
+                      <FileArrowDown size={20} weight="duotone" />
                       <span className="text-sm font-bold">
                         {t("header.tools.saveBackup")}
                       </span>
@@ -472,7 +481,8 @@ export function EditorView({
 
                 <div className="pt-8 border-t border-border/20 text-center">
                   <div className="inline-flex items-center gap-2 text-[10px] font-bold text-muted-foreground/50 uppercase tracking-widest">
-                    <Info size={14} /> {t("header.tools.version")}
+                    <Info size={14} weight="duotone" />{" "}
+                    {t("header.tools.version")}
                   </div>
                 </div>
               </div>
@@ -501,7 +511,7 @@ export function EditorView({
               onClick={() => setZoom((v) => Math.max(0.4, v - 0.1))}
               className="h-7 w-7"
             >
-              <MagnifyingGlassMinus size={14} />
+              <MagnifyingGlassMinus size={14} weight="duotone" />
             </Button>
             <span className="text-[10px] font-black w-10 text-center">
               {Math.round(zoom * 100)}%
@@ -512,7 +522,7 @@ export function EditorView({
               onClick={() => setZoom((v) => Math.min(1.2, v + 0.1))}
               className="h-7 w-7"
             >
-              <MagnifyingGlassPlus size={14} />
+              <MagnifyingGlassPlus size={14} weight="duotone" />
             </Button>
           </div>
           <div className="absolute inset-0 overflow-auto custom-scrollbar flex items-start justify-center p-12 canvas-grid">

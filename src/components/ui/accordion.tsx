@@ -52,10 +52,12 @@ function AccordionTrigger({
       >
         {children}
         <CaretDownIcon
+          weight="duotone"
           data-slot="accordion-trigger-icon"
           className="pointer-events-none shrink-0 group-aria-expanded/accordion-trigger:hidden"
         />
         <CaretUpIcon
+          weight="duotone"
           data-slot="accordion-trigger-icon"
           className="pointer-events-none hidden shrink-0 group-aria-expanded/accordion-trigger:inline"
         />

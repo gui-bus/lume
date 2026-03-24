@@ -73,12 +73,12 @@ export function PortfolioView({
                 href={`mailto:${personalInfo.email}`}
                 className="flex items-center gap-2 text-sm font-medium hover:text-primary transition-colors"
               >
-                <Envelope size={18} /> {personalInfo.email}
+                <Envelope size={18} weight="duotone" /> {personalInfo.email}
               </a>
             )}
             {personalInfo.location && (
               <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
-                <MapPin size={18} /> {personalInfo.location}
+                <MapPin size={18} weight="duotone" /> {personalInfo.location}
               </div>
             )}
             {personalInfo.linkedin && (
@@ -87,7 +87,7 @@ export function PortfolioView({
                 target="_blank"
                 className="flex items-center gap-2 text-sm font-medium hover:text-primary transition-colors"
               >
-                <LinkIcon size={18} /> LinkedIn
+                <LinkIcon size={18} weight="duotone" /> LinkedIn
               </a>
             )}
             {personalInfo.website && (
@@ -96,7 +96,7 @@ export function PortfolioView({
                 target="_blank"
                 className="flex items-center gap-2 text-sm font-medium hover:text-primary transition-colors"
               >
-                <LinkIcon size={18} /> Portfólio
+                <LinkIcon size={18} weight="duotone" /> Portfólio
               </a>
             )}
           </div>
@@ -183,7 +183,7 @@ export function PortfolioView({
                         target="_blank"
                         className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider hover:text-primary transition-colors"
                       >
-                        <GithubLogo size={16} weight="bold" /> Código
+                        <GithubLogo size={16} weight="duotone" /> Código
                       </a>
                     )}
                     {proj.deploy && (
@@ -192,7 +192,7 @@ export function PortfolioView({
                         target="_blank"
                         className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider hover:text-primary transition-colors"
                       >
-                        <LinkIcon size={16} weight="bold" /> Live Demo
+                        <LinkIcon size={16} weight="duotone" /> Live Demo
                       </a>
                     )}
                   </div>

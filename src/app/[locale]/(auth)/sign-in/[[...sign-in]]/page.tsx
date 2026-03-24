@@ -78,7 +78,7 @@ export default function SignInPage() {
                 <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center">
                   <ShieldCheck
                     size={28}
-                    weight="bold"
+                    weight="duotone"
                     className="text-primary"
                   />
                 </div>
@@ -114,7 +114,7 @@ export default function SignInPage() {
               transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
               className="absolute -bottom-6 left-0 px-6 py-3 rounded-2xl bg-primary border border-primary/20 shadow-2xl z-30 flex items-center gap-3"
             >
-              <Target size={20} weight="bold" className="text-white" />
+              <Target size={20} weight="duotone" className="text-white" />
               <span className="text-xs font-black uppercase tracking-widest text-white tracking-tighter">
                 Fullstack Expert
               </span>
@@ -134,7 +134,11 @@ export default function SignInPage() {
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
               className="rounded-full h-8 w-8 hover:bg-background/80"
             >
-              {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
+              {theme === "dark" ? (
+                <Sun size={18} weight="duotone" />
+              ) : (
+                <Moon size={18} weight="duotone" />
+              )}
             </Button>
           </div>
         </div>

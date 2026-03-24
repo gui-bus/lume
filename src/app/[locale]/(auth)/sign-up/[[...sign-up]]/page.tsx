@@ -78,7 +78,7 @@ export default function SignUpPage() {
                 <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center">
                   <ShieldCheck
                     size={28}
-                    weight="bold"
+                    weight="duotone"
                     className="text-primary"
                   />
                 </div>
@@ -118,7 +118,11 @@ export default function SignUpPage() {
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
               className="rounded-full h-8 w-8 hover:bg-background/80 transition-colors"
             >
-              {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
+              {theme === "dark" ? (
+                <Sun size={18} weight="duotone" />
+              ) : (
+                <Moon size={18} weight="duotone" />
+              )}
             </Button>
           </div>
         </div>
