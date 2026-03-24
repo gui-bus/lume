@@ -1,0 +1,166 @@
+{
+  "common": {
+    "title": "Lume",
+    "description": "Gerador de Currículos e Portfólios",
+    "next": "Próximo",
+    "previous": "Anterior",
+    "save": "Salvar",
+    "preview": "Visualizar",
+    "loading": "Carregando...",
+    "downloadPDF": "Baixar PDF",
+    "atsScore": "Score {score}",
+    "step": "Passo {number}",
+    "myResume": "Meu Currículo",
+    "clearDraft": "Limpar Tudo"
+  },
+  "editor": {
+    "title": "Editar Currículo",
+    "subtitle": "Refine suas informações profissionais.",
+    "steps": {
+      "profile": "Perfil",
+      "stack": "Stack",
+      "journey": "Jornada",
+      "education": "Formação",
+      "projects": "Projetos",
+      "extras": "Extras"
+    },
+    "personalInfo": {
+      "fullName": "Nome Completo",
+      "fullNamePlaceholder": "Ex: João Silva",
+      "email": "E-mail",
+      "emailPlaceholder": "seu@email.com",
+      "phone": "Telefone",
+      "phonePlaceholder": "(11) 99999-9999",
+      "location": "Localização",
+      "locationPlaceholder": "São Paulo, SP",
+      "linkedin": "LinkedIn",
+      "portfolio": "Portfólio",
+      "summary": "Resumo Profissional",
+      "summaryPlaceholder": "Uma breve introdução..."
+    },
+    "stack": {
+      "title": "Tecnologias & Expertises",
+      "placeholder": "React, Node.js, TypeScript, Docker, AWS...",
+      "hint": "Separe cada tecnologia utilizando vírgulas"
+    },
+    "experience": {
+      "add": "Adicionar Experiência",
+      "company": "Empresa",
+      "position": "Cargo",
+      "startDate": "Início",
+      "endDate": "Fim",
+      "current": "Ainda trabalho nesta empresa",
+      "description": "Descrição",
+      "placeholder": {
+        "startDate": "Jan 2020"
+      }
+    },
+    "education": {
+      "add": "Adicionar Formação",
+      "school": "Instituição",
+      "degree": "Grau",
+      "field": "Área",
+      "graduationDate": "Data de Graduação",
+      "placeholder": {
+        "graduationDate": "2019"
+      }
+    },
+    "projects": {
+      "add": "Adicionar Projeto",
+      "name": "Nome do Projeto",
+      "github": "GitHub",
+      "deploy": "Deploy",
+      "description": "Descrição"
+    },
+    "extras": {
+      "languages": {
+        "title": "Idiomas",
+        "label": "Idioma",
+        "placeholder": "Ex: Inglês",
+        "proficiency": "Proficiência",
+        "add": "Novo Idioma",
+        "levels": {
+          "basico": "Básico",
+          "intermediario": "Intermediário",
+          "avancado": "Avançado",
+          "fluente": "Fluente",
+          "nativo": "Nativo"
+        }
+      },
+      "certifications": {
+        "title": "Certificações",
+        "name": "Certificado",
+        "issuer": "Emissor",
+        "date": "Ano",
+        "datePlaceholder": "2023",
+        "add": "Nova Certificação"
+      },
+      "volunteering": {
+        "title": "Voluntariado",
+        "organization": "Organização",
+        "role": "Papel",
+        "description": "Sobre o trabalho",
+        "add": "Novo Registro"
+      }
+    }
+  },
+  "header": {
+    "jobMatch": {
+      "button": "Match de Vagas",
+      "title": "Análise de Match",
+      "description": "Compare seu currículo com uma vaga real",
+      "placeholder": "Cole aqui a descrição completa da vaga...",
+      "charCount": "{count} caracteres",
+      "clear": "Limpar texto",
+      "technicalMatch": "Aderência técnica",
+      "basedOnKeywords": "Baseado em palavras-chave",
+      "missingKeywords": "Faltando no seu currículo",
+      "matchingKeywords": "Competências encontradas"
+    },
+    "healthCheck": {
+      "title": "Health Check",
+      "atsStructure": "Estrutura (ATS)",
+      "strongVerbs": "Verbos de Impacto",
+      "suggestionsLabel": "Sugestões:"
+    },
+    "actions": {
+      "importJsonSuccess": "JSON importado!",
+      "importJsonError": "Erro no JSON",
+      "importLinkedInInfo": "Processando LinkedIn...",
+      "importLinkedInSuccess": "Dados extraídos!",
+      "importLinkedInError": "Erro no processamento",
+      "exportJsonSuccess": "JSON exportado!",
+      "shareSuccess": "Link de compartilhamento copiado!",
+      "shareError": "Falha ao gerar link",
+      "portfolioEnabled": "Modo Portfólio Ativado",
+      "portfolioDisabled": "Modo Currículo Ativado",
+      "generatingPdf": "Gerando...",
+      "downloadPdf": "Baixar PDF",
+      "pdfShort": "PDF"
+    },
+    "export": {
+      "jsonFilename": "curriculo-{name}.json",
+      "pdfFilename": "curriculo-{name}.pdf"
+    },
+    "tools": {
+      "title": "Ferramentas & Ajustes",
+      "importExport": "Importação & Exportação",
+      "importLinkedIn": "Importar LinkedIn",
+      "importLinkedInDesc": "Extrair do seu perfil PDF",
+      "loadJson": "Carregar JSON",
+      "loadJsonDesc": "Restaurar de um backup",
+      "saveBackup": "Salvar Backup",
+      "saveBackupDesc": "Exportar para arquivo .json",
+      "visibilityLink": "Visibilidade & Link",
+      "generateLink": "Gerar Link Público",
+      "generateLinkDesc": "Compartilhe sua URL única",
+      "portfolioActive": "Modo Portfólio Ativo",
+      "portfolioActivate": "Ativar Modo Portfólio",
+      "portfolioDesc": "Exibir currículo como site",
+      "metrics": "Métricas de Acesso",
+      "views": "Views",
+      "downloads": "Downloads",
+      "version": "Lume v1.0"
+    }
+  }
+}

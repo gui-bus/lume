@@ -1,0 +1,166 @@
+{
+  "common": {
+    "title": "Lume",
+    "description": "Resume & Portfolio Builder",
+    "next": "Next",
+    "previous": "Previous",
+    "save": "Save",
+    "preview": "Preview",
+    "loading": "Loading...",
+    "downloadPDF": "Download PDF",
+    "atsScore": "Score {score}",
+    "step": "Step {number}",
+    "myResume": "My Resume",
+    "clearDraft": "Clear All Data"
+  },
+  "editor": {
+    "title": "Edit Resume",
+    "subtitle": "Refine your professional information.",
+    "steps": {
+      "profile": "Profile",
+      "stack": "Stack",
+      "journey": "Journey",
+      "education": "Education",
+      "projects": "Projects",
+      "extras": "Extras"
+    },
+    "personalInfo": {
+      "fullName": "Full Name",
+      "fullNamePlaceholder": "e.g. John Doe",
+      "email": "Email",
+      "emailPlaceholder": "your@email.com",
+      "phone": "Phone",
+      "phonePlaceholder": "+1 555-555-5555",
+      "location": "Location",
+      "locationPlaceholder": "New York, NY",
+      "linkedin": "LinkedIn",
+      "portfolio": "Portfolio",
+      "summary": "Professional Summary",
+      "summaryPlaceholder": "A brief introduction..."
+    },
+    "stack": {
+      "title": "Technologies & Expertises",
+      "placeholder": "React, Node.js, TypeScript, Docker, AWS...",
+      "hint": "Separate each technology using commas"
+    },
+    "experience": {
+      "add": "Add Experience",
+      "company": "Company",
+      "position": "Position",
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "current": "I still work at this company",
+      "description": "Description",
+      "placeholder": {
+        "startDate": "Jan 2020"
+      }
+    },
+    "education": {
+      "add": "Add Education",
+      "school": "Institution",
+      "degree": "Degree",
+      "field": "Field",
+      "graduationDate": "Graduation Date",
+      "placeholder": {
+        "graduationDate": "2019"
+      }
+    },
+    "projects": {
+      "add": "Add Project",
+      "name": "Project Name",
+      "github": "GitHub",
+      "deploy": "Deploy",
+      "description": "Description"
+    },
+    "extras": {
+      "languages": {
+        "title": "Languages",
+        "label": "Language",
+        "placeholder": "e.g. English",
+        "proficiency": "Proficiency",
+        "add": "New Language",
+        "levels": {
+          "basico": "Basic",
+          "intermediario": "Intermediate",
+          "avancado": "Advanced",
+          "fluente": "Fluent",
+          "nativo": "Native"
+        }
+      },
+      "certifications": {
+        "title": "Certifications",
+        "name": "Certificate",
+        "issuer": "Issuer",
+        "date": "Year",
+        "datePlaceholder": "2023",
+        "add": "New Certification"
+      },
+      "volunteering": {
+        "title": "Volunteering",
+        "organization": "Organization",
+        "role": "Role",
+        "description": "About the work",
+        "add": "New Entry"
+      }
+    }
+  },
+  "header": {
+    "jobMatch": {
+      "button": "Job Match",
+      "title": "Match Analysis",
+      "description": "Compare your resume with a real job opening",
+      "placeholder": "Paste the full job description here...",
+      "charCount": "{count} characters",
+      "clear": "Clear text",
+      "technicalMatch": "Technical Match",
+      "basedOnKeywords": "Based on keywords",
+      "missingKeywords": "Missing from your resume",
+      "matchingKeywords": "Found skills"
+    },
+    "healthCheck": {
+      "title": "Health Check",
+      "atsStructure": "Structure (ATS)",
+      "strongVerbs": "Impact Verbs",
+      "suggestionsLabel": "Suggestions:"
+    },
+    "actions": {
+      "importJsonSuccess": "JSON imported!",
+      "importJsonError": "JSON Error",
+      "importLinkedInInfo": "Processing LinkedIn...",
+      "importLinkedInSuccess": "Data extracted!",
+      "importLinkedInError": "Processing error",
+      "exportJsonSuccess": "JSON exported!",
+      "shareSuccess": "Share link copied!",
+      "shareError": "Failed to generate link",
+      "portfolioEnabled": "Portfolio Mode Enabled",
+      "portfolioDisabled": "Resume Mode Enabled",
+      "generatingPdf": "Generating...",
+      "downloadPdf": "Download PDF",
+      "pdfShort": "PDF"
+    },
+    "export": {
+      "jsonFilename": "resume-{name}.json",
+      "pdfFilename": "resume-{name}.pdf"
+    },
+    "tools": {
+      "title": "Tools & Adjustments",
+      "importExport": "Import & Export",
+      "importLinkedIn": "Import LinkedIn",
+      "importLinkedInDesc": "Extract from your PDF profile",
+      "loadJson": "Load JSON",
+      "loadJsonDesc": "Restore from a backup",
+      "saveBackup": "Save Backup",
+      "saveBackupDesc": "Export to .json file",
+      "visibilityLink": "Visibility & Link",
+      "generateLink": "Generate Public Link",
+      "generateLinkDesc": "Share your unique URL",
+      "portfolioActive": "Portfolio Mode Active",
+      "portfolioActivate": "Activate Portfolio Mode",
+      "portfolioDesc": "Display resume as a website",
+      "metrics": "Access Metrics",
+      "views": "Views",
+      "downloads": "Downloads",
+      "version": "Lume v1.0"
+    }
+  }
+}
