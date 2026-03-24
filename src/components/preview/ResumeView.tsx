@@ -34,12 +34,23 @@ export function ResumeView({ data, colorTheme = "#18181b" }: ResumeViewProps) {
           </h1>
           <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] font-medium text-slate-500">
             {personalInfo.email && (
-              <span className="text-slate-800">{personalInfo.email}</span>
+              <a
+                href={`mailto:${personalInfo.email}`}
+                className="text-blue-600 hover:underline"
+              >
+                {personalInfo.email}
+              </a>
             )}
             {personalInfo.phone && (
               <>
                 <span className="text-slate-300">•</span>
-                <span>{personalInfo.phone}</span>
+                <a
+                  href={`https://wa.me/${personalInfo.phone.replace(/\D/g, "")}?text=${encodeURIComponent("Vim pelo seu currículo")}`}
+                  target="_blank"
+                  className="text-blue-600 hover:underline"
+                >
+                  {personalInfo.phone}
+                </a>
               </>
             )}
             {personalInfo.location && (
@@ -57,6 +68,18 @@ export function ResumeView({ data, colorTheme = "#18181b" }: ResumeViewProps) {
                   className="text-blue-600 font-bold uppercase tracking-wider"
                 >
                   LinkedIn
+                </a>
+              </>
+            )}
+            {personalInfo.website && (
+              <>
+                <span className="text-slate-300">•</span>
+                <a
+                  href={personalInfo.website}
+                  target="_blank"
+                  className="text-blue-600 font-bold uppercase tracking-wider"
+                >
+                  Portfólio
                 </a>
               </>
             )}

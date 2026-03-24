@@ -207,12 +207,22 @@ export const ResumePDF = ({
           </Text>
           <View style={styles.contactRow}>
             {personalInfo.email && (
-              <Text style={styles.contactTextMain}>{personalInfo.email}</Text>
+              <Link
+                style={[styles.link, { fontWeight: "normal" }]}
+                src={`mailto:${personalInfo.email}`}
+              >
+                {personalInfo.email}
+              </Link>
             )}
             {personalInfo.phone && (
               <>
                 <Text style={styles.bullet}>•</Text>
-                <Text style={styles.contactText}>{personalInfo.phone}</Text>
+                <Link
+                  style={[styles.link, { fontWeight: "normal" }]}
+                  src={`https://wa.me/${personalInfo.phone.replace(/\D/g, "")}?text=${encodeURIComponent("Vim pelo seu currículo")}`}
+                >
+                  {personalInfo.phone}
+                </Link>
               </>
             )}
             {personalInfo.location && (
