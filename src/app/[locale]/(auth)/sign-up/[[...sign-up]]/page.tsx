@@ -6,11 +6,12 @@ import { motion } from "framer-motion";
 import { useTheme } from "@/components/theme-provider";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { Button } from "@/components/ui/button";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 
 export default function SignUpPage() {
   const { theme, setTheme } = useTheme();
   const t = useTranslations("common");
+  const locale = useLocale();
 
   return (
     <div className="min-h-screen w-full flex bg-background overflow-hidden relative text-foreground selection:bg-primary/30">
@@ -66,44 +67,6 @@ export default function SignUpPage() {
               ))}
             </motion.div>
           </div>
-
-          <div className="relative h-64 w-full mt-10">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.5, rotate: -12, x: 20, y: -20 }}
-              animate={{ opacity: 1, scale: 1, rotate: -12, x: 0, y: 0 }}
-              transition={{ delay: 0.6, type: "spring", stiffness: 120 }}
-              className="absolute top-0 left-0 w-60 p-8 rounded-[3rem] bg-white border border-white/20 shadow-[0_40px_80px_-15px_rgba(0,0,0,0.4)] z-20"
-            >
-              <div className="flex items-center justify-between mb-6 text-slate-900">
-                <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center">
-                  <ShieldCheck
-                    size={28}
-                    weight="duotone"
-                    className="text-primary"
-                  />
-                </div>
-                <div className="text-right">
-                  <span className="block text-[10px] font-black uppercase tracking-widest text-slate-400 leading-none mb-1">
-                    {t("auth.atsEngine")}
-                  </span>
-                  <span className="text-[11px] font-bold text-emerald-500 uppercase">
-                    {t("auth.status")}
-                  </span>
-                </div>
-              </div>
-              <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
-                <div className="h-full bg-primary w-[98%]" />
-              </div>
-              <div className="mt-4 flex items-end gap-1 text-slate-900">
-                <span className="text-4xl font-black tracking-tighter leading-none text-slate-900">
-                  98%
-                </span>
-                <span className="text-[10px] font-black text-primary uppercase tracking-widest mb-1 ml-1">
-                  {t("auth.match")}
-                </span>
-              </div>
-            </motion.div>
-          </div>
         </div>
       </div>
 
@@ -145,6 +108,9 @@ export default function SignUpPage() {
 
           <div className="w-full">
             <SignUp
+              routing="path"
+              path={`/${locale}/sign-up`}
+              signInUrl={`/${locale}/sign-in`}
               appearance={{
                 elements: {
                   rootBox: "w-full",

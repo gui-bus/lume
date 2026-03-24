@@ -17,7 +17,7 @@ export function Providers({ children, messages, locale }: ProvidersProps) {
   const localization = locale === "pt" ? ptBR : enUS;
 
   return (
-    <ClerkProvider localization={localization}>
+    <ClerkProvider localization={localization} afterSignOutUrl="/">
       <ThemeProvider>
         <NextIntlClientProvider messages={messages} locale={locale}>
           {children}
