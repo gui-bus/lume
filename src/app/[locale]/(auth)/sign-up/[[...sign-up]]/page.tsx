@@ -106,30 +106,8 @@ export default function SignUpPage() {
             </p>
           </div>
 
-          <div className="w-full">
-            <SignUp
-              routing="path"
-              path={`/${locale}/sign-up`}
-              signInUrl={`/${locale}/sign-in`}
-              fallbackRedirectUrl={`/${locale}`}
-              appearance={{
-                elements: {
-                  rootBox: "w-full",
-                  card: "bg-background shadow-xl border border-border/40 p-8 rounded-3xl text-foreground",
-                  headerTitle: "text-2xl font-black tracking-tight",
-                  headerSubtitle: "text-muted-foreground",
-                  main: "space-y-6",
-                  formButtonPrimary:
-                    "bg-primary hover:bg-primary/90 text-sm font-bold h-12 rounded-xl transition-all shadow-lg shadow-primary/10",
-                  formFieldInput:
-                    "h-11 rounded-xl bg-muted/20 border-border/50 focus:ring-4 focus:ring-primary/10 transition-all text-sm px-4",
-                  footer: "mt-8 border-t border-border/40 pt-6",
-                  footerActionLink: "text-primary font-bold hover:underline",
-                  socialButtonsBlockButton:
-                    "h-12 rounded-xl border-border/50 bg-background hover:bg-muted/50 transition-all font-bold text-sm",
-                },
-              }}
-            />
+          <div className="w-full flex justify-center">
+            <SignUp routing="path" path={`/${locale}/sign-up`} />
           </div>
         </div>
 
