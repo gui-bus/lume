@@ -17,6 +17,7 @@ model Resume {
   id          String   @id @default(uuid())
   title       String
   content     Json
+  locale      String   @default("pt")
   colorTheme  String   @default("#18181b")
   isPortfolio Boolean  @default(false)
   views       Int      @default(0)
@@ -25,4 +26,8 @@ model Resume {
   user        User?    @relation(fields: [userId], references: [id])
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  groupId String?
+
+  @@index([groupId, locale])
 }
