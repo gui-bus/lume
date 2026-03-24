@@ -3,10 +3,8 @@ import { ResumeData } from "@/types/resume";
 export async function parseLinkedInPDF(
   file: File,
 ): Promise<Partial<ResumeData>> {
-  // Importação dinâmica para evitar erro no SSR (DOMMatrix is not defined)
   const pdfjsLib = await import("pdfjs-dist");
 
-  // Configura o worker do PDF.js
   pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.mjs`;
 
   const arrayBuffer = await file.arrayBuffer();
@@ -14,7 +12,6 @@ export async function parseLinkedInPDF(
 
   let fullText = "";
 
-  // Extrai todo o texto de todas as páginas
   for (let i = 1; i <= pdf.numPages; i++) {
     const page = await pdf.getPage(i);
     const textContent = await page.getTextContent();
@@ -22,7 +19,6 @@ export async function parseLinkedInPDF(
     fullText += pageText + "\n";
   }
 
-  // Lógica Básica de Extração (Heurísticas baseadas no padrão do LinkedIn)
   const lines = fullText
     .split("\n")
     .map((l) => l.trim())

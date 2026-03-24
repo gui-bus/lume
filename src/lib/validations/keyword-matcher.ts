@@ -1,6 +1,5 @@
 import { ResumeData } from "@/types/resume";
 
-// Dicionário base de tecnologias e competências para o algoritmo filtrar o ruído
 const SKILL_DICTIONARY = [
   "react",
   "next.js",
@@ -94,13 +93,12 @@ export function analyzeJobMatch(
     text
       .toLowerCase()
       .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "") // Remove acentos
-      .replace(/[^\w\s.#]/g, " "); // Remove símbolos exceto ponto e hashtag (C#, .NET)
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^\w\s.#]/g, " ");
 
   const jobNormalized = normalize(jobDescription);
   const resumeNormalized = normalize(JSON.stringify(resumeData));
 
-  // 1. Encontra quais palavras do nosso dicionário estão na vaga
   const jobKeywordsFound = SKILL_DICTIONARY.filter((skill) => {
     const regex = new RegExp(`\\b${skill.replace(".", "\\.")}\\b`, "gi");
     return regex.test(jobNormalized);
@@ -115,7 +113,6 @@ export function analyzeJobMatch(
     };
   }
 
-  // 2. Cruza com o que existe no currículo
   const matchingKeywords: string[] = [];
   const missingKeywords: string[] = [];
 
@@ -128,7 +125,6 @@ export function analyzeJobMatch(
     }
   });
 
-  // 3. Calcula o Score (0 a 100)
   const score = Math.round(
     (matchingKeywords.length / jobKeywordsFound.length) * 100,
   );

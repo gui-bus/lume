@@ -13,8 +13,6 @@ export function ResumeView({ data, colorTheme = "#18181b" }: ResumeViewProps) {
   const [pages, setPages] = useState<React.ReactNode[][]>([]);
   const measureRef = useRef<HTMLDivElement>(null);
 
-  // A4 a 96 DPI: 794px x 1123px. Margens 25mm = 94.5px.
-  // Altura útil: 1123 - (94.5 * 2) = 934px. Usamos 900px por segurança.
   const SAFE_PAGE_HEIGHT = 900;
 
   const {
@@ -41,7 +39,6 @@ export function ResumeView({ data, colorTheme = "#18181b" }: ResumeViewProps) {
       </div>
     );
 
-    // 1. Cabeçalho (Design Limpo ATS)
     blocks.push(
       wrap(
         <div className="flex flex-col gap-2">
@@ -115,7 +112,6 @@ export function ResumeView({ data, colorTheme = "#18181b" }: ResumeViewProps) {
       </div>
     );
 
-    // 2. Experiência
     if (experiences?.length > 0) {
       blocks.push(
         wrap(sectionTitle("Experiência Profissional"), "title-exp", "pb-0"),
@@ -154,7 +150,6 @@ export function ResumeView({ data, colorTheme = "#18181b" }: ResumeViewProps) {
       });
     }
 
-    // 3. Educação
     if (educations?.length > 0) {
       blocks.push(
         wrap(sectionTitle("Formação Acadêmica"), "title-edu", "pb-0"),
@@ -180,7 +175,6 @@ export function ResumeView({ data, colorTheme = "#18181b" }: ResumeViewProps) {
       });
     }
 
-    // 4. Habilidades (Coluna Única)
     if (skills?.length > 0) {
       blocks.push(wrap(sectionTitle("Habilidades"), "title-skills", "pb-0"));
       blocks.push(
@@ -200,7 +194,6 @@ export function ResumeView({ data, colorTheme = "#18181b" }: ResumeViewProps) {
       );
     }
 
-    // 5. Idiomas (Coluna Única)
     if (languages?.length > 0) {
       blocks.push(wrap(sectionTitle("Idiomas"), "title-langs", "pb-0"));
       blocks.push(
@@ -220,7 +213,6 @@ export function ResumeView({ data, colorTheme = "#18181b" }: ResumeViewProps) {
       );
     }
 
-    // 6. Certificações
     if (certifications?.length > 0) {
       blocks.push(wrap(sectionTitle("Certificações"), "title-certs", "pb-0"));
       certifications.forEach((c, i) => {
@@ -244,7 +236,6 @@ export function ResumeView({ data, colorTheme = "#18181b" }: ResumeViewProps) {
       });
     }
 
-    // 7. Projetos
     if (projects?.length > 0) {
       blocks.push(wrap(sectionTitle("Projetos"), "title-proj", "pb-0"));
       projects.forEach((p, i) => {

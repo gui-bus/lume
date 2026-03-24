@@ -56,7 +56,6 @@ export async function getResume(id: string, locale?: string) {
 
   try {
     if (locale) {
-      // 1. Tenta buscar a versão exata do idioma para aquele groupId
       const resumeByGroup = await prisma.resume.findFirst({
         where: {
           groupId: id,
@@ -71,7 +70,6 @@ export async function getResume(id: string, locale?: string) {
         return resumeByGroup;
       }
 
-      // 2. Se o ID passado for um ID individual e não um groupId, descobrimos o groupId dele
       const individualResume = await prisma.resume.findUnique({
         where: { id: id },
         select: { groupId: true },
@@ -93,7 +91,6 @@ export async function getResume(id: string, locale?: string) {
       }
     }
 
-    // Fallback: busca pelo ID exato ou primeiro disponível
     const fallback = await prisma.resume.findFirst({
       where: {
         OR: [{ id: id }, { groupId: id }],

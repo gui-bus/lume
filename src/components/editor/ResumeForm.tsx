@@ -131,7 +131,6 @@ export function ResumeForm({
   const dataString = JSON.stringify(watchedData);
 
   useEffect(() => {
-    // Carrega dados iniciais específicos do idioma
     const savedDraft = localStorage.getItem(`resume-draft-${locale}`);
     const savedId = localStorage.getItem(`resume-id-${locale}`);
 
@@ -163,7 +162,6 @@ export function ResumeForm({
             localStorage.getItem(`resume-id-${locale}`) || resumeId;
           const groupId = localStorage.getItem("resume-group-id");
 
-          // Usamos t.rich ou apenas t se for uma string simples para o título
           const resumeTitle = t("common.myResume");
           const result = await saveResume(
             currentId || undefined,
@@ -188,7 +186,7 @@ export function ResumeForm({
       };
       performSave();
     }
-  }, [debouncedData, locale]); // Removido resumeId, onIdGenerated e t para evitar loops
+  }, [debouncedData, locale]);
 
   return (
     <div className="flex flex-col h-full bg-background overflow-hidden">

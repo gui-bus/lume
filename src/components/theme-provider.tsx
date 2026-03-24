@@ -18,7 +18,6 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setThemeState] = React.useState<Theme>("dark");
 
   useEffect(() => {
-    // Ao carregar, recupera o tema do localStorage ou preferência do sistema
     const savedTheme = localStorage.getItem("theme") as Theme | null;
     const initialTheme =
       savedTheme ||
@@ -43,7 +42,6 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   );
 }
 
-// Hook customizado para substituir o 'useTheme' do next-themes
 export function useTheme() {
   const context = React.useContext(ThemeContext);
   if (!context) throw new Error("useTheme must be used within ThemeProvider");

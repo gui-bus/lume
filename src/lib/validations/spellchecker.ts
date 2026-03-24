@@ -42,7 +42,6 @@ export function checkStrongVerbs(data: ResumeData): SpellCheckResult {
     WEAK_WORDS.forEach((word) => {
       const index = lowerText.indexOf(word);
       if (index !== -1) {
-        // Pega um pequeno contexto ao redor da palavra
         const start = Math.max(0, index - 20);
         const end = Math.min(text.length, index + word.length + 20);
         const context =

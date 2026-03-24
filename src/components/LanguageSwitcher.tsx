@@ -15,8 +15,7 @@ export function LanguageSwitcher() {
   const switchLanguage = (newLocale: string) => {
     startTransition(() => {
       router.replace(pathname, { locale: newLocale });
-      // Forçamos o refresh para garantir que o Server Component (SharePage)
-      // busque os dados novamente com o novo locale
+
       router.refresh();
     });
   };

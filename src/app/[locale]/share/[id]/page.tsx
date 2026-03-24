@@ -23,7 +23,6 @@ export default async function SharePage({ params }: SharePageProps) {
   const hasViewed = cookieStore.get(viewedCookieName);
 
   if (!hasViewed) {
-    // Incrementa a visualização de forma assíncrona
     incrementView(resume.id);
   }
 

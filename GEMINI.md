@@ -91,6 +91,7 @@ src/
 - **Styling:** Adhere to Tailwind CSS 4 conventions and use shadcn/ui components for consistency.
 - **Git Hooks:** Husky and commitlint are configured. Ensure commit messages follow the [Conventional Commits](https://www.conventionalcommits.org/) specification.
 - **Code Quality:** ESLint and Prettier are used for linting and formatting. Run `pnpm lint` to check for issues.
+- **Comments:** Do not use `//` comments in the code. Remove any existing single-line comments.
 
 ## Testing Strategy
 

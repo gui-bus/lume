@@ -9,7 +9,6 @@ import {
 } from "@react-pdf/renderer";
 import { ResumeData } from "@/types/resume";
 
-// Fator de conversão PX para PT: 1px = 0.75pt
 const PX = 0.75;
 
 const styles = StyleSheet.create({
@@ -19,7 +18,7 @@ const styles = StyleSheet.create({
     fontFamily: "Helvetica",
     color: "#1e293b",
   },
-  // 1. Cabeçalho
+
   header: {
     marginBottom: 24 * PX,
   },
@@ -67,7 +66,7 @@ const styles = StyleSheet.create({
     color: "#475569",
     marginTop: 8 * PX,
   },
-  // Seções
+
   sectionTitleContainer: {
     flexDirection: "row",
     alignItems: "center",
@@ -86,7 +85,7 @@ const styles = StyleSheet.create({
     height: 0.5 * PX,
     backgroundColor: "#e2e8f0",
   },
-  // Itens
+
   item: {
     marginBottom: 18 * PX,
   },
@@ -127,7 +126,7 @@ const styles = StyleSheet.create({
     color: "#475569",
     marginTop: 4 * PX,
   },
-  // Habilidades
+
   skillsGrid: {
     flexDirection: "row",
     flexWrap: "wrap",
@@ -144,7 +143,7 @@ const styles = StyleSheet.create({
     borderRadius: 4 * PX,
     color: "#475569",
   },
-  // Idiomas
+
   languageItem: {
     flexDirection: "row",
     gap: 6 * PX,
@@ -161,7 +160,7 @@ const styles = StyleSheet.create({
     color: "#94a3b8",
     textTransform: "uppercase",
   },
-  // Projetos
+
   projectHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
