@@ -418,7 +418,7 @@ export function EditorView({
                 {/* Import/Export Section */}
                 <div className="space-y-4">
                   <h4 className="text-[10px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-2">
-                    <FileArrowUp size={14} weight="duotone" /> Backup
+                    <FileArrowUp size={14} weight="duotone" /> Backup & Restore
                   </h4>
                   <div className="grid grid-cols-1 gap-2">
                     <div className="relative w-full">
@@ -430,23 +430,41 @@ export function EditorView({
                       />
                       <Button
                         variant="outline"
-                        className="w-full justify-start gap-3 rounded-xl py-6 border-border/40"
+                        className="w-full justify-start gap-3 rounded-xl py-6 border-border/40 hover:bg-primary/5 hover:border-primary/20 transition-all"
                       >
-                        <FileArrowUp size={20} weight="duotone" />
-                        <span className="text-sm font-bold">
-                          {t("header.tools.loadJson")}
-                        </span>
+                        <FileArrowUp
+                          size={20}
+                          weight="duotone"
+                          className="text-primary"
+                        />
+                        <div className="flex flex-col items-start leading-tight">
+                          <span className="text-sm font-bold">
+                            {t("header.tools.loadJson")}
+                          </span>
+                          <span className="text-[10px] opacity-60">
+                            {t("header.tools.loadJsonDesc")}
+                          </span>
+                        </div>
                       </Button>
                     </div>
                     <Button
                       variant="outline"
                       onClick={handleExportJSON}
-                      className="w-full justify-start gap-3 rounded-xl py-6 border-border/40"
+                      className="w-full justify-start gap-3 rounded-xl py-6 border-border/40 hover:bg-primary/5 hover:border-primary/20 transition-all"
                     >
-                      <FileArrowDown size={20} weight="duotone" />
-                      <span className="text-sm font-bold">
-                        {t("header.tools.saveBackup")}
-                      </span>
+                      <FileArrowDown
+                        size={20}
+                        weight="duotone"
+                        className="text-primary"
+                      />
+                      <div className="flex flex-col items-start leading-tight">
+                        <span className="text-sm font-bold">
+                          {t("header.tools.saveBackup")}
+                        </span>
+                        <span className="text-[10px] opacity-60">
+                          {t("header.tools.saveBackupDesc")}
+                        </span>
+                      </div>
                     </Button>
                   </div>
                 </div>
