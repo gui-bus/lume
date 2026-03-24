@@ -18,13 +18,13 @@
 
 ## 📖 Panorama Geral
 
-O **Lume** é uma plataforma de engenharia de carreira projetada para profissionais que buscam excelência visual e técnica. Mais do que um simples editor, o Lume resolve a fricção na criação de currículos otimizados para algoritmos (ATS) em uma experiência fluida e integrada.
+O **Lume** é uma plataforma de engenharia de carreira projetada para profissionais que buscam excelência visual e técnica. Mais do que um simples editor, o Lume resolve a fricção na criação de currículos otimizados para algoritmos (ATS) em uma experiência fluida, integrada e de alta performance.
 
 ### 🎯 Diferenciais Estratégicos
 
 - **Foco em Conversão (ATS):** Validadores integrados que garantem que seu currículo seja lido corretamente por sistemas de recrutamento.
-- **Preview em Tempo Real:** Edição instantânea com renderização fiel de PDF.
-- **Experiência Premium:** Interface baseada em micro-interações, View Transitions e tipografia de alta legibilidade.
+- **Preview em Tempo Real:** Edição instantânea com renderização fiel de PDF via motor dedicado.
+- **Experiência Premium:** Interface baseada em micro-interações, View Transitions para troca de temas e tipografia otimizada.
 
 ---
 
@@ -32,22 +32,24 @@ O **Lume** é uma plataforma de engenharia de carreira projetada para profission
 
 ### 🖋️ Editor Inteligente & Real-time
 
-Interface de alta performance que elimina a necessidade de recarregamentos:
+Interface de alta performance focada em UX:
 
-- **Live PDF Rendering:** Visualização instantânea do documento final via `@react-pdf/renderer`.
-- **Drag & Drop Reordering:** Reorganize experiências, formações e projetos com gestos intuitivos.
-- **Smart Spellchecker:** Detector de "verbos fracos" que sugere alternativas de alto impacto para destacar suas conquistas.
+- **Live PDF Rendering:** Visualização instantânea do documento final enquanto você digita.
+- **Drag & Drop Reordering:** Reorganize experiências, formações e projetos com `dnd-kit`.
+- **Smart Spellchecker:** Detector de "verbos fracos" que sugere alternativas de alto impacto.
+- **Perfil Completo:** Suporte a LinkedIn, GitHub e Portfólio pessoal integrados.
 
 ### 🤖 Validação & Performance
 
-- **ATS Health Check:** Pontuação em tempo real baseada em melhores práticas de legibilidade para robôs de recrutamento.
-- **Keyword Matcher:** Analise seu currículo contra descrições de vagas específicas para identificar lacunas de habilidades.
-- **LinkedIn Parser:** Importe seus dados diretamente do PDF do LinkedIn para acelerar o preenchimento.
+- **ATS Health Check:** Pontuação baseada em melhores práticas de legibilidade para robôs.
+- **Keyword Matcher:** Analise a compatibilidade do currículo com descrições de vagas.
+- **LinkedIn Parser:** Importação inteligente de dados via PDF do LinkedIn.
 
 ### 🌐 Compartilhamento & Link Público
 
-- **Slug Customizado:** Gere links públicos profissionais (ex: `lume.dev/seu-nome`) para compartilhar com recrutadores.
-- **Analytics Integrado:** Acompanhe visualizações e downloads do seu perfil profissional.
+- **Slug Customizado:** Links profissionais e curtos (ex: `lume.dev/seu-nome`).
+- **Analytics:** Acompanhamento de visualizações e downloads em tempo real.
+- **Internacionalização:** Crie versões do seu currículo em Português ou Inglês com um clique.
 
 ---
 
@@ -55,22 +57,15 @@ Interface de alta performance que elimina a necessidade de recarregamentos:
 
 ### Arquitetura de Frontend
 
-O projeto utiliza o estado da arte do ecossistema React:
+- **Next.js 16 (App Router):** Server Actions para mutações e gerenciamento de estado eficiente.
+- **React 19:** Utilização de hooks modernos e concorrência para uma UI responsiva.
+- **Framer Motion:** Animações fluidas, transições de passos e troca de temas via View Transitions API.
 
-- **Next.js 16 (App Router):** Utilização intensiva de Server Actions para mutações de dados e cache otimizado.
-- **React 19:** Aproveitamento das novas APIs de gerenciamento de estado e hooks modernos.
-- **Framer Motion:** Orquestração de animações de interface, incluindo View Transitions para trocas de tema.
+### Dados & Segurança
 
-### Dados & Infraestrutura
-
-- **Prisma ORM:** Camada de dados robusta sobre PostgreSQL, garantindo integridade e performance em consultas complexas.
-- **Clerk Auth:** Autenticação segura e simplificada com suporte a múltiplos provedores sociais.
-- **next-intl:** Suporte nativo a internacionalização (PT/EN), permitindo currículos globais.
-
-### Design System
-
-- **Tailwind CSS v4:** Utilização da nova engine baseada em propriedades nativas do CSS para performance máxima.
-- **OKLCH Color Space:** Paleta de cores vibrante e acessível, otimizada para temas Light e Dark com contrastes perfeitos.
+- **Prisma ORM:** Modelagem de dados type-safe e interações robustas com PostgreSQL.
+- **Clerk Auth:** Autenticação de nível empresarial com fluxos de onboarding customizados.
+- **Zod:** Validação rigorosa de dados em tempo real no formulário.
 
 ---
 
@@ -78,29 +73,29 @@ O projeto utiliza o estado da arte do ecossistema React:
 
 ```text
 ├── src/
-│   ├── app/              # Next.js App Router (Páginas, Actions, Layouts)
-│   ├── components/       # Componentes React (Editor, PDF, UI, Preview)
-│   ├── hooks/            # Hooks customizados (Debounce, UI State)
-│   ├── i18n/             # Configurações de Internacionalização
-│   ├── lib/              # Lógica de Negócio e Validadores (ATS, Matcher)
-│   ├── prisma/           # Schema e Migrations do Banco de Dados
-│   └── types/            # Definições TypeScript Globais
+│   ├── app/              # Rotas, Layouts e Server Actions
+│   ├── components/       # Componentes (Editor, PDF, UI, Preview)
+│   ├── hooks/            # Custom Hooks (Debounce, Theme)
+│   ├── i18n/             # Configuração de Internacionalização
+│   ├── lib/              # Core Logic (ATS, Spellcheck, Matcher)
+│   └── types/            # Definições TypeScript
+├── prisma/               # Schema e Migrações (Database)
 ├── messages/             # Dicionários de Tradução (JSON)
-├── tests/                # Suíte de Testes (Vitest + RTL)
-└── vitest.config.ts      # Configurações de Teste e JSDOM
+├── vitest.config.ts      # Configurações de Teste
+└── vitest-setup.ts       # Setup do Testing Library
 ```
 
 ---
 
 ## 🧪 Engenharia de Qualidade
 
-A estabilidade do Lume é garantida por uma pipeline de testes rigorosa:
+A estabilidade é garantida por testes automatizados integrados ao fluxo de desenvolvimento:
 
-- **Logic Validation:** Testes unitários para os algoritmos de score ATS e keyword matching.
-- **UI Testing:** Validação de componentes críticos como o seletor de idiomas e formulários.
-- **Pre-commit Hooks:** Integração com Husky que impede commits caso a suíte de testes falhe.
+- **Logic Tests:** Validação dos motores de cálculo e parsing.
+- **Component Tests:** Testes de integração de UI com React Testing Library.
+- **Pre-commit Automation:** Husky executando `vitest` antes de cada commit.
 
-Para rodar o ambiente de testes:
+Para rodar os testes:
 
 ```bash
 pnpm test
