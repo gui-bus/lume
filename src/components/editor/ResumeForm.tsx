@@ -30,6 +30,7 @@ import { useDebounce } from "@/hooks/use-debounce";
 import { saveResume } from "@/app/actions/resume-actions";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { useTranslations, useLocale } from "next-intl";
 
 interface ResumeFormProps {
   initialData?: ResumeData;
@@ -57,22 +58,30 @@ const defaultValues: ResumeData = {
   volunteering: [],
 };
 
-const STEPS = [
-  { id: "identidade", label: "Perfil", icon: User },
-  { id: "stack", label: "Stack", icon: Toolbox },
-  { id: "jornada", label: "Jornada", icon: Briefcase },
-  { id: "formacao", label: "Formação", icon: GraduationCap },
-  { id: "projetos", label: "Projetos", icon: GitBranch },
-  { id: "extra", label: "Extras", icon: PlusCircle },
-];
-
 export function ResumeForm({
   initialData,
   resumeId,
   onDataChange,
   onIdGenerated,
 }: ResumeFormProps) {
+  const t = useTranslations();
+  const locale = useLocale();
+
+  const STEPS = [
+    { id: "identidade", label: t("editor.steps.profile"), icon: User },
+    { id: "stack", label: t("editor.steps.stack"), icon: Toolbox },
+    { id: "jornada", label: t("editor.steps.journey"), icon: Briefcase },
+    { id: "formacao", label: t("editor.steps.education"), icon: GraduationCap },
+    { id: "projetos", label: t("editor.steps.projects"), icon: GitBranch },
+    { id: "extra", label: t("editor.steps.extras"), icon: PlusCircle },
+  ];
+
   const [activeStep, setActiveStep] = useState(0);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const {
     register,
@@ -118,22 +127,60 @@ export function ResumeForm({
   } = useFieldArray({ control, name: "volunteering" });
 
   const watchedData = watch();
-  const debouncedData = useDebounce(watchedData, 1000);
+  const debouncedData = useDebounce(watchedData, 2000);
   const dataString = JSON.stringify(watchedData);
+
+  useEffect(() => {
+    // Carrega dados iniciais específicos do idioma
+    const savedDraft = localStorage.getItem(`resume-draft-${locale}`);
+    const savedId = localStorage.getItem(`resume-id-${locale}`);
+
+    if (savedId && !resumeId) {
+      onIdGenerated?.(savedId);
+    }
+
+    if (savedDraft && !initialData) {
+      try {
+        reset(JSON.parse(savedDraft));
+      } catch (e) {}
+    }
+  }, [locale]);
 
   useEffect(() => {
     onDataChange(watchedData);
   }, [dataString, onDataChange]);
 
   useEffect(() => {
+    if (!mounted) return;
     if (debouncedData) {
-      localStorage.setItem("resume-draft", JSON.stringify(debouncedData));
+      localStorage.setItem(
+        `resume-draft-${locale}`,
+        JSON.stringify(debouncedData),
+      );
       const performSave = async () => {
         try {
-          const result = await saveResume(resumeId, debouncedData);
-          if (!resumeId && result.id) {
-            localStorage.setItem("resume-id", result.id);
+          const currentId =
+            localStorage.getItem(`resume-id-${locale}`) || resumeId;
+          const groupId = localStorage.getItem("resume-group-id");
+
+          // Usamos t.rich ou apenas t se for uma string simples para o título
+          const resumeTitle = t("common.myResume");
+          const result = await saveResume(
+            currentId || undefined,
+            debouncedData,
+            resumeTitle,
+            undefined,
+            locale,
+            groupId || undefined,
+          );
+
+          if (!currentId && result.id) {
+            localStorage.setItem(`resume-id-${locale}`, result.id);
             onIdGenerated?.(result.id);
+          }
+
+          if (!groupId && result.groupId) {
+            localStorage.setItem("resume-group-id", result.groupId);
           }
         } catch (error) {
           console.error(error);
@@ -141,7 +188,7 @@ export function ResumeForm({
       };
       performSave();
     }
-  }, [debouncedData, resumeId, onIdGenerated]);
+  }, [debouncedData, locale]); // Removido resumeId, onIdGenerated e t para evitar loops
 
   return (
     <div className="flex flex-col h-full bg-background overflow-hidden">
@@ -197,13 +244,13 @@ export function ResumeForm({
           >
             <div className="space-y-2">
               <div className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/50">
-                Passo {activeStep + 1}
+                {t("common.step", { number: activeStep + 1 })}
               </div>
               <h2 className="text-4xl font-black tracking-tight">
                 {STEPS[activeStep].label}
               </h2>
               <p className="text-sm text-muted-foreground font-medium">
-                Refine suas informações profissionais.
+                {t("editor.subtitle")}
               </p>
             </div>
 
@@ -212,21 +259,21 @@ export function ResumeForm({
                 <div className="grid grid-cols-2 gap-6">
                   <div className="space-y-2.5">
                     <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                      Nome Completo
+                      {t("editor.personalInfo.fullName")}
                     </Label>
                     <Input
                       {...register("personalInfo.name")}
-                      placeholder="Ex: Linus Torvalds"
+                      placeholder={t("editor.personalInfo.fullNamePlaceholder")}
                       className="input-glow h-12 bg-muted/20 border-border/50 font-bold"
                     />
                   </div>
                   <div className="space-y-2.5">
                     <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                      E-mail
+                      {t("editor.personalInfo.email")}
                     </Label>
                     <Input
                       {...register("personalInfo.email")}
-                      placeholder="linus@linux.org"
+                      placeholder={t("editor.personalInfo.emailPlaceholder")}
                       className="input-glow h-12 bg-muted/20 border-border/50"
                     />
                   </div>
@@ -234,21 +281,21 @@ export function ResumeForm({
                 <div className="grid grid-cols-2 gap-6">
                   <div className="space-y-2.5">
                     <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                      Telefone
+                      {t("editor.personalInfo.phone")}
                     </Label>
                     <Input
                       {...register("personalInfo.phone")}
-                      placeholder="(11) 99999-9999"
+                      placeholder={t("editor.personalInfo.phonePlaceholder")}
                       className="input-glow h-12 bg-muted/20 border-border/50"
                     />
                   </div>
                   <div className="space-y-2.5">
                     <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                      Localização
+                      {t("editor.personalInfo.location")}
                     </Label>
                     <Input
                       {...register("personalInfo.location")}
-                      placeholder="São Paulo, SP"
+                      placeholder={t("editor.personalInfo.locationPlaceholder")}
                       className="input-glow h-12 bg-muted/20 border-border/50"
                     />
                   </div>
@@ -256,7 +303,7 @@ export function ResumeForm({
                 <div className="grid grid-cols-2 gap-6">
                   <div className="space-y-2.5">
                     <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                      LinkedIn
+                      {t("editor.personalInfo.linkedin")}
                     </Label>
                     <Input
                       {...register("personalInfo.linkedin")}
@@ -265,7 +312,7 @@ export function ResumeForm({
                   </div>
                   <div className="space-y-2.5">
                     <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                      Portfólio
+                      {t("editor.personalInfo.portfolio")}
                     </Label>
                     <Input
                       {...register("personalInfo.website")}
@@ -275,11 +322,11 @@ export function ResumeForm({
                 </div>
                 <div className="space-y-2.5">
                   <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                    Resumo Profissional
+                    {t("editor.personalInfo.summary")}
                   </Label>
                   <Textarea
                     {...register("personalInfo.summary")}
-                    placeholder="Uma breve introdução..."
+                    placeholder={t("editor.personalInfo.summaryPlaceholder")}
                     className="min-h-[150px] input-glow bg-muted/20 border-border/50 leading-relaxed py-4"
                   />
                 </div>
@@ -289,7 +336,7 @@ export function ResumeForm({
             {activeStep === 1 && (
               <div className="space-y-6">
                 <Label className="text-sm font-bold uppercase tracking-widest text-muted-foreground">
-                  Tecnologias & Expertises
+                  {t("editor.stack.title")}
                 </Label>
                 <Textarea
                   {...register("skills", {
@@ -301,11 +348,11 @@ export function ResumeForm({
                             .filter((s) => s !== "")
                         : v,
                   })}
-                  placeholder="React, Node.js, TypeScript, Docker, AWS..."
+                  placeholder={t("editor.stack.placeholder")}
                   className="min-h-[350px] input-glow text-xl font-mono leading-relaxed bg-muted/20 border-border/50 p-8"
                 />
                 <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest text-center">
-                  Separe cada tecnologia utilizando vírgulas
+                  {t("editor.stack.hint")}
                 </p>
               </div>
             )}
@@ -328,7 +375,7 @@ export function ResumeForm({
                     <CardContent className="p-8 pt-12 grid grid-cols-2 gap-6">
                       <div className="space-y-2">
                         <Label className="text-[10px] font-black uppercase tracking-widest">
-                          Empresa
+                          {t("editor.experience.company")}
                         </Label>
                         <Input
                           {...register(`experiences.${i}.company`)}
@@ -337,7 +384,7 @@ export function ResumeForm({
                       </div>
                       <div className="space-y-2">
                         <Label className="text-[10px] font-black uppercase tracking-widest">
-                          Cargo
+                          {t("editor.experience.position")}
                         </Label>
                         <Input
                           {...register(`experiences.${i}.position`)}
@@ -346,17 +393,19 @@ export function ResumeForm({
                       </div>
                       <div className="space-y-2">
                         <Label className="text-[10px] font-black uppercase tracking-widest">
-                          Início
+                          {t("editor.experience.startDate")}
                         </Label>
                         <Input
                           {...register(`experiences.${i}.startDate`)}
-                          placeholder="Jan 2020"
+                          placeholder={t(
+                            "editor.experience.placeholder.startDate",
+                          )}
                           className="h-11 bg-background/50 border-border/50"
                         />
                       </div>
                       <div className="space-y-2">
                         <Label className="text-[10px] font-black uppercase tracking-widest">
-                          Fim
+                          {t("editor.experience.endDate")}
                         </Label>
                         <Input
                           {...register(`experiences.${i}.endDate`)}
@@ -375,12 +424,12 @@ export function ResumeForm({
                           htmlFor={`exp-cur-${i}`}
                           className="text-xs font-bold text-muted-foreground uppercase tracking-widest"
                         >
-                          Ainda trabalho nesta empresa
+                          {t("editor.experience.current")}
                         </Label>
                       </div>
                       <div className="col-span-2 space-y-2">
                         <Label className="text-[10px] font-black uppercase tracking-widest">
-                          Descrição
+                          {t("editor.experience.description")}
                         </Label>
                         <Textarea
                           {...register(`experiences.${i}.description`)}
@@ -410,7 +459,7 @@ export function ResumeForm({
                     className="mr-2 text-primary"
                   />
                   <span className="font-black uppercase tracking-widest text-xs">
-                    Adicionar Experiência
+                    {t("editor.experience.add")}
                   </span>
                 </Button>
               </div>
@@ -434,7 +483,7 @@ export function ResumeForm({
                     <CardContent className="p-8 pt-12 grid grid-cols-2 gap-6">
                       <div className="col-span-2 space-y-2">
                         <Label className="text-[10px] font-black uppercase tracking-widest">
-                          Instituição
+                          {t("editor.education.school")}
                         </Label>
                         <Input
                           {...register(`educations.${i}.school`)}
@@ -443,7 +492,7 @@ export function ResumeForm({
                       </div>
                       <div className="space-y-2">
                         <Label className="text-[10px] font-black uppercase tracking-widest">
-                          Grau
+                          {t("editor.education.degree")}
                         </Label>
                         <Input
                           {...register(`educations.${i}.degree`)}
@@ -452,7 +501,7 @@ export function ResumeForm({
                       </div>
                       <div className="space-y-2">
                         <Label className="text-[10px] font-black uppercase tracking-widest">
-                          Área
+                          {t("editor.education.field")}
                         </Label>
                         <Input
                           {...register(`educations.${i}.field`)}
@@ -461,11 +510,13 @@ export function ResumeForm({
                       </div>
                       <div className="col-span-2 space-y-2">
                         <Label className="text-[10px] font-black uppercase tracking-widest">
-                          Data de Graduação
+                          {t("editor.education.graduationDate")}
                         </Label>
                         <Input
                           {...register(`educations.${i}.graduationDate`)}
-                          placeholder="2019"
+                          placeholder={t(
+                            "editor.education.placeholder.graduationDate",
+                          )}
                           className="h-11 bg-background/50 border-border/50"
                         />
                       </div>
@@ -490,7 +541,7 @@ export function ResumeForm({
                     className="mr-2 text-primary"
                   />
                   <span className="font-black uppercase tracking-widest text-xs">
-                    Adicionar Formação
+                    {t("editor.education.add")}
                   </span>
                 </Button>
               </div>
@@ -514,7 +565,7 @@ export function ResumeForm({
                     <CardContent className="p-8 pt-12 space-y-6">
                       <div className="space-y-2">
                         <Label className="text-[10px] font-black uppercase tracking-widest">
-                          Nome do Projeto
+                          {t("editor.projects.name")}
                         </Label>
                         <Input
                           {...register(`projects.${i}.name`)}
@@ -524,7 +575,7 @@ export function ResumeForm({
                       <div className="grid grid-cols-2 gap-6">
                         <div className="space-y-2">
                           <Label className="text-[10px] font-black uppercase tracking-widest">
-                            GitHub
+                            {t("editor.projects.github")}
                           </Label>
                           <Input
                             {...register(`projects.${i}.github`)}
@@ -533,7 +584,7 @@ export function ResumeForm({
                         </div>
                         <div className="space-y-2">
                           <Label className="text-[10px] font-black uppercase tracking-widest">
-                            Deploy
+                            {t("editor.projects.deploy")}
                           </Label>
                           <Input
                             {...register(`projects.${i}.deploy`)}
@@ -543,7 +594,7 @@ export function ResumeForm({
                       </div>
                       <div className="space-y-2">
                         <Label className="text-[10px] font-black uppercase tracking-widest">
-                          Descrição
+                          {t("editor.projects.description")}
                         </Label>
                         <Textarea
                           {...register(`projects.${i}.description`)}
@@ -571,7 +622,7 @@ export function ResumeForm({
                     className="mr-2 text-primary"
                   />
                   <span className="font-black uppercase tracking-widest text-xs">
-                    Adicionar Projeto
+                    {t("editor.projects.add")}
                   </span>
                 </Button>
               </div>
@@ -588,7 +639,7 @@ export function ResumeForm({
                       className="text-primary"
                     />{" "}
                     <Label className="text-xl font-black uppercase tracking-tight">
-                      Idiomas
+                      {t("editor.extras.languages.title")}
                     </Label>
                   </div>
                   <div className="grid gap-4">
@@ -599,27 +650,41 @@ export function ResumeForm({
                       >
                         <div className="flex-1 space-y-2">
                           <Label className="text-[10px] font-bold uppercase tracking-widest">
-                            Idioma
+                            {t("editor.extras.languages.label")}
                           </Label>
                           <Input
                             {...register(`languages.${i}.name`)}
                             className="h-10 bg-background/50"
-                            placeholder="Ex: Inglês"
+                            placeholder={t(
+                              "editor.extras.languages.placeholder",
+                            )}
                           />
                         </div>
                         <div className="w-48 space-y-2">
                           <Label className="text-[10px] font-bold uppercase tracking-widest">
-                            Proficiência
+                            {t("editor.extras.languages.proficiency")}
                           </Label>
                           <select
                             {...register(`languages.${i}.level`)}
                             className="w-full h-10 rounded-lg border border-border/50 bg-background/50 px-3 py-1 text-sm focus:ring-1 focus:ring-primary outline-none"
                           >
-                            <option value="Básico">Básico</option>
-                            <option value="Intermediário">Intermediário</option>
-                            <option value="Avançado">Avançado</option>
-                            <option value="Fluente">Fluente</option>
-                            <option value="Nativo">Nativo</option>
+                            <option value="Básico">
+                              {t("editor.extras.languages.levels.basico")}
+                            </option>
+                            <option value="Intermediário">
+                              {t(
+                                "editor.extras.languages.levels.intermediario",
+                              )}
+                            </option>
+                            <option value="Avançado">
+                              {t("editor.extras.languages.levels.avancado")}
+                            </option>
+                            <option value="Fluente">
+                              {t("editor.extras.languages.levels.fluente")}
+                            </option>
+                            <option value="Nativo">
+                              {t("editor.extras.languages.levels.nativo")}
+                            </option>
                           </select>
                         </div>
                         <Button
@@ -638,7 +703,8 @@ export function ResumeForm({
                       className="w-fit font-bold uppercase tracking-widest text-[10px]"
                       onClick={() => appendLang({ name: "", level: "Básico" })}
                     >
-                      <Plus weight="bold" className="mr-2" /> Novo Idioma
+                      <Plus weight="bold" className="mr-2" />{" "}
+                      {t("editor.extras.languages.add")}
                     </Button>
                   </div>
                 </div>
@@ -652,7 +718,7 @@ export function ResumeForm({
                       className="text-primary"
                     />{" "}
                     <Label className="text-xl font-black uppercase tracking-tight">
-                      Certificações
+                      {t("editor.extras.certifications.title")}
                     </Label>
                   </div>
                   <div className="grid gap-4">
@@ -663,7 +729,7 @@ export function ResumeForm({
                       >
                         <div className="flex-[2] space-y-2">
                           <Label className="text-[10px] font-bold uppercase tracking-widest">
-                            Certificado
+                            {t("editor.extras.certifications.name")}
                           </Label>
                           <Input
                             {...register(`certifications.${i}.name`)}
@@ -672,7 +738,7 @@ export function ResumeForm({
                         </div>
                         <div className="flex-1 space-y-2">
                           <Label className="text-[10px] font-bold uppercase tracking-widest">
-                            Emissor
+                            {t("editor.extras.certifications.issuer")}
                           </Label>
                           <Input
                             {...register(`certifications.${i}.issuer`)}
@@ -681,12 +747,14 @@ export function ResumeForm({
                         </div>
                         <div className="w-28 space-y-2">
                           <Label className="text-[10px] font-bold uppercase tracking-widest">
-                            Ano
+                            {t("editor.extras.certifications.date")}
                           </Label>
                           <Input
                             {...register(`certifications.${i}.date`)}
                             className="h-10 bg-background/50 text-center"
-                            placeholder="2023"
+                            placeholder={t(
+                              "editor.extras.certifications.datePlaceholder",
+                            )}
                           />
                         </div>
                         <Button
@@ -707,7 +775,8 @@ export function ResumeForm({
                         appendCert({ name: "", issuer: "", date: "" })
                       }
                     >
-                      <Plus weight="bold" className="mr-2" /> Nova Certificação
+                      <Plus weight="bold" className="mr-2" />{" "}
+                      {t("editor.extras.certifications.add")}
                     </Button>
                   </div>
                 </div>
@@ -721,7 +790,7 @@ export function ResumeForm({
                       className="text-primary"
                     />{" "}
                     <Label className="text-xl font-black uppercase tracking-tight">
-                      Voluntariado
+                      {t("editor.extras.volunteering.title")}
                     </Label>
                   </div>
                   <div className="grid gap-4">
@@ -741,7 +810,7 @@ export function ResumeForm({
                         <CardContent className="p-6 pt-10 grid grid-cols-2 gap-6">
                           <div className="space-y-2">
                             <Label className="text-[10px] font-bold uppercase tracking-widest">
-                              Organização
+                              {t("editor.extras.volunteering.organization")}
                             </Label>
                             <Input
                               {...register(`volunteering.${i}.organization`)}
@@ -750,7 +819,7 @@ export function ResumeForm({
                           </div>
                           <div className="space-y-2">
                             <Label className="text-[10px] font-bold uppercase tracking-widest">
-                              Papel
+                              {t("editor.extras.volunteering.role")}
                             </Label>
                             <Input
                               {...register(`volunteering.${i}.role`)}
@@ -759,7 +828,7 @@ export function ResumeForm({
                           </div>
                           <div className="col-span-2 space-y-2">
                             <Label className="text-[10px] font-bold uppercase tracking-widest">
-                              Sobre o trabalho
+                              {t("editor.extras.volunteering.description")}
                             </Label>
                             <Textarea
                               {...register(`volunteering.${i}.description`)}
@@ -783,7 +852,8 @@ export function ResumeForm({
                         })
                       }
                     >
-                      <Plus weight="bold" className="mr-2" /> Novo Registro
+                      <Plus weight="bold" className="mr-2" />{" "}
+                      {t("editor.extras.volunteering.add")}
                     </Button>
                   </div>
                 </div>
@@ -801,7 +871,7 @@ export function ResumeForm({
           onClick={() => setActiveStep((s) => s - 1)}
           className="rounded-xl px-6 h-11 font-bold text-muted-foreground hover:text-foreground hover:bg-muted/50"
         >
-          <CaretLeft weight="bold" className="mr-2" /> Anterior
+          <CaretLeft weight="bold" className="mr-2" /> {t("common.previous")}
         </Button>
         <div className="flex gap-1.5">
           {STEPS.map((_, i) => (
@@ -821,7 +891,7 @@ export function ResumeForm({
           disabled={activeStep === STEPS.length - 1}
           className="rounded-xl px-10 h-11 shadow-xl shadow-primary/10 transition-all hover:scale-[1.03] active:scale-95 font-black uppercase tracking-widest text-xs"
         >
-          Próximo <CaretRight weight="bold" className="ml-2" />
+          {t("common.next")} <CaretRight weight="bold" className="ml-2" />
         </Button>
       </div>
     </div>
