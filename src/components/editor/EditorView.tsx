@@ -352,14 +352,20 @@ export function EditorView({
                     />
                     <Button
                       variant="outline"
-                      className="w-full justify-start gap-3 rounded-xl py-6 border-border/40 hover:bg-[#0A66C2]/5 hover:text-[#0A66C2] transition-colors"
+                      className="w-full justify-start gap-4 rounded-2xl py-8 border-border/40 bg-muted/5 hover:bg-muted/20 hover:border-border transition-all group"
                     >
-                      <LinkedinLogo size={20} weight="duotone" />
-                      <div className="flex flex-col items-start leading-tight">
-                        <span className="text-sm font-bold">
+                      <div className="w-10 h-10 rounded-xl bg-muted/20 flex items-center justify-center shrink-0 group-hover:bg-background transition-colors">
+                        <LinkedinLogo
+                          size={22}
+                          weight="duotone"
+                          className="text-muted-foreground group-hover:text-foreground"
+                        />
+                      </div>
+                      <div className="flex flex-col items-start leading-tight gap-1">
+                        <span className="text-sm font-bold text-foreground">
                           {t("header.tools.importLinkedIn")}
                         </span>
-                        <span className="text-[10px] opacity-60">
+                        <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-tight">
                           {t("header.tools.importLinkedInDesc")}
                         </span>
                       </div>
@@ -390,24 +396,26 @@ export function EditorView({
                           )
                         }
                         placeholder="seu-nome"
-                        className="h-11 bg-muted/20 border-border/40 rounded-xl"
+                        className="h-12 bg-muted/10 border-border/40 rounded-xl focus:ring-primary/20"
                       />
                     </div>
                     <Button
                       variant="outline"
                       onClick={handleShare}
-                      className="w-full justify-start gap-3 rounded-xl py-6 border-primary/20 hover:bg-primary/5 transition-all"
+                      className="w-full justify-start gap-4 rounded-2xl py-8 border-border/40 bg-muted/5 hover:bg-muted/20 hover:border-border transition-all group"
                     >
-                      <ShareNetwork
-                        size={20}
-                        weight="duotone"
-                        className="text-primary"
-                      />
-                      <div className="flex flex-col items-start leading-tight">
-                        <span className="text-sm font-bold">
+                      <div className="w-10 h-10 rounded-xl bg-muted/20 flex items-center justify-center shrink-0 group-hover:bg-background transition-colors">
+                        <ShareNetwork
+                          size={22}
+                          weight="duotone"
+                          className="text-muted-foreground group-hover:text-foreground"
+                        />
+                      </div>
+                      <div className="flex flex-col items-start leading-tight gap-1">
+                        <span className="text-sm font-bold text-foreground">
                           {t("header.tools.generateLink")}
                         </span>
-                        <span className="text-[10px] opacity-60">
+                        <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-tight">
                           {t("header.tools.generateLinkDesc")}
                         </span>
                       </div>
@@ -420,7 +428,7 @@ export function EditorView({
                   <h4 className="text-[10px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-2">
                     <FileArrowUp size={14} weight="duotone" /> Backup & Restore
                   </h4>
-                  <div className="grid grid-cols-1 gap-2">
+                  <div className="grid grid-cols-1 gap-3">
                     <div className="relative w-full">
                       <input
                         type="file"
@@ -430,18 +438,20 @@ export function EditorView({
                       />
                       <Button
                         variant="outline"
-                        className="w-full justify-start gap-3 rounded-xl py-6 border-border/40 hover:bg-primary/5 hover:border-primary/20 transition-all"
+                        className="w-full justify-start gap-4 rounded-2xl py-8 border-border/40 bg-muted/5 hover:bg-muted/20 hover:border-border transition-all group"
                       >
-                        <FileArrowUp
-                          size={20}
-                          weight="duotone"
-                          className="text-primary"
-                        />
-                        <div className="flex flex-col items-start leading-tight">
-                          <span className="text-sm font-bold">
+                        <div className="w-10 h-10 rounded-xl bg-muted/20 flex items-center justify-center shrink-0 group-hover:bg-background transition-colors">
+                          <FileArrowUp
+                            size={22}
+                            weight="duotone"
+                            className="text-muted-foreground group-hover:text-foreground"
+                          />
+                        </div>
+                        <div className="flex flex-col items-start leading-tight gap-1">
+                          <span className="text-sm font-bold text-foreground">
                             {t("header.tools.loadJson")}
                           </span>
-                          <span className="text-[10px] opacity-60">
+                          <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-tight">
                             {t("header.tools.loadJsonDesc")}
                           </span>
                         </div>
@@ -450,18 +460,20 @@ export function EditorView({
                     <Button
                       variant="outline"
                       onClick={handleExportJSON}
-                      className="w-full justify-start gap-3 rounded-xl py-6 border-border/40 hover:bg-primary/5 hover:border-primary/20 transition-all"
+                      className="w-full justify-start gap-4 rounded-2xl py-8 border-border/40 bg-muted/5 hover:bg-muted/20 hover:border-border transition-all group"
                     >
-                      <FileArrowDown
-                        size={20}
-                        weight="duotone"
-                        className="text-primary"
-                      />
-                      <div className="flex flex-col items-start leading-tight">
-                        <span className="text-sm font-bold">
+                      <div className="w-10 h-10 rounded-xl bg-muted/20 flex items-center justify-center shrink-0 group-hover:bg-background transition-colors">
+                        <FileArrowDown
+                          size={22}
+                          weight="duotone"
+                          className="text-muted-foreground group-hover:text-foreground"
+                        />
+                      </div>
+                      <div className="flex flex-col items-start leading-tight gap-1">
+                        <span className="text-sm font-bold text-foreground">
                           {t("header.tools.saveBackup")}
                         </span>
-                        <span className="text-[10px] opacity-60">
+                        <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-tight">
                           {t("header.tools.saveBackupDesc")}
                         </span>
                       </div>
