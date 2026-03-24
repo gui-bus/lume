@@ -304,7 +304,15 @@ export function ResumeForm({
         )}
       </AnimatePresence>
 
-      <div className="px-4 pt-6 pb-4 border-b bg-muted/5 shrink-0">
+      <div className="px-4 pt-6 pb-4 border-b bg-muted/5 shrink-0 relative">
+        <div className="absolute top-0 left-0 w-full h-[3px] bg-muted/30 overflow-hidden">
+          <motion.div
+            className="h-full bg-primary shadow-[0_0_10px_rgba(var(--primary),0.5)]"
+            initial={{ width: "0%" }}
+            animate={{ width: `${((activeStep + 1) / 6) * 100}%` }}
+            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+          />
+        </div>
         <div className="flex w-full gap-1.5 p-1.5 bg-muted/20 rounded-2xl border border-border/40 text-left">
           {[
             { id: "identidade", label: t("editor.steps.profile"), icon: User },
@@ -352,12 +360,17 @@ export function ResumeForm({
       </div>
 
       <div className="flex-1 overflow-y-auto custom-scrollbar px-10 py-12 pb-32">
-        <AnimatePresence mode="wait">
+        <AnimatePresence mode="wait" initial={false}>
           <motion.div
             key={activeStep}
-            initial={{ opacity: 0, x: 10 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -10 }}
+            initial={{ opacity: 0, x: 20, filter: "blur(10px)" }}
+            animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
+            exit={{ opacity: 0, x: -20, filter: "blur(10px)" }}
+            transition={{
+              type: "spring",
+              stiffness: 260,
+              damping: 20,
+            }}
             className="space-y-10 text-left"
           >
             <div className="space-y-2">
@@ -574,7 +587,7 @@ export function ResumeForm({
                         id={field.id}
                         onRemove={() => removeExp(i)}
                       >
-                        <Card className="border-border/50 bg-muted/10 relative overflow-hidden group shadow-none hover:bg-muted/20 transition-all duration-500">
+                        <Card className="border-border/40 bg-muted/5 relative overflow-hidden group shadow-none hover:bg-muted/10 transition-all duration-300 focus-within:ring-2 focus-within:ring-primary/10 focus-within:border-primary/20 focus-within:bg-background">
                           <CardContent className="p-8 pt-12 grid grid-cols-2 gap-6 text-left">
                             <div className="space-y-2 text-left">
                               <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
@@ -733,7 +746,7 @@ export function ResumeForm({
                         id={field.id}
                         onRemove={() => removeEdu(i)}
                       >
-                        <Card className="border-border/50 bg-muted/10 relative overflow-hidden group shadow-none hover:bg-muted/20 transition-all duration-500">
+                        <Card className="border-border/40 bg-muted/5 relative overflow-hidden group shadow-none hover:bg-muted/10 transition-all duration-300 focus-within:ring-2 focus-within:ring-primary/10 focus-within:border-primary/20 focus-within:bg-background">
                           <CardContent className="p-8 pt-12 grid grid-cols-2 gap-6 text-left">
                             <div className="space-y-2 col-span-2 text-left">
                               <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
@@ -857,7 +870,7 @@ export function ResumeForm({
                         id={field.id}
                         onRemove={() => removeProj(i)}
                       >
-                        <Card className="border-border/50 bg-muted/10 relative overflow-hidden group shadow-none hover:bg-muted/20 transition-all duration-500">
+                        <Card className="border-border/40 bg-muted/5 relative overflow-hidden group shadow-none hover:bg-muted/10 transition-all duration-300 focus-within:ring-2 focus-within:ring-primary/10 focus-within:border-primary/20 focus-within:bg-background">
                           <CardContent className="p-8 pt-12 grid grid-cols-2 gap-6 text-left">
                             <div className="space-y-2 col-span-2 text-left">
                               <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">

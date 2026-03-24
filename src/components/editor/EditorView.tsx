@@ -549,9 +549,13 @@ export function EditorView({
               )}
             </PDFDownloadLink>
           </div>
-          <div className="absolute inset-0 overflow-auto custom-scrollbar flex items-start justify-center p-12 canvas-grid">
-            <motion.div animate={{ scale: zoom }} className="origin-top my-8">
-              <div className="shadow-2xl rounded-sm overflow-hidden bg-white">
+          <div className="absolute inset-0 overflow-auto custom-scrollbar flex items-start justify-center p-12 bg-neutral-50 dark:bg-neutral-950/50">
+            <div className="absolute inset-0 z-0 opacity-[0.03] dark:opacity-[0.05] pointer-events-none [background-image:radial-gradient(circle_at_center,#000_1px,transparent_1px)] [background-size:24px_24px] dark:[background-image:radial-gradient(circle_at_center,#fff_1px,transparent_1px)]" />
+            <motion.div
+              animate={{ scale: zoom }}
+              className="origin-top my-8 z-10"
+            >
+              <div className="shadow-[0_0_50px_-12px_rgba(0,0,0,0.12)] dark:shadow-[0_0_50px_-12px_rgba(0,0,0,0.5)] rounded-sm overflow-hidden bg-white ring-1 ring-black/5 dark:ring-white/10">
                 <ResumeView data={data} colorTheme="#18181b" />
               </div>
             </motion.div>
