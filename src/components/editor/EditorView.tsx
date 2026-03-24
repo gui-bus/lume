@@ -314,26 +314,6 @@ export function EditorView({
             />
           </Show>
 
-          <PDFDownloadLink
-            document={<ResumePDF data={data} colorTheme="#18181b" />}
-            fileName={`resume-${data.personalInfo.name || "lume"}.pdf`}
-          >
-            {({ loading }) => (
-              <Button
-                size="sm"
-                className="gap-2 rounded-full px-6 h-9 font-bold shadow-lg shadow-primary/10 active:scale-95 transition-all"
-                disabled={loading}
-              >
-                <FileArrowDown size={18} weight="duotone" />
-                <span className="hidden sm:inline">
-                  {loading
-                    ? t("header.actions.generatingPdf")
-                    : t("header.actions.downloadPdf")}
-                </span>
-              </Button>
-            )}
-          </PDFDownloadLink>
-
           <Sheet>
             <SheetTrigger asChild>
               <Button
@@ -496,26 +476,49 @@ export function EditorView({
         </div>
 
         <div className="hidden lg:flex flex-1 bg-muted/5 relative overflow-hidden items-center justify-center">
-          <div className="absolute top-4 right-8 z-50 flex items-center bg-muted/30 rounded-full px-1 py-1 border border-border/30 backdrop-blur-md">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setZoom((v) => Math.max(0.4, v - 0.1))}
-              className="h-7 w-7"
+          <div className="absolute top-4 right-8 z-50 flex items-center bg-card/95 backdrop-blur-xl rounded-full px-2 py-1.5 border border-border/40 shadow-2xl gap-2">
+            <div className="flex items-center gap-1">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setZoom((v) => Math.max(0.4, v - 0.1))}
+                className="h-8 w-8 rounded-full hover:bg-primary/10 transition-colors"
+              >
+                <MagnifyingGlassMinus size={16} weight="duotone" />
+              </Button>
+              <span className="text-[10px] font-black w-10 text-center tracking-tighter">
+                {Math.round(zoom * 100)}%
+              </span>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setZoom((v) => Math.min(1.2, v + 0.1))}
+                className="h-8 w-8 rounded-full hover:bg-primary/10 transition-colors"
+              >
+                <MagnifyingGlassPlus size={16} weight="duotone" />
+              </Button>
+            </div>
+
+            <Separator orientation="vertical" className="h-4 bg-border/40" />
+
+            <PDFDownloadLink
+              document={<ResumePDF data={data} colorTheme="#18181b" />}
+              fileName={`resume-${data.personalInfo.name || "lume"}.pdf`}
             >
-              <MagnifyingGlassMinus size={14} weight="duotone" />
-            </Button>
-            <span className="text-[10px] font-black w-10 text-center">
-              {Math.round(zoom * 100)}%
-            </span>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setZoom((v) => Math.min(1.2, v + 0.1))}
-              className="h-7 w-7"
-            >
-              <MagnifyingGlassPlus size={14} weight="duotone" />
-            </Button>
+              {({ loading }) => (
+                <Button
+                  size="sm"
+                  onClick={() => resumeId && incrementDownload(resumeId)}
+                  className="gap-2 rounded-full px-4 h-8 font-bold text-[10px] uppercase tracking-widest active:scale-95 transition-all shadow-lg shadow-primary/10"
+                  disabled={loading}
+                >
+                  <FileArrowDown size={16} weight="duotone" />
+                  {loading
+                    ? t("header.actions.generatingPdf")
+                    : t("header.actions.pdfShort")}
+                </Button>
+              )}
+            </PDFDownloadLink>
           </div>
           <div className="absolute inset-0 overflow-auto custom-scrollbar flex items-start justify-center p-12 canvas-grid">
             <motion.div animate={{ scale: zoom }} className="origin-top my-8">
