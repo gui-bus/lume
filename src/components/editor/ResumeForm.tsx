@@ -194,7 +194,6 @@ export function ResumeForm({
           resumeId,
           debouncedData,
           debouncedData.personalInfo.name || t("myResume"),
-          false,
           locale,
           groupId,
         );
@@ -228,7 +227,6 @@ export function ResumeForm({
           resumeId,
           latestDataRef.current,
           latestDataRef.current.personalInfo.name || "Resume",
-          false,
           locale,
           groupId,
         );

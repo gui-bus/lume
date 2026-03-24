@@ -9,7 +9,6 @@ export async function saveResume(
   id: string | undefined,
   data: ResumeData,
   title: string = "Meu Currículo",
-  isPortfolio?: boolean,
   locale: string = "pt",
   groupId?: string,
   slug?: string,
@@ -69,7 +68,6 @@ export async function saveResume(
       data: {
         content: data as any,
         title,
-        isPortfolio: isPortfolio ?? undefined,
         slug: slug || undefined,
       },
     });
@@ -80,7 +78,6 @@ export async function saveResume(
         title,
         locale,
         groupId: finalGroupId,
-        isPortfolio: isPortfolio ?? false,
         userId,
         slug: slug || undefined,
       },

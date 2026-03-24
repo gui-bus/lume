@@ -56,7 +56,7 @@ export default function SignUpPage() {
               transition={{ delay: 0.4 }}
               className="flex flex-wrap gap-3"
             >
-              {["ats", "pdf", "portfolio", "keywords"].map((key, i) => (
+              {["ats", "pdf", "keywords"].map((key, i) => (
                 <span
                   key={i}
                   className="px-4 py-1.5 rounded-full bg-white/10 border border-white/10 backdrop-blur-md text-[10px] font-black uppercase tracking-[0.2em] text-white/80"

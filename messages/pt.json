@@ -1,7 +1,7 @@
 {
   "common": {
     "title": "Lume",
-    "description": "Gerador de Currículos e Portfólios",
+    "description": "Gerador de Currículos",
     "next": "Próximo",
     "previous": "Anterior",
     "save": "Salvar",
@@ -38,8 +38,6 @@
         "exportJsonSuccess": "Backup JSON exportado!",
         "shareSuccess": "Link copiado para a área de transferência!",
         "shareError": "Erro ao gerar link de compartilhamento.",
-        "portfolioEnabled": "Modo Portfólio ativado!",
-        "portfolioDisabled": "Modo Portfólio desativado.",
         "generatingPdf": "Gerando...",
         "downloadPdf": "Baixar PDF",
         "pdfShort": "PDF"
@@ -61,10 +59,7 @@
         "customSlug": "Link Personalizado",
         "customSlugDesc": "lume.com/p/seu-link",
         "generateLink": "Gerar Link Público",
-        "generateLinkDesc": "Compartilhar via URL única",
-        "portfolioActivate": "Ativar Modo Portfólio",
-        "portfolioActive": "Portfólio Ativo",
-        "portfolioDesc": "Exibir currículo como site",
+        "generateLinkDesc": "Compartilhe via URL única",
         "metrics": "Métricas de Acesso",
         "views": "Views",
         "downloads": "Downloads",
@@ -89,9 +84,8 @@
       "match": "Match",
       "status": "Otimizado",
       "tags": {
-        "ats": "Otimizado para ATS",
+        "ats": "ATS Otimizado",
         "pdf": "PDF em tempo real",
-        "portfolio": "Modo Portfólio",
         "keywords": "Análise de Keywords"
       }
     },

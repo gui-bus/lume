@@ -19,7 +19,6 @@ model Resume {
   content     Json
   locale      String   @default("pt")
   colorTheme  String   @default("#18181b")
-  isPortfolio Boolean  @default(false)
   views       Int      @default(0)
   downloads   Int      @default(0)
   userId      String?

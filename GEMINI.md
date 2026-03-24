@@ -1,6 +1,6 @@
-# Lume - Resume & Portfolio Builder
+# Lume - Resume Builder
 
-Lume is a modern, high-performance web application designed for creating, managing, and sharing professional resumes and digital portfolios. It features an integrated ATS (Applicant Tracking System) validator, keyword matching, and a real-time PDF preview/generation engine.
+Lume is a modern, high-performance web application designed for creating, managing, and sharing professional resumes. It features an integrated ATS (Applicant Tracking System) validator, keyword matching, and a real-time PDF preview/generation engine.
 
 ## Tech Stack
 
@@ -30,7 +30,6 @@ src/
 ## Key Features
 
 - **Resume Editor:** Interactive form-based editor with real-time validation.
-- **Portfolio View:** Transform a resume into a visually appealing web portfolio.
 - **ATS Validator:** Check resume compatibility with Applicant Tracking Systems.
 - **Keyword Matcher:** Analyze resume content against job descriptions.
 - **PDF Export:** High-quality PDF generation using `@react-pdf/renderer`.
@@ -96,5 +95,6 @@ src/
 
 ## Testing Strategy
 
-_(TODO: Implement automated testing using Vitest/Playwright)_
-Currently, validation is handled through manual verification of PDF outputs and form submissions.
+- **Unit Testing:** Business logic validation (ATS, Spellcheck, Matcher).
+- **Component Testing:** UI interactions via Vitest + React Testing Library.
+- **Pre-commit Hooks:** Automated test runs via Husky.

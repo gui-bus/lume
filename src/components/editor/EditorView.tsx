@@ -184,7 +184,6 @@ export function EditorView({
         resumeId,
         data,
         data.personalInfo.name || t("title"),
-        false,
         locale,
         groupId,
         slug,

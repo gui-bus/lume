@@ -1,7 +1,7 @@
 {
   "common": {
     "title": "Lume",
-    "description": "Resume & Portfolio Builder",
+    "description": "Resume Builder",
     "next": "Next",
     "previous": "Previous",
     "save": "Save",
@@ -38,8 +38,6 @@
         "exportJsonSuccess": "JSON backup exported!",
         "shareSuccess": "Link copied to clipboard!",
         "shareError": "Error generating share link.",
-        "portfolioEnabled": "Portfolio Mode enabled!",
-        "portfolioDisabled": "Portfolio Mode disabled.",
         "generatingPdf": "Generating...",
         "downloadPdf": "Download PDF",
         "pdfShort": "PDF"
@@ -62,9 +60,6 @@
         "customSlugDesc": "lume.com/p/your-link",
         "generateLink": "Generate Public Link",
         "generateLinkDesc": "Share via unique URL",
-        "portfolioActivate": "Activate Portfolio Mode",
-        "portfolioActive": "Portfolio Active",
-        "portfolioDesc": "Display resume as a website",
         "metrics": "Access Metrics",
         "views": "Views",
         "downloads": "Downloads",
@@ -91,7 +86,6 @@
       "tags": {
         "ats": "ATS Optimized",
         "pdf": "Real-time PDF",
-        "portfolio": "Portfolio Mode",
         "keywords": "Keyword Analysis"
       }
     },

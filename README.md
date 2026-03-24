@@ -1,7 +1,7 @@
 # <p align="center">LUME</p>
 
 <p align="center">
-  <strong>O Construtor de Currículos e Portfólios de Próxima Geração: Performance, ATS e Design Premium.</strong>
+  <strong>O Construtor de Currículos de Próxima Geração: Performance, ATS e Design Premium.</strong>
 </p>
 
 <p align="center">
@@ -18,12 +18,12 @@
 
 ## 📖 Panorama Geral
 
-O **Lume** é uma plataforma de engenharia de carreira projetada para profissionais que buscam excelência visual e técnica. Mais do que um simples editor, o Lume resolve a fricção entre a criação de currículos otimizados para algoritmos (ATS) e a apresentação de um portfólio digital moderno, unificando ambos em uma experiência fluida e integrada.
+O **Lume** é uma plataforma de engenharia de carreira projetada para profissionais que buscam excelência visual e técnica. Mais do que um simples editor, o Lume resolve a fricção na criação de currículos otimizados para algoritmos (ATS) em uma experiência fluida e integrada.
 
 ### 🎯 Diferenciais Estratégicos
 
 - **Foco em Conversão (ATS):** Validadores integrados que garantem que seu currículo seja lido corretamente por sistemas de recrutamento.
-- **Preview Híbrido:** Edição em tempo real com renderização fiel de PDF e visualização instantânea em modo Portfólio.
+- **Preview em Tempo Real:** Edição instantânea com renderização fiel de PDF.
 - **Experiência Premium:** Interface baseada em micro-interações, View Transitions e tipografia de alta legibilidade.
 
 ---
@@ -44,9 +44,8 @@ Interface de alta performance que elimina a necessidade de recarregamentos:
 - **Keyword Matcher:** Analise seu currículo contra descrições de vagas específicas para identificar lacunas de habilidades.
 - **LinkedIn Parser:** Importe seus dados diretamente do PDF do LinkedIn para acelerar o preenchimento.
 
-### 🌐 Portfólio Digital & Compartilhamento
+### 🌐 Compartilhamento & Link Público
 
-- **Portfolio Mode:** Transforme seu currículo estático em um site pessoal responsivo e elegante.
 - **Slug Customizado:** Gere links públicos profissionais (ex: `lume.dev/seu-nome`) para compartilhar com recrutadores.
 - **Analytics Integrado:** Acompanhe visualizações e downloads do seu perfil profissional.
 
