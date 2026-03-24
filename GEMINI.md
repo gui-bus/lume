@@ -8,6 +8,7 @@ Lume is a modern, high-performance web application designed for creating, managi
 - **Language:** [TypeScript](https://www.typescriptlang.org/)
 - **Styling:** [Tailwind CSS 4](https://tailwindcss.com/)
 - **UI Components:** [Radix UI](https://www.radix-ui.com/) + [shadcn/ui](https://ui.shadcn.com/)
+- **Authentication:** [Clerk](https://clerk.com/)
 - **Database:** [PostgreSQL](https://www.postgresql.org/) via [Prisma ORM](https://www.prisma.io/)
 - **PDF Generation:** [@react-pdf/renderer](https://react-pdf.org/)
 - **Validation:** [Zod](https://zod.dev/) + [React Hook Form](https://react-hook-form.com/)

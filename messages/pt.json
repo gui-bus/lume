@@ -7,160 +7,90 @@
     "save": "Salvar",
     "preview": "Visualizar",
     "loading": "Carregando...",
-    "downloadPDF": "Baixar PDF",
-    "atsScore": "Score {score}",
-    "step": "Passo {number}",
+    "atsScore": "ATS Score: {score}%",
     "myResume": "Meu Currículo",
-    "clearDraft": "Limpar Tudo"
-  },
-  "editor": {
-    "title": "Editar Currículo",
-    "subtitle": "Refine suas informações profissionais.",
-    "steps": {
-      "profile": "Perfil",
-      "stack": "Stack",
-      "journey": "Jornada",
-      "education": "Formação",
-      "projects": "Projetos",
-      "extras": "Extras"
-    },
-    "personalInfo": {
-      "fullName": "Nome Completo",
-      "fullNamePlaceholder": "Ex: João Silva",
-      "email": "E-mail",
-      "emailPlaceholder": "seu@email.com",
-      "phone": "Telefone",
-      "phonePlaceholder": "(11) 99999-9999",
-      "location": "Localização",
-      "locationPlaceholder": "São Paulo, SP",
-      "linkedin": "LinkedIn",
-      "portfolio": "Portfólio",
-      "summary": "Resumo Profissional",
-      "summaryPlaceholder": "Uma breve introdução..."
-    },
-    "stack": {
-      "title": "Tecnologias & Expertises",
-      "placeholder": "React, Node.js, TypeScript, Docker, AWS...",
-      "hint": "Separe cada tecnologia utilizando vírgulas"
-    },
-    "experience": {
-      "add": "Adicionar Experiência",
-      "company": "Empresa",
-      "position": "Cargo",
-      "startDate": "Início",
-      "endDate": "Fim",
-      "current": "Ainda trabalho nesta empresa",
-      "description": "Descrição",
-      "placeholder": {
-        "startDate": "Jan 2020"
-      }
-    },
-    "education": {
-      "add": "Adicionar Formação",
-      "school": "Instituição",
-      "degree": "Grau",
-      "field": "Área",
-      "graduationDate": "Data de Graduação",
-      "placeholder": {
-        "graduationDate": "2019"
-      }
-    },
-    "projects": {
-      "add": "Adicionar Projeto",
-      "name": "Nome do Projeto",
-      "github": "GitHub",
-      "deploy": "Deploy",
-      "description": "Descrição"
-    },
-    "extras": {
-      "languages": {
-        "title": "Idiomas",
-        "label": "Idioma",
-        "placeholder": "Ex: Inglês",
-        "proficiency": "Proficiência",
-        "add": "Novo Idioma",
-        "levels": {
-          "basico": "Básico",
-          "intermediario": "Intermediário",
-          "avancado": "Avançado",
-          "fluente": "Fluente",
-          "nativo": "Nativo"
-        }
+    "header": {
+      "jobMatch": {
+        "button": "Match de Vaga",
+        "title": "Análise de Match",
+        "description": "Cole a descrição da vaga para analisar a compatibilidade",
+        "placeholder": "Cole aqui a descrição da vaga desejada...",
+        "charCount": "{count} caracteres",
+        "clear": "Limpar",
+        "technicalMatch": "Match Técnico",
+        "basedOnKeywords": "Baseado em palavras-chave",
+        "missingKeywords": "Palavras-chave ausentes",
+        "matchingKeywords": "Palavras-chave encontradas"
       },
-      "certifications": {
-        "title": "Certificações",
-        "name": "Certificado",
-        "issuer": "Emissor",
-        "date": "Ano",
-        "datePlaceholder": "2023",
-        "add": "Nova Certificação"
+      "healthCheck": {
+        "title": "Check-up de Currículo",
+        "atsStructure": "Estrutura ATS",
+        "strongVerbs": "Verbos de Ação",
+        "suggestionsLabel": "Sugestões:"
       },
-      "volunteering": {
-        "title": "Voluntariado",
-        "organization": "Organização",
-        "role": "Papel",
-        "description": "Sobre o trabalho",
-        "add": "Novo Registro"
+      "actions": {
+        "importJsonSuccess": "Dados importados com sucesso!",
+        "importJsonError": "Erro ao importar arquivo JSON.",
+        "importLinkedInInfo": "Analisando seu PDF do LinkedIn...",
+        "importLinkedInSuccess": "Dados básicos importados do LinkedIn!",
+        "importLinkedInError": "Erro ao processar PDF do LinkedIn.",
+        "exportJsonSuccess": "Backup JSON exportado!",
+        "shareSuccess": "Link copiado para a área de transferência!",
+        "shareError": "Erro ao gerar link de compartilhamento.",
+        "portfolioEnabled": "Modo Portfólio ativado!",
+        "portfolioDisabled": "Modo Portfólio desativado.",
+        "generatingPdf": "Gerando...",
+        "downloadPdf": "Baixar PDF",
+        "pdfShort": "PDF"
+      },
+      "export": {
+        "jsonFilename": "curriculo-{name}",
+        "pdfFilename": "curriculo-{name}"
+      },
+      "tools": {
+        "title": "Ferramentas & Exportação",
+        "importExport": "Importação & Exportação",
+        "importLinkedIn": "Importar do LinkedIn",
+        "importLinkedInDesc": "Extrair dados do seu PDF do LinkedIn",
+        "loadJson": "Carregar JSON",
+        "loadJsonDesc": "Restaurar de um arquivo .json",
+        "saveBackup": "Salvar Backup",
+        "saveBackupDesc": "Baixar cópia de segurança em JSON",
+        "visibilityLink": "Visibilidade & Link",
+        "generateLink": "Gerar Link Público",
+        "generateLinkDesc": "Compartilhar via URL única",
+        "portfolioActivate": "Ativar Modo Portfólio",
+        "portfolioActive": "Portfólio Ativo",
+        "portfolioDesc": "Exibir currículo como site",
+        "metrics": "Métricas de Acesso",
+        "views": "Views",
+        "downloads": "Downloads",
+        "version": "Lume v1.0"
+      },
+      "auth": {
+        "signIn": "Entrar",
+        "signUp": "Criar Conta",
+        "profile": "Meu Perfil"
       }
-    }
-  },
-  "header": {
-    "jobMatch": {
-      "button": "Match de Vagas",
-      "title": "Análise de Match",
-      "description": "Compare seu currículo com uma vaga real",
-      "placeholder": "Cole aqui a descrição completa da vaga...",
-      "charCount": "{count} caracteres",
-      "clear": "Limpar texto",
-      "technicalMatch": "Aderência técnica",
-      "basedOnKeywords": "Baseado em palavras-chave",
-      "missingKeywords": "Faltando no seu currículo",
-      "matchingKeywords": "Competências encontradas"
     },
-    "healthCheck": {
-      "title": "Health Check",
-      "atsStructure": "Estrutura (ATS)",
-      "strongVerbs": "Verbos de Impacto",
-      "suggestionsLabel": "Sugestões:"
-    },
-    "actions": {
-      "importJsonSuccess": "JSON importado!",
-      "importJsonError": "Erro no JSON",
-      "importLinkedInInfo": "Processando LinkedIn...",
-      "importLinkedInSuccess": "Dados extraídos!",
-      "importLinkedInError": "Erro no processamento",
-      "exportJsonSuccess": "JSON exportado!",
-      "shareSuccess": "Link de compartilhamento copiado!",
-      "shareError": "Falha ao gerar link",
-      "portfolioEnabled": "Modo Portfólio Ativado",
-      "portfolioDisabled": "Modo Currículo Ativado",
-      "generatingPdf": "Gerando...",
-      "downloadPdf": "Baixar PDF",
-      "pdfShort": "PDF"
-    },
-    "export": {
-      "jsonFilename": "curriculo-{name}.json",
-      "pdfFilename": "curriculo-{name}.pdf"
-    },
-    "tools": {
-      "title": "Ferramentas & Ajustes",
-      "importExport": "Importação & Exportação",
-      "importLinkedIn": "Importar LinkedIn",
-      "importLinkedInDesc": "Extrair do seu perfil PDF",
-      "loadJson": "Carregar JSON",
-      "loadJsonDesc": "Restaurar de um backup",
-      "saveBackup": "Salvar Backup",
-      "saveBackupDesc": "Exportar para arquivo .json",
-      "visibilityLink": "Visibilidade & Link",
-      "generateLink": "Gerar Link Público",
-      "generateLinkDesc": "Compartilhe sua URL única",
-      "portfolioActive": "Modo Portfólio Ativo",
-      "portfolioActivate": "Ativar Modo Portfólio",
-      "portfolioDesc": "Exibir currículo como site",
-      "metrics": "Métricas de Acesso",
-      "views": "Views",
-      "downloads": "Downloads",
-      "version": "Lume v1.0"
+    "auth": {
+      "signInTitle": "Entrar.",
+      "signInDesc": "Acesse sua conta e continue refinando sua presença profissional.",
+      "signUpTitle": "Criar conta.",
+      "signUpDesc": "Junte-se à elite profissional e transforme seu currículo em uma ferramenta de conversão.",
+      "heroTitle": "Sua carreira",
+      "heroSubtitle": "em destaque.",
+      "heroLegacy": "legado.",
+      "heroAscension": "ascensão.",
+      "atsEngine": "Motor ATS",
+      "match": "Match",
+      "status": "Otimizado",
+      "tags": {
+        "ats": "Otimizado para ATS",
+        "pdf": "PDF em tempo real",
+        "portfolio": "Modo Portfólio",
+        "keywords": "Análise de Keywords"
+      }
     }
   }
 }
