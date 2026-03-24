@@ -5,17 +5,22 @@ import ReactCountryFlag from "react-country-flag";
 import { useLocale } from "next-intl";
 import { useRouter, usePathname } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
+import { useSearchParams } from "next/navigation";
 
 export function LanguageSwitcher() {
   const [isPending, startTransition] = useTransition();
   const locale = useLocale();
   const router = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
 
   const switchLanguage = (newLocale: string) => {
     startTransition(() => {
-      router.replace(pathname, { locale: newLocale });
+      const currentParams = new URLSearchParams(searchParams.toString());
+      const query = currentParams.toString();
+      const pathWithQuery = query ? `${pathname}?${query}` : pathname;
 
+      router.replace(pathWithQuery, { locale: newLocale });
       router.refresh();
     });
   };

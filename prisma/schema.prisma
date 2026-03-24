@@ -7,7 +7,7 @@ datasource db {
 }
 
 model User {
-  id      String   @id @default(uuid())
+  id      String   @id
   email   String   @unique
   name    String?
   resumes Resume[]
@@ -27,7 +27,8 @@ model Resume {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  groupId String?
+  groupId String
 
-  @@index([groupId, locale])
+  @@unique([groupId, locale])
+  @@index([userId])
 }

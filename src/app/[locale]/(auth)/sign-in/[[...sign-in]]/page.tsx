@@ -10,7 +10,7 @@ import { useTranslations } from "next-intl";
 
 export default function SignInPage() {
   const { theme, setTheme } = useTheme();
-  const t = useTranslations("common.auth");
+  const t = useTranslations("common");
 
   return (
     <div className="min-h-screen w-full flex bg-background overflow-hidden relative text-foreground selection:bg-primary/30">
@@ -43,9 +43,9 @@ export default function SignInPage() {
               transition={{ delay: 0.2 }}
             >
               <h2 className="text-8xl font-black tracking-tighter leading-[0.85] text-white">
-                {t("heroTitle")} <br />
+                {t("auth.heroTitle")} <br />
                 <span className="text-primary italic font-serif">
-                  {t("heroSubtitle")}
+                  {t("auth.heroSubtitle")}
                 </span>
               </h2>
             </motion.div>
@@ -61,7 +61,7 @@ export default function SignInPage() {
                   key={i}
                   className="px-4 py-1.5 rounded-full bg-white/10 border border-white/10 backdrop-blur-md text-[10px] font-black uppercase tracking-[0.2em] text-white/80"
                 >
-                  {t(`tags.${key}`)}
+                  {t(`auth.tags.${key}`)}
                 </span>
               ))}
             </motion.div>
@@ -84,10 +84,10 @@ export default function SignInPage() {
                 </div>
                 <div className="text-right">
                   <span className="block text-[10px] font-black uppercase tracking-widest text-slate-400 leading-none mb-1">
-                    {t("atsEngine")}
+                    {t("auth.atsEngine")}
                   </span>
                   <span className="text-[11px] font-bold text-emerald-500 uppercase">
-                    {t("status")}
+                    {t("auth.status")}
                   </span>
                 </div>
               </div>
@@ -104,7 +104,7 @@ export default function SignInPage() {
                   98%
                 </span>
                 <span className="text-[10px] font-black text-primary uppercase tracking-widest mb-1 ml-1">
-                  {t("match")}
+                  {t("auth.match")}
                 </span>
               </div>
             </motion.div>
@@ -148,10 +148,10 @@ export default function SignInPage() {
         <div className="w-full max-w-[400px] space-y-10">
           <div className="space-y-3">
             <h3 className="text-5xl font-black tracking-tight text-foreground">
-              {t("signInTitle")}
+              {t("auth.signInTitle")}
             </h3>
             <p className="text-muted-foreground font-medium text-lg leading-relaxed">
-              {t("signInDesc")}
+              {t("auth.signInDesc")}
             </p>
           </div>
 

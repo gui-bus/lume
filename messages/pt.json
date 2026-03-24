@@ -9,6 +9,7 @@
     "loading": "Carregando...",
     "atsScore": "ATS Score: {score}%",
     "myResume": "Meu Currículo",
+    "step": "Passo {number}",
     "header": {
       "jobMatch": {
         "button": "Match de Vaga",
@@ -70,7 +71,8 @@
       "auth": {
         "signIn": "Entrar",
         "signUp": "Criar Conta",
-        "profile": "Meu Perfil"
+        "profile": "Meu Perfil",
+        "dashboard": "Dashboard"
       }
     },
     "auth": {
@@ -90,6 +92,115 @@
         "pdf": "PDF em tempo real",
         "portfolio": "Modo Portfólio",
         "keywords": "Análise de Keywords"
+      }
+    },
+    "dashboard": {
+      "title": "Meus Currículos",
+      "description": "Gerencie e acompanhe a performance de seus perfis profissionais.",
+      "newResume": "Novo Currículo",
+      "empty": "Você ainda não criou nenhum currículo.",
+      "createFirst": "Criar meu primeiro currículo",
+      "lastUpdate": "Atualizado em {date}",
+      "actions": {
+        "edit": "Editar",
+        "share": "Compartilhar",
+        "delete": "Excluir",
+        "deleteConfirm": "Tem certeza?",
+        "copyLink": "Copiar Link"
+      },
+      "stats": {
+        "views": "Visualizações",
+        "downloads": "Downloads"
+      }
+    },
+    "editor": {
+      "subtitle": "Preencha as informações para gerar seu currículo.",
+      "steps": {
+        "profile": "Perfil",
+        "stack": "Stack",
+        "journey": "Experiência",
+        "education": "Formação",
+        "projects": "Projetos",
+        "extras": "Extras"
+      },
+      "personalInfo": {
+        "fullName": "Nome Completo",
+        "fullNamePlaceholder": "Ex: João Silva",
+        "email": "E-mail Profissional",
+        "emailPlaceholder": "Ex: joao@email.com",
+        "phone": "Telefone / WhatsApp",
+        "phonePlaceholder": "Ex: (11) 99999-9999",
+        "location": "Localização",
+        "locationPlaceholder": "Ex: São Paulo, SP",
+        "linkedin": "LinkedIn (URL)",
+        "portfolio": "Site / Portfólio (URL)",
+        "summary": "Resumo Profissional",
+        "summaryPlaceholder": "Conte um pouco sobre sua trajetória e objetivos..."
+      },
+      "stack": {
+        "title": "Minha Stack & Habilidades",
+        "placeholder": "Ex: React, TypeScript, Node.js, AWS, Figma...",
+        "hint": "Separe as habilidades por vírgula para melhor visualização"
+      },
+      "experience": {
+        "company": "Empresa",
+        "position": "Cargo / Função",
+        "startDate": "Data de Início",
+        "endDate": "Data de Término",
+        "current": "Atualmente nesta função",
+        "description": "Responsabilidades e Conquistas",
+        "add": "Adicionar Experiência",
+        "placeholder": {
+          "startDate": "Ex: Jan 2022"
+        }
+      },
+      "education": {
+        "school": "Instituição / Universidade",
+        "degree": "Grau / Nível",
+        "field": "Curso / Área de Estudo",
+        "graduationDate": "Data de Conclusão",
+        "add": "Adicionar Formação",
+        "placeholder": {
+          "graduationDate": "Ex: Dez 2023"
+        }
+      },
+      "projects": {
+        "name": "Nome do Projeto",
+        "github": "Repositório (URL)",
+        "deploy": "Live Demo (URL)",
+        "description": "Sobre o projeto",
+        "add": "Adicionar Projeto"
+      },
+      "extras": {
+        "languages": {
+          "title": "Idiomas",
+          "label": "Idioma",
+          "placeholder": "Ex: Inglês",
+          "proficiency": "Nível de Proficiência",
+          "add": "Adicionar Idioma",
+          "levels": {
+            "basico": "Básico",
+            "intermediario": "Intermediário",
+            "avancado": "Avançado",
+            "fluente": "Fluente",
+            "nativo": "Nativo"
+          }
+        },
+        "certifications": {
+          "title": "Certificações",
+          "name": "Nome da Certificação",
+          "issuer": "Organização Emissora",
+          "date": "Data",
+          "datePlaceholder": "Ex: 2023",
+          "add": "Adicionar Certificação"
+        },
+        "volunteering": {
+          "title": "Trabalho Voluntário",
+          "organization": "Organização",
+          "role": "Função",
+          "description": "O que você fez?",
+          "add": "Adicionar Voluntariado"
+        }
       }
     }
   }

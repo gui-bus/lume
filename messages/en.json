@@ -9,6 +9,7 @@
     "loading": "Loading...",
     "atsScore": "ATS Score: {score}%",
     "myResume": "My Resume",
+    "step": "Step {number}",
     "header": {
       "jobMatch": {
         "button": "Job Match",
@@ -70,7 +71,8 @@
       "auth": {
         "signIn": "Sign In",
         "signUp": "Create Account",
-        "profile": "Profile"
+        "profile": "Profile",
+        "dashboard": "Dashboard"
       }
     },
     "auth": {
@@ -90,6 +92,115 @@
         "pdf": "Real-time PDF",
         "portfolio": "Portfolio Mode",
         "keywords": "Keyword Analysis"
+      }
+    },
+    "dashboard": {
+      "title": "My Resumes",
+      "description": "Manage and track the performance of your professional profiles.",
+      "newResume": "New Resume",
+      "empty": "You haven't created any resumes yet.",
+      "createFirst": "Create my first resume",
+      "lastUpdate": "Updated {date}",
+      "actions": {
+        "edit": "Edit",
+        "share": "Share",
+        "delete": "Delete",
+        "deleteConfirm": "Are you sure?",
+        "copyLink": "Copy Link"
+      },
+      "stats": {
+        "views": "Views",
+        "downloads": "Downloads"
+      }
+    },
+    "editor": {
+      "subtitle": "Fill in the information to generate your resume.",
+      "steps": {
+        "profile": "Profile",
+        "stack": "Stack",
+        "journey": "Experience",
+        "education": "Education",
+        "projects": "Projects",
+        "extras": "Extras"
+      },
+      "personalInfo": {
+        "fullName": "Full Name",
+        "fullNamePlaceholder": "e.g., John Doe",
+        "email": "Professional Email",
+        "emailPlaceholder": "e.g., john@email.com",
+        "phone": "Phone / WhatsApp",
+        "phonePlaceholder": "e.g., +1 555 000-0000",
+        "location": "Location",
+        "locationPlaceholder": "e.g., New York, NY",
+        "linkedin": "LinkedIn (URL)",
+        "portfolio": "Website / Portfolio (URL)",
+        "summary": "Professional Summary",
+        "summaryPlaceholder": "Tell us a bit about your journey and goals..."
+      },
+      "stack": {
+        "title": "My Stack & Skills",
+        "placeholder": "e.g., React, TypeScript, Node.js, AWS, Figma...",
+        "hint": "Separate skills with commas for better visualization"
+      },
+      "experience": {
+        "company": "Company",
+        "position": "Title / Role",
+        "startDate": "Start Date",
+        "endDate": "End Date",
+        "current": "Currently in this role",
+        "description": "Responsibilities and Achievements",
+        "add": "Add Experience",
+        "placeholder": {
+          "startDate": "e.g., Jan 2022"
+        }
+      },
+      "education": {
+        "school": "Institution / University",
+        "degree": "Degree / Level",
+        "field": "Course / Field of Study",
+        "graduationDate": "Completion Date",
+        "add": "Add Education",
+        "placeholder": {
+          "graduationDate": "e.g., Dec 2023"
+        }
+      },
+      "projects": {
+        "name": "Project Name",
+        "github": "Repository (URL)",
+        "deploy": "Live Demo (URL)",
+        "description": "About the project",
+        "add": "Add Project"
+      },
+      "extras": {
+        "languages": {
+          "title": "Languages",
+          "label": "Language",
+          "placeholder": "e.g., English",
+          "proficiency": "Proficiency Level",
+          "add": "Add Language",
+          "levels": {
+            "basico": "Basic",
+            "intermediario": "Intermediate",
+            "avancado": "Advanced",
+            "fluente": "Fluent",
+            "nativo": "Native"
+          }
+        },
+        "certifications": {
+          "title": "Certifications",
+          "name": "Certification Name",
+          "issuer": "Issuing Organization",
+          "date": "Date",
+          "datePlaceholder": "e.g., 2023",
+          "add": "Add Certification"
+        },
+        "volunteering": {
+          "title": "Volunteer Work",
+          "organization": "Organization",
+          "role": "Role",
+          "description": "What did you do?",
+          "add": "Add Volunteer Work"
+        }
       }
     }
   }

@@ -3,6 +3,7 @@
 import prisma from "@/lib/prisma";
 import { ResumeData } from "@/types/resume";
 import { revalidatePath } from "next/cache";
+import { auth, currentUser } from "@clerk/nextjs/server";
 
 export async function saveResume(
   id: string | undefined,
@@ -12,96 +13,129 @@ export async function saveResume(
   locale: string = "pt",
   groupId?: string,
 ) {
-  const finalId = id || "";
+  const { userId } = await auth();
+  const user = await currentUser();
 
-  let targetGroupId = groupId;
-  if (!targetGroupId && id) {
-    const existing = await prisma.resume.findUnique({
-      where: { id },
-      select: { groupId: true },
-    });
-    targetGroupId = existing?.groupId || undefined;
+  if (!userId || !user) {
+    throw new Error("Usuário não autenticado");
   }
 
-  const finalGroupId = targetGroupId || crypto.randomUUID();
-
-  const result = await prisma.resume.upsert({
-    where: {
-      id: finalId,
-    },
+  // Sincronizar Usuário
+  await prisma.user.upsert({
+    where: { id: userId },
     update: {
-      content: data as any,
-      title,
-      locale,
-      groupId: finalGroupId,
-      isPortfolio: isPortfolio ?? undefined,
+      email: user.emailAddresses[0].emailAddress,
+      name: `${user.firstName} ${user.lastName}`.trim(),
     },
     create: {
-      content: data as any,
-      title,
-      locale,
-      groupId: finalGroupId,
-      isPortfolio: isPortfolio ?? false,
+      id: userId,
+      email: user.emailAddresses[0].emailAddress,
+      name: `${user.firstName} ${user.lastName}`.trim(),
     },
   });
 
-  revalidatePath("/[locale]/share/[id]", "page");
+  const finalGroupId = groupId || crypto.randomUUID();
+
+  // Busca manual para evitar erro de 'Unknown argument groupId_locale'
+  const existingVersion = await prisma.resume.findFirst({
+    where: {
+      groupId: finalGroupId,
+      locale: locale,
+      userId: userId,
+    },
+  });
+
+  let result;
+
+  if (existingVersion) {
+    // Atualiza o existente
+    result = await prisma.resume.update({
+      where: { id: existingVersion.id },
+      data: {
+        content: data as any,
+        title,
+        isPortfolio: isPortfolio ?? undefined,
+      },
+    });
+  } else {
+    // Cria um novo
+    result = await prisma.resume.create({
+      data: {
+        content: data as any,
+        title,
+        locale,
+        groupId: finalGroupId,
+        isPortfolio: isPortfolio ?? false,
+        userId,
+      },
+    });
+  }
+
   return result;
 }
 
-export async function getResume(id: string, locale?: string) {
-  console.log(
-    `[DEBUG] Buscando currículo. ID/GroupId: ${id}, Locale solicitado: ${locale}`,
-  );
+export async function listUserResumes() {
+  const { userId } = await auth();
+  if (!userId) return [];
 
+  const resumes = await prisma.resume.findMany({
+    where: { userId },
+    orderBy: { updatedAt: "desc" },
+  });
+
+  const uniqueGroups = new Map();
+  resumes.forEach((r) => {
+    if (!uniqueGroups.has(r.groupId)) {
+      uniqueGroups.set(r.groupId, r);
+    }
+  });
+
+  return Array.from(uniqueGroups.values());
+}
+
+export async function deleteResume(id: string) {
+  const { userId } = await auth();
+  if (!userId) throw new Error("Não autorizado");
+
+  const resume = await prisma.resume.findUnique({ where: { id } });
+  if (resume?.groupId) {
+    await prisma.resume.deleteMany({
+      where: { groupId: resume.groupId, userId },
+    });
+  }
+
+  revalidatePath("/", "layout");
+}
+
+export async function getResume(id: string, locale?: string) {
   try {
+    // Busca prioritária por GroupId + Locale usando findFirst para evitar erros de validação
     if (locale) {
-      const resumeByGroup = await prisma.resume.findFirst({
+      const resume = await prisma.resume.findFirst({
         where: {
           groupId: id,
           locale: locale,
         },
       });
+      if (resume) return resume;
+    }
 
-      if (resumeByGroup) {
-        console.log(
-          `[DEBUG] Encontrado por GroupId + Locale: ${resumeByGroup.id}`,
-        );
-        return resumeByGroup;
-      }
-
-      const individualResume = await prisma.resume.findUnique({
-        where: { id: id },
-        select: { groupId: true },
-      });
-
-      if (individualResume?.groupId) {
+    // Fallback: ID individual
+    const individual = await prisma.resume.findUnique({ where: { id } });
+    if (individual) {
+      if (locale && individual.locale !== locale) {
         const localized = await prisma.resume.findFirst({
           where: {
-            groupId: individualResume.groupId,
+            groupId: individual.groupId,
             locale: locale,
           },
         });
-        if (localized) {
-          console.log(
-            `[DEBUG] Encontrado por GroupId do individual + Locale: ${localized.id}`,
-          );
-          return localized;
-        }
+        return localized || null;
       }
+      return individual;
     }
 
-    const fallback = await prisma.resume.findFirst({
-      where: {
-        OR: [{ id: id }, { groupId: id }],
-      },
-      orderBy: { updatedAt: "desc" },
-    });
-
-    console.log(
-      `[DEBUG] Usando fallback: ${fallback?.id} (${fallback?.locale})`,
-    );
-    return fallback;
+    return null;
   } catch (error) {
     console.error("Error fetching resume:", error);
     return null;
