@@ -17,13 +17,10 @@ import {
   LinkedinLogo,
   ChartLineUp,
   Browser,
-  MagicWand,
   List,
   Gear,
   Info,
   Target,
-  CheckCircle,
-  WarningCircle,
 } from "@phosphor-icons/react";
 import {
   Popover,
@@ -35,6 +32,7 @@ import {
   SheetContent,
   SheetHeader,
   SheetTitle,
+  SheetDescription,
   SheetTrigger,
 } from "@/components/ui/sheet";
 import {
@@ -47,24 +45,20 @@ import {
 } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { saveResume, incrementDownload } from "@/app/actions/resume-actions";
 import { useTheme } from "@/components/theme-provider";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import { ResumePDF } from "@/components/pdf/ResumePDF";
 import { cn } from "@/lib/utils";
-import { validateATS, ATSResult } from "@/lib/validations/ats-validator";
-import {
-  checkStrongVerbs,
-  SpellCheckResult,
-} from "@/lib/validations/spellchecker";
+import { validateATS } from "@/lib/validations/ats-validator";
+import { checkStrongVerbs } from "@/lib/validations/spellchecker";
 import { parseLinkedInPDF } from "@/lib/validations/linkedin-parser";
-import {
-  analyzeJobMatch,
-  MatchResult,
-} from "@/lib/validations/keyword-matcher";
+import { analyzeJobMatch } from "@/lib/validations/keyword-matcher";
 import { useLocale, useTranslations } from "next-intl";
 import { UserButton, Show } from "@clerk/nextjs";
 
@@ -91,20 +85,22 @@ interface EditorViewProps {
   initialData?: ResumeData;
   resumeId?: string;
   groupId?: string;
+  initialSlug?: string;
 }
 
 export function EditorView({
   initialData,
   resumeId: serverResumeId,
   groupId: serverGroupId,
+  initialSlug,
 }: EditorViewProps) {
   const t = useTranslations("common");
   const locale = useLocale();
 
-  // O estado 'data' é usado apenas para o PREVIEW
   const [data, setData] = useState<ResumeData>(initialData || defaultData);
   const [resumeId, setResumeId] = useState<string | undefined>(serverResumeId);
   const [groupId, setGroupId] = useState<string | undefined>(serverGroupId);
+  const [slug, setSlug] = useState<string>(initialSlug || "");
 
   const [mounted, setMounted] = useState(false);
   const [zoom, setZoom] = useState(0.8);
@@ -115,15 +111,15 @@ export function EditorView({
     setMounted(true);
   }, []);
 
-  // Quando o servidor envia novos dados (ex: troca de idioma), atualizamos o preview
   useEffect(() => {
     if (initialData) setData(initialData);
     setResumeId(serverResumeId);
     setGroupId(serverGroupId);
-  }, [initialData, serverResumeId, serverGroupId]);
+    setSlug(initialSlug || "");
+  }, [initialData, serverResumeId, serverGroupId, initialSlug]);
 
   const handleDataChange = useCallback((newData: ResumeData) => {
-    setData(newData);
+    setData({ ...newData });
   }, []);
 
   const handleIdGenerated = useCallback((newId: string, newGroupId: string) => {
@@ -131,13 +127,45 @@ export function EditorView({
     setGroupId(newGroupId);
   }, []);
 
-  // Memoziação de cálculos pesados para evitar loops de render
   const atsResult = useMemo(() => validateATS(data), [data]);
   const spellResult = useMemo(() => checkStrongVerbs(data), [data]);
   const matchResult = useMemo(
     () => (jobDescription ? analyzeJobMatch(data, jobDescription) : null),
     [data, jobDescription],
   );
+
+  const handleImportJSON = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      try {
+        setData(JSON.parse(event.target?.result as string));
+        toast.success(t("header.actions.importJsonSuccess"));
+      } catch (error) {
+        toast.error(t("header.actions.importJsonError"));
+      }
+    };
+    reader.readAsText(file);
+  };
+
+  const handleLinkedInImport = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    try {
+      toast.info(t("header.actions.importLinkedInInfo"));
+      const partialData = await parseLinkedInPDF(file);
+      setData((prev) => ({
+        ...prev,
+        personalInfo: { ...prev.personalInfo, ...partialData.personalInfo },
+      }));
+      toast.success(t("header.actions.importLinkedInSuccess"));
+    } catch (error) {
+      toast.error(t("header.actions.importLinkedInError"));
+    }
+  };
 
   const handleExportJSON = () => {
     const blob = new Blob([JSON.stringify(data, null, 2)], {
@@ -159,22 +187,25 @@ export function EditorView({
         false,
         locale,
         groupId,
+        slug,
       );
       setResumeId(result.id);
       setGroupId(result.groupId);
-      await navigator.clipboard.writeText(
-        `${window.location.origin}/share/${result.groupId}`,
-      );
+      setSlug(result.slug || "");
+
+      const shareUrl = `${window.location.origin}/share/${result.slug || result.groupId}`;
+
+      await navigator.clipboard.writeText(shareUrl);
       toast.success(t("header.actions.shareSuccess"));
-    } catch (error) {
-      toast.error(t("header.actions.shareError"));
+    } catch (error: any) {
+      toast.error(error.message || t("header.actions.shareError"));
     }
   };
 
   if (!mounted) return null;
 
   return (
-    <main className="h-screen flex flex-col bg-background text-foreground overflow-hidden">
+    <main className="h-screen flex flex-col bg-background text-foreground overflow-hidden text-left">
       <header className="no-print h-16 border-b border-border/40 bg-background/50 backdrop-blur-xl flex items-center justify-between px-4 md:px-8 shrink-0 z-50">
         <div className="flex items-center gap-4">
           <span className="text-2xl md:text-3xl font-black tracking-[0.2em] uppercase text-primary">
@@ -319,23 +350,131 @@ export function EditorView({
             </SheetTrigger>
             <SheetContent
               side="right"
-              className="w-[300px] sm:w-[400px] bg-background/95 backdrop-blur-xl p-6"
+              className="w-[300px] sm:w-[400px] bg-background/95 backdrop-blur-xl p-0 flex flex-col"
             >
-              <div className="space-y-8 mt-8">
-                <Button
-                  variant="outline"
-                  onClick={handleShare}
-                  className="w-full justify-start gap-3 rounded-xl py-6"
-                >
-                  <ShareNetwork size={20} /> {t("header.tools.generateLink")}
-                </Button>
-                <Button
-                  variant="outline"
-                  onClick={handleExportJSON}
-                  className="w-full justify-start gap-3 rounded-xl py-6"
-                >
-                  <FileArrowDown size={20} /> {t("header.tools.saveBackup")}
-                </Button>
+              <SheetHeader className="p-6 border-b border-border/20 bg-primary/5">
+                <SheetTitle className="text-sm font-black uppercase tracking-[0.2em] flex items-center gap-2">
+                  <Gear size={18} /> {t("header.tools.title")}
+                </SheetTitle>
+                <SheetDescription className="sr-only">
+                  Menu de ferramentas e configurações
+                </SheetDescription>
+              </SheetHeader>
+
+              <div className="flex-1 overflow-y-auto custom-scrollbar p-6 space-y-8 text-left">
+                {/* LinkedIn Section */}
+                <div className="space-y-4">
+                  <h4 className="text-[10px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-2">
+                    <LinkedinLogo size={14} weight="fill" /> LinkedIn Import
+                  </h4>
+                  <div className="relative w-full">
+                    <input
+                      type="file"
+                      accept=".pdf"
+                      onChange={handleLinkedInImport}
+                      className="absolute inset-0 opacity-0 cursor-pointer z-10"
+                    />
+                    <Button
+                      variant="outline"
+                      className="w-full justify-start gap-3 rounded-xl py-6 border-border/40 hover:bg-[#0A66C2]/5 hover:text-[#0A66C2] transition-colors"
+                    >
+                      <LinkedinLogo size={20} weight="fill" />
+                      <div className="flex flex-col items-start leading-tight">
+                        <span className="text-sm font-bold">
+                          {t("header.tools.importLinkedIn")}
+                        </span>
+                        <span className="text-[10px] opacity-60">
+                          {t("header.tools.importLinkedInDesc")}
+                        </span>
+                      </div>
+                    </Button>
+                  </div>
+                </div>
+
+                {/* Slug Section */}
+                <div className="space-y-4">
+                  <h4 className="text-[10px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-2">
+                    <Browser size={14} /> {t("header.tools.visibilityLink")}
+                  </h4>
+                  <div className="space-y-3">
+                    <div className="space-y-2">
+                      <Label
+                        htmlFor="slug"
+                        className="text-[10px] uppercase font-bold text-muted-foreground ml-1"
+                      >
+                        Custom URL
+                      </Label>
+                      <Input
+                        id="slug"
+                        value={slug}
+                        onChange={(e) =>
+                          setSlug(
+                            e.target.value.toLowerCase().replace(/\s+/g, "-"),
+                          )
+                        }
+                        placeholder="seu-nome"
+                        className="h-11 bg-muted/20 border-border/40 rounded-xl"
+                      />
+                    </div>
+                    <Button
+                      variant="outline"
+                      onClick={handleShare}
+                      className="w-full justify-start gap-3 rounded-xl py-6 border-primary/20 hover:bg-primary/5 transition-all"
+                    >
+                      <ShareNetwork size={20} className="text-primary" />
+                      <div className="flex flex-col items-start leading-tight">
+                        <span className="text-sm font-bold">
+                          {t("header.tools.generateLink")}
+                        </span>
+                        <span className="text-[10px] opacity-60">
+                          {t("header.tools.generateLinkDesc")}
+                        </span>
+                      </div>
+                    </Button>
+                  </div>
+                </div>
+
+                {/* Import/Export Section */}
+                <div className="space-y-4">
+                  <h4 className="text-[10px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-2">
+                    <FileArrowUp size={14} /> Backup
+                  </h4>
+                  <div className="grid grid-cols-1 gap-2">
+                    <div className="relative w-full">
+                      <input
+                        type="file"
+                        accept=".json"
+                        onChange={handleImportJSON}
+                        className="absolute inset-0 opacity-0 cursor-pointer z-10"
+                      />
+                      <Button
+                        variant="outline"
+                        className="w-full justify-start gap-3 rounded-xl py-6 border-border/40"
+                      >
+                        <FileArrowUp size={20} />
+                        <span className="text-sm font-bold">
+                          {t("header.tools.loadJson")}
+                        </span>
+                      </Button>
+                    </div>
+                    <Button
+                      variant="outline"
+                      onClick={handleExportJSON}
+                      className="w-full justify-start gap-3 rounded-xl py-6 border-border/40"
+                    >
+                      <FileArrowDown size={20} />
+                      <span className="text-sm font-bold">
+                        {t("header.tools.saveBackup")}
+                      </span>
+                    </Button>
+                  </div>
+                </div>
+
+                <div className="pt-8 border-t border-border/20 text-center">
+                  <div className="inline-flex items-center gap-2 text-[10px] font-bold text-muted-foreground/50 uppercase tracking-widest">
+                    <Info size={14} /> {t("header.tools.version")}
+                  </div>
+                </div>
               </div>
             </SheetContent>
           </Sheet>
@@ -343,9 +482,9 @@ export function EditorView({
       </header>
 
       <div className="flex-1 flex overflow-hidden">
-        <div className="w-full lg:w-[480px] xl:w-[540px] shrink-0 border-r bg-card/10 overflow-hidden relative flex flex-col">
+        <div className="w-full lg:w-[480px] xl:w-[540px] shrink-0 border-r bg-card/10 overflow-hidden relative flex flex-col text-left">
           <ResumeForm
-            key={`${locale}-${serverResumeId || "new"}`} // MATA e CRIA o form ao trocar de idioma
+            key={locale}
             initialData={initialData || defaultData}
             resumeId={resumeId}
             groupId={groupId}

@@ -23,7 +23,25 @@ import {
   Certificate,
   HandHeart,
   PlusCircle,
+  DotsSixVertical,
 } from "@phosphor-icons/react";
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+  useSortable,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 import { useEffect, useState, useCallback, useRef } from "react";
 import { useDebounce } from "@/hooks/use-debounce";
 import { saveResume } from "@/app/actions/resume-actions";
@@ -59,6 +77,60 @@ const defaultValues: ResumeData = {
   volunteering: [],
 };
 
+interface SortableItemProps {
+  id: string;
+  children: React.ReactNode;
+  onRemove: () => void;
+}
+
+function SortableItem({ id, children, onRemove }: SortableItemProps) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    zIndex: isDragging ? 50 : undefined,
+  };
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      className={cn(
+        "relative group",
+        isDragging && "z-50 shadow-2xl scale-[1.02] cursor-grabbing",
+      )}
+    >
+      <div
+        {...attributes}
+        {...listeners}
+        className="absolute top-4 left-3 z-10 p-1.5 rounded-lg hover:bg-background/50 text-muted-foreground/30 hover:text-primary transition-all cursor-grab active:cursor-grabbing opacity-0 group-hover:opacity-100"
+      >
+        <DotsSixVertical size={18} weight="bold" />
+      </div>
+      <Button
+        variant="ghost"
+        size="icon"
+        className="absolute top-3 right-3 text-muted-foreground hover:text-destructive opacity-0 group-hover:opacity-100 h-8 w-8 z-10 transition-all"
+        onClick={(e) => {
+          e.stopPropagation();
+          onRemove();
+        }}
+      >
+        <Trash size={16} />
+      </Button>
+      {children}
+    </div>
+  );
+}
+
 export function ResumeForm({
   initialData,
   resumeId,
@@ -70,6 +142,17 @@ export function ResumeForm({
   const locale = useLocale();
   const [activeStep, setActiveStep] = useState(0);
   const [isSaving, setIsSaving] = useState(false);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8,
+      },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    }),
+  );
 
   const { register, control, watch, reset } = useForm<ResumeData>({
     resolver: zodResolver(ResumeSchema),
@@ -150,16 +233,19 @@ export function ResumeForm({
     fields: expFields,
     append: appendExp,
     remove: removeExp,
+    move: moveExp,
   } = useFieldArray({ control, name: "experiences" });
   const {
     fields: eduFields,
     append: appendEdu,
     remove: removeEdu,
+    move: moveEdu,
   } = useFieldArray({ control, name: "educations" });
   const {
     fields: projFields,
     append: appendProj,
     remove: removeProj,
+    move: moveProj,
   } = useFieldArray({ control, name: "projects" });
   const {
     fields: langFields,
@@ -176,6 +262,22 @@ export function ResumeForm({
     append: appendVol,
     remove: removeVol,
   } = useFieldArray({ control, name: "volunteering" });
+
+  const handleDragEnd = useCallback(
+    (
+      event: DragEndEvent,
+      fields: any[],
+      move: (f: number, t: number) => void,
+    ) => {
+      const { active, over } = event;
+      if (over && active.id !== over.id) {
+        const oldIndex = fields.findIndex((f) => f.id === active.id);
+        const newIndex = fields.findIndex((f) => f.id === over.id);
+        move(oldIndex, newIndex);
+      }
+    },
+    [],
+  );
 
   return (
     <div className="flex flex-col h-full bg-background overflow-hidden relative text-left">
@@ -382,86 +484,92 @@ export function ResumeForm({
 
             {activeStep === 2 && (
               <div className="space-y-8">
-                {expFields.map((field, i) => (
-                  <Card
-                    key={field.id}
-                    className="border-border/50 bg-muted/10 relative overflow-hidden group shadow-none hover:bg-muted/20 transition-all duration-500"
+                <DndContext
+                  sensors={sensors}
+                  collisionDetection={closestCenter}
+                  onDragEnd={(e) => handleDragEnd(e, expFields, moveExp)}
+                >
+                  <SortableContext
+                    items={expFields.map((f) => f.id)}
+                    strategy={verticalListSortingStrategy}
                   >
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="absolute top-3 right-3 text-muted-foreground hover:text-destructive opacity-0 group-hover:opacity-100 h-8 w-8"
-                      onClick={() => removeExp(i)}
-                    >
-                      <Trash size={16} />
-                    </Button>
-                    <CardContent className="p-8 pt-12 grid grid-cols-2 gap-6 text-left">
-                      <div className="space-y-2">
-                        <Label className="text-[10px] font-black uppercase tracking-widest">
-                          {t("editor.experience.company")}
-                        </Label>
-                        <Input
-                          {...register(`experiences.${i}.company`)}
-                          className="h-11 bg-background/50 border-border/50 font-bold"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label className="text-[10px] font-black uppercase tracking-widest">
-                          {t("editor.experience.position")}
-                        </Label>
-                        <Input
-                          {...register(`experiences.${i}.position`)}
-                          className="h-11 bg-background/50 border-border/50"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label className="text-[10px] font-black uppercase tracking-widest">
-                          {t("editor.experience.startDate")}
-                        </Label>
-                        <Input
-                          {...register(`experiences.${i}.startDate`)}
-                          placeholder={t(
-                            "editor.experience.placeholder.startDate",
-                          )}
-                          className="h-11 bg-background/50 border-border/50"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label className="text-[10px] font-black uppercase tracking-widest">
-                          {t("editor.experience.endDate")}
-                        </Label>
-                        <Input
-                          {...register(`experiences.${i}.endDate`)}
-                          disabled={watch(`experiences.${i}.current`)}
-                          className="h-11 bg-background/50 border-border/50"
-                        />
-                      </div>
-                      <div className="col-span-2 flex items-center gap-3 bg-background/30 p-3 rounded-lg border border-border/30">
-                        <input
-                          type="checkbox"
-                          id={`exp-cur-${i}`}
-                          {...register(`experiences.${i}.current`)}
-                          className="w-4 h-4 rounded border-border bg-background accent-primary"
-                        />
-                        <Label
-                          htmlFor={`exp-cur-${i}`}
-                          className="text-xs font-bold text-muted-foreground uppercase tracking-widest"
-                        >
-                          {t("editor.experience.current")}
-                        </Label>
-                      </div>
-                      <div className="col-span-2 space-y-2 text-left">
-                        <Label className="text-[10px] font-black uppercase tracking-widest">
-                          {t("editor.experience.description")}
-                        </Label>
-                        <Textarea
-                          {...register(`experiences.${i}.description`)}
-                          className="min-h-[150px] text-sm bg-background/50 border-border/50 leading-relaxed text-left"
-                        />
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
+                    {expFields.map((field, i) => (
+                      <SortableItem
+                        key={field.id}
+                        id={field.id}
+                        onRemove={() => removeExp(i)}
+                      >
+                        <Card className="border-border/50 bg-muted/10 relative overflow-hidden group shadow-none hover:bg-muted/20 transition-all duration-500">
+                          <CardContent className="p-8 pt-12 grid grid-cols-2 gap-6 text-left">
+                            <div className="space-y-2">
+                              <Label className="text-[10px] font-black uppercase tracking-widest">
+                                {t("editor.experience.company")}
+                              </Label>
+                              <Input
+                                {...register(`experiences.${i}.company`)}
+                                className="h-11 bg-background/50 border-border/50 font-bold"
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <Label className="text-[10px] font-black uppercase tracking-widest">
+                                {t("editor.experience.position")}
+                              </Label>
+                              <Input
+                                {...register(`experiences.${i}.position`)}
+                                className="h-11 bg-background/50 border-border/50"
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <Label className="text-[10px] font-black uppercase tracking-widest">
+                                {t("editor.experience.startDate")}
+                              </Label>
+                              <Input
+                                {...register(`experiences.${i}.startDate`)}
+                                placeholder={t(
+                                  "editor.experience.placeholder.startDate",
+                                )}
+                                className="h-11 bg-background/50 border-border/50"
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <Label className="text-[10px] font-black uppercase tracking-widest">
+                                {t("editor.experience.endDate")}
+                              </Label>
+                              <Input
+                                {...register(`experiences.${i}.endDate`)}
+                                disabled={watch(`experiences.${i}.current`)}
+                                className="h-11 bg-background/50 border-border/50"
+                              />
+                            </div>
+                            <div className="col-span-2 flex items-center gap-3 bg-background/30 p-3 rounded-lg border border-border/30">
+                              <input
+                                type="checkbox"
+                                id={`exp-cur-${i}`}
+                                {...register(`experiences.${i}.current`)}
+                                className="w-4 h-4 rounded border-border bg-background accent-primary"
+                              />
+                              <Label
+                                htmlFor={`exp-cur-${i}`}
+                                className="text-xs font-bold text-muted-foreground uppercase tracking-widest"
+                              >
+                                {t("editor.experience.current")}
+                              </Label>
+                            </div>
+                            <div className="col-span-2 space-y-2 text-left">
+                              <Label className="text-[10px] font-black uppercase tracking-widest">
+                                {t("editor.experience.description")}
+                              </Label>
+                              <Textarea
+                                {...register(`experiences.${i}.description`)}
+                                className="min-h-[150px] text-sm bg-background/50 border-border/50 leading-relaxed text-left"
+                              />
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </SortableItem>
+                    ))}
+                  </SortableContext>
+                </DndContext>
                 <Button
                   variant="outline"
                   className="w-full h-20 border-dashed border-2 bg-muted/5 hover:bg-muted/20 border-border/50 rounded-2xl transition-all"
@@ -488,11 +596,402 @@ export function ResumeForm({
               </div>
             )}
 
-            {/* Outros passos omitidos para brevidade, mas a lógica de efeitos acima resolve os erros */}
-            {activeStep >= 3 && (
-              <p className="text-muted-foreground italic">
-                Carregando demais campos...
-              </p>
+            {activeStep === 3 && (
+              <div className="space-y-8">
+                <DndContext
+                  sensors={sensors}
+                  collisionDetection={closestCenter}
+                  onDragEnd={(e) => handleDragEnd(e, eduFields, moveEdu)}
+                >
+                  <SortableContext
+                    items={eduFields.map((f) => f.id)}
+                    strategy={verticalListSortingStrategy}
+                  >
+                    {eduFields.map((field, i) => (
+                      <SortableItem
+                        key={field.id}
+                        id={field.id}
+                        onRemove={() => removeEdu(i)}
+                      >
+                        <Card className="border-border/50 bg-muted/10 relative overflow-hidden group shadow-none hover:bg-muted/20 transition-all duration-500">
+                          <CardContent className="p-8 pt-12 grid grid-cols-2 gap-6 text-left">
+                            <div className="space-y-2 col-span-2">
+                              <Label className="text-[10px] font-black uppercase tracking-widest">
+                                {t("editor.education.school")}
+                              </Label>
+                              <Input
+                                {...register(`educations.${i}.school`)}
+                                className="h-11 bg-background/50 border-border/50 font-bold"
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <Label className="text-[10px] font-black uppercase tracking-widest">
+                                {t("editor.education.degree")}
+                              </Label>
+                              <Input
+                                {...register(`educations.${i}.degree`)}
+                                className="h-11 bg-background/50 border-border/50"
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <Label className="text-[10px] font-black uppercase tracking-widest">
+                                {t("editor.education.field")}
+                              </Label>
+                              <Input
+                                {...register(`educations.${i}.field`)}
+                                className="h-11 bg-background/50 border-border/50"
+                              />
+                            </div>
+                            <div className="space-y-2 col-span-2">
+                              <Label className="text-[10px] font-black uppercase tracking-widest">
+                                {t("editor.education.graduationDate")}
+                              </Label>
+                              <Input
+                                {...register(`educations.${i}.graduationDate`)}
+                                placeholder={t(
+                                  "editor.education.placeholder.graduationDate",
+                                )}
+                                className="h-11 bg-background/50 border-border/50"
+                              />
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </SortableItem>
+                    ))}
+                  </SortableContext>
+                </DndContext>
+                <Button
+                  variant="outline"
+                  className="w-full h-20 border-dashed border-2 bg-muted/5 hover:bg-muted/20 border-border/50 rounded-2xl transition-all"
+                  onClick={() =>
+                    appendEdu({
+                      school: "",
+                      degree: "",
+                      field: "",
+                      graduationDate: "",
+                    })
+                  }
+                >
+                  <PlusCircle
+                    size={20}
+                    weight="duotone"
+                    className="mr-2 text-primary"
+                  />
+                  <span className="font-black uppercase tracking-widest text-xs">
+                    {t("editor.education.add")}
+                  </span>
+                </Button>
+              </div>
+            )}
+
+            {activeStep === 4 && (
+              <div className="space-y-8">
+                <DndContext
+                  sensors={sensors}
+                  collisionDetection={closestCenter}
+                  onDragEnd={(e) => handleDragEnd(e, projFields, moveProj)}
+                >
+                  <SortableContext
+                    items={projFields.map((f) => f.id)}
+                    strategy={verticalListSortingStrategy}
+                  >
+                    {projFields.map((field, i) => (
+                      <SortableItem
+                        key={field.id}
+                        id={field.id}
+                        onRemove={() => removeProj(i)}
+                      >
+                        <Card className="border-border/50 bg-muted/10 relative overflow-hidden group shadow-none hover:bg-muted/20 transition-all duration-500">
+                          <CardContent className="p-8 pt-12 grid grid-cols-2 gap-6 text-left">
+                            <div className="space-y-2 col-span-2">
+                              <Label className="text-[10px] font-black uppercase tracking-widest">
+                                {t("editor.projects.name")}
+                              </Label>
+                              <Input
+                                {...register(`projects.${i}.name`)}
+                                className="h-11 bg-background/50 border-border/50 font-bold"
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <Label className="text-[10px] font-black uppercase tracking-widest">
+                                {t("editor.projects.github")}
+                              </Label>
+                              <Input
+                                {...register(`projects.${i}.github`)}
+                                className="h-11 bg-background/50 border-border/50 font-mono text-xs"
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <Label className="text-[10px] font-black uppercase tracking-widest">
+                                {t("editor.projects.deploy")}
+                              </Label>
+                              <Input
+                                {...register(`projects.${i}.deploy`)}
+                                className="h-11 bg-background/50 border-border/50 font-mono text-xs"
+                              />
+                            </div>
+                            <div className="col-span-2 space-y-2 text-left">
+                              <Label className="text-[10px] font-black uppercase tracking-widest">
+                                {t("editor.projects.description")}
+                              </Label>
+                              <Textarea
+                                {...register(`projects.${i}.description`)}
+                                className="min-h-[120px] text-sm bg-background/50 border-border/50 leading-relaxed text-left"
+                              />
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </SortableItem>
+                    ))}
+                  </SortableContext>
+                </DndContext>
+                <Button
+                  variant="outline"
+                  className="w-full h-20 border-dashed border-2 bg-muted/5 hover:bg-muted/20 border-border/50 rounded-2xl transition-all"
+                  onClick={() =>
+                    appendProj({
+                      name: "",
+                      description: "",
+                      github: "",
+                      deploy: "",
+                    })
+                  }
+                >
+                  <PlusCircle
+                    size={20}
+                    weight="duotone"
+                    className="mr-2 text-primary"
+                  />
+                  <span className="font-black uppercase tracking-widest text-xs">
+                    {t("editor.projects.add")}
+                  </span>
+                </Button>
+              </div>
+            )}
+
+            {activeStep === 5 && (
+              <div className="space-y-12">
+                <div className="space-y-6">
+                  <div className="flex items-center gap-3">
+                    <Translate
+                      size={24}
+                      weight="duotone"
+                      className="text-primary"
+                    />
+                    <h3 className="text-sm font-black uppercase tracking-widest">
+                      {t("editor.extras.languages.title")}
+                    </h3>
+                  </div>
+                  <div className="grid gap-4">
+                    {langFields.map((field, i) => (
+                      <div key={field.id} className="flex gap-4 items-end">
+                        <div className="flex-1 space-y-2">
+                          <Label className="text-[10px] font-black uppercase tracking-widest">
+                            {t("editor.extras.languages.label")}
+                          </Label>
+                          <Input
+                            {...register(`languages.${i}.name`)}
+                            className="h-11 bg-muted/20 border-border/50"
+                          />
+                        </div>
+                        <div className="flex-1 space-y-2">
+                          <Label className="text-[10px] font-black uppercase tracking-widest">
+                            {t("editor.extras.languages.proficiency")}
+                          </Label>
+                          <select
+                            {...register(`languages.${i}.level`)}
+                            className="w-full h-11 px-3 rounded-md bg-muted/20 border border-border/50 text-sm focus:outline-none focus:ring-1 focus:ring-primary"
+                          >
+                            <option value="Básico">
+                              {t("editor.extras.languages.levels.basico")}
+                            </option>
+                            <option value="Intermediário">
+                              {t(
+                                "editor.extras.languages.levels.intermediario",
+                              )}
+                            </option>
+                            <option value="Avançado">
+                              {t("editor.extras.languages.levels.avancado")}
+                            </option>
+                            <option value="Fluente">
+                              {t("editor.extras.languages.levels.fluente")}
+                            </option>
+                            <option value="Nativo">
+                              {t("editor.extras.languages.levels.nativo")}
+                            </option>
+                          </select>
+                        </div>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => removeLang(i)}
+                          className="h-11 w-11 text-muted-foreground hover:text-destructive"
+                        >
+                          <Trash size={18} />
+                        </Button>
+                      </div>
+                    ))}
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="w-fit"
+                      onClick={() => appendLang({ name: "", level: "Básico" })}
+                    >
+                      <Plus size={16} className="mr-2" />{" "}
+                      {t("editor.extras.languages.add")}
+                    </Button>
+                  </div>
+                </div>
+
+                <div className="space-y-6">
+                  <div className="flex items-center gap-3">
+                    <Certificate
+                      size={24}
+                      weight="duotone"
+                      className="text-primary"
+                    />
+                    <h3 className="text-sm font-black uppercase tracking-widest">
+                      {t("editor.extras.certifications.title")}
+                    </h3>
+                  </div>
+                  <div className="grid gap-4">
+                    {certFields.map((field, i) => (
+                      <div
+                        key={field.id}
+                        className="p-4 rounded-xl bg-muted/20 border border-border/50 relative group"
+                      >
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => removeCert(i)}
+                          className="absolute top-2 right-2 h-8 w-8 text-muted-foreground hover:text-destructive opacity-0 group-hover:opacity-100"
+                        >
+                          <Trash size={16} />
+                        </Button>
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="space-y-2">
+                            <Label className="text-[10px] font-black uppercase tracking-widest">
+                              {t("editor.extras.certifications.name")}
+                            </Label>
+                            <Input
+                              {...register(`certifications.${i}.name`)}
+                              className="h-10 bg-background/50"
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <Label className="text-[10px] font-black uppercase tracking-widest">
+                              {t("editor.extras.certifications.issuer")}
+                            </Label>
+                            <Input
+                              {...register(`certifications.${i}.issuer`)}
+                              className="h-10 bg-background/50"
+                            />
+                          </div>
+                          <div className="space-y-2 col-span-2">
+                            <Label className="text-[10px] font-black uppercase tracking-widest">
+                              {t("editor.extras.certifications.date")}
+                            </Label>
+                            <Input
+                              {...register(`certifications.${i}.date`)}
+                              placeholder={t(
+                                "editor.extras.certifications.datePlaceholder",
+                              )}
+                              className="h-10 bg-background/50"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="w-fit"
+                      onClick={() =>
+                        appendCert({ name: "", issuer: "", date: "" })
+                      }
+                    >
+                      <Plus size={16} className="mr-2" />{" "}
+                      {t("editor.extras.certifications.add")}
+                    </Button>
+                  </div>
+                </div>
+
+                <div className="space-y-6">
+                  <div className="flex items-center gap-3">
+                    <HandHeart
+                      size={24}
+                      weight="duotone"
+                      className="text-primary"
+                    />
+                    <h3 className="text-sm font-black uppercase tracking-widest">
+                      {t("editor.extras.volunteering.title")}
+                    </h3>
+                  </div>
+                  <div className="grid gap-4">
+                    {volFields.map((field, i) => (
+                      <div
+                        key={field.id}
+                        className="p-4 rounded-xl bg-muted/20 border border-border/50 relative group"
+                      >
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => removeVol(i)}
+                          className="absolute top-2 right-2 h-8 w-8 text-muted-foreground hover:text-destructive opacity-0 group-hover:opacity-100"
+                        >
+                          <Trash size={16} />
+                        </Button>
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="space-y-2">
+                            <Label className="text-[10px] font-black uppercase tracking-widest">
+                              {t("editor.extras.volunteering.organization")}
+                            </Label>
+                            <Input
+                              {...register(`volunteering.${i}.organization`)}
+                              className="h-10 bg-background/50"
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <Label className="text-[10px] font-black uppercase tracking-widest">
+                              {t("editor.extras.volunteering.role")}
+                            </Label>
+                            <Input
+                              {...register(`volunteering.${i}.role`)}
+                              className="h-10 bg-background/50"
+                            />
+                          </div>
+                          <div className="col-span-2 space-y-2">
+                            <Label className="text-[10px] font-black uppercase tracking-widest">
+                              {t("editor.extras.volunteering.description")}
+                            </Label>
+                            <Textarea
+                              {...register(`volunteering.${i}.description`)}
+                              className="min-h-[100px] bg-background/50"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="w-fit"
+                      onClick={() =>
+                        appendVol({
+                          organization: "",
+                          role: "",
+                          startDate: "",
+                          current: false,
+                          description: "",
+                        })
+                      }
+                    >
+                      <Plus size={16} className="mr-2" />{" "}
+                      {t("editor.extras.volunteering.add")}
+                    </Button>
+                  </div>
+                </div>
+              </div>
             )}
           </motion.div>
         </AnimatePresence>

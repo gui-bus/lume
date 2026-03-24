@@ -12,6 +12,7 @@ export async function saveResume(
   isPortfolio?: boolean,
   locale: string = "pt",
   groupId?: string,
+  slug?: string,
 ) {
   const { userId } = await auth();
   const user = await currentUser();
@@ -36,7 +37,22 @@ export async function saveResume(
 
   const finalGroupId = groupId || crypto.randomUUID();
 
-  // Busca manual para evitar erro de 'Unknown argument groupId_locale'
+  // Verifica se o slug já está em uso por outro grupo
+  if (slug) {
+    const slugExists = await prisma.resume.findFirst({
+      where: {
+        slug,
+        NOT: { groupId: finalGroupId },
+      },
+    });
+    if (slugExists) {
+      throw new Error(
+        "Este link personalizado já está em uso por outro usuário.",
+      );
+    }
+  }
+
+  // Busca manual para separar idiomas corretamente
   const existingVersion = await prisma.resume.findFirst({
     where: {
       groupId: finalGroupId,
@@ -48,17 +64,16 @@ export async function saveResume(
   let result;
 
   if (existingVersion) {
-    // Atualiza o existente
     result = await prisma.resume.update({
       where: { id: existingVersion.id },
       data: {
         content: data as any,
         title,
         isPortfolio: isPortfolio ?? undefined,
+        slug: slug || undefined,
       },
     });
   } else {
-    // Cria um novo
     result = await prisma.resume.create({
       data: {
         content: data as any,
@@ -67,6 +82,7 @@ export async function saveResume(
         groupId: finalGroupId,
         isPortfolio: isPortfolio ?? false,
         userId,
+        slug: slug || undefined,
       },
     });
   }
@@ -107,32 +123,50 @@ export async function deleteResume(id: string) {
   revalidatePath("/", "layout");
 }
 
-export async function getResume(id: string, locale?: string) {
+export async function getResume(identifier: string, locale?: string) {
   try {
-    // Busca prioritária por GroupId + Locale usando findFirst para evitar erros de validação
-    if (locale) {
-      const resume = await prisma.resume.findFirst({
+    // 1. Tenta buscar por SLUG primeiro
+    const bySlug = await prisma.resume.findFirst({
+      where: { slug: identifier },
+    });
+
+    if (bySlug) {
+      // Se o slug encontrado for do idioma certo, retorna ele
+      if (!locale || bySlug.locale === locale) return bySlug;
+
+      // Se o slug for de outro idioma, buscamos a versão correta no MESMO GRUPO
+      const localized = await prisma.resume.findFirst({
         where: {
-          groupId: id,
+          groupId: bySlug.groupId,
           locale: locale,
         },
       });
-      if (resume) return resume;
+
+      // Retorna a versão traduzida se existir, ou o rascunho original se não
+      return localized || bySlug;
     }
 
-    // Fallback: ID individual
-    const individual = await prisma.resume.findUnique({ where: { id } });
-    if (individual) {
-      if (locale && individual.locale !== locale) {
+    // 2. Busca por GROUP ID + LOCALE (Para links UUID padrão)
+    if (locale) {
+      const byGroup = await prisma.resume.findFirst({
+        where: {
+          groupId: identifier,
+          locale: locale,
+        },
+      });
+      if (byGroup) return byGroup;
+    }
+
+    // 3. Fallback: Busca por ID individual
+    const byId = await prisma.resume.findUnique({ where: { id: identifier } });
+    if (byId) {
+      if (locale && byId.locale !== locale) {
         const localized = await prisma.resume.findFirst({
-          where: {
-            groupId: individual.groupId,
-            locale: locale,
-          },
+          where: { groupId: byId.groupId, locale },
         });
-        return localized || null;
+        return localized || byId;
       }
-      return individual;
+      return byId;
     }
 
     return null;

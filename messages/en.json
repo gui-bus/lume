@@ -58,6 +58,8 @@
         "saveBackup": "Save Backup",
         "saveBackupDesc": "Download a JSON backup copy",
         "visibilityLink": "Visibility & Link",
+        "customSlug": "Custom Link",
+        "customSlugDesc": "lume.com/p/your-link",
         "generateLink": "Generate Public Link",
         "generateLinkDesc": "Share via unique URL",
         "portfolioActivate": "Activate Portfolio Mode",

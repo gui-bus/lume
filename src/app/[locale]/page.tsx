@@ -22,6 +22,7 @@ export default async function Page({
   let initialData = null;
   let resumeId: string | undefined = undefined;
   let groupId: string | undefined = id;
+  let initialSlug: string | undefined = undefined;
 
   if (id) {
     const res = await getResume(id, locale);
@@ -29,6 +30,7 @@ export default async function Page({
       initialData = res.content as unknown as ResumeData;
       resumeId = res.id;
       groupId = res.groupId ?? undefined;
+      initialSlug = res.slug ?? undefined;
     }
   } else {
     const userResumes = await listUserResumes();
@@ -39,6 +41,7 @@ export default async function Page({
         initialData = res.content as unknown as ResumeData;
         resumeId = res.id;
         groupId = res.groupId ?? undefined;
+        initialSlug = res.slug ?? undefined;
       } else {
         groupId = latest.groupId ?? undefined;
       }
@@ -50,6 +53,7 @@ export default async function Page({
       initialData={initialData || undefined}
       resumeId={resumeId}
       groupId={groupId}
+      initialSlug={initialSlug}
     />
   );
 }

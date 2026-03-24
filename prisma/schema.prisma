@@ -28,6 +28,7 @@ model Resume {
   updatedAt   DateTime @updatedAt
 
   groupId String
+  slug    String?  @unique
 
   @@unique([groupId, locale])
   @@index([userId])
