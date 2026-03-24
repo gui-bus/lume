@@ -36,7 +36,7 @@ export function ResumeView({ data, colorTheme = "#18181b" }: ResumeViewProps) {
             {personalInfo.email && (
               <a
                 href={`mailto:${personalInfo.email}`}
-                className="text-blue-600 hover:underline"
+                className="text-lume-blue hover:underline"
               >
                 {personalInfo.email}
               </a>
@@ -47,7 +47,7 @@ export function ResumeView({ data, colorTheme = "#18181b" }: ResumeViewProps) {
                 <a
                   href={`https://wa.me/${personalInfo.phone.replace(/\D/g, "")}?text=${encodeURIComponent("Vim pelo seu currículo")}`}
                   target="_blank"
-                  className="text-blue-600 hover:underline"
+                  className="text-lume-blue hover:underline"
                 >
                   {personalInfo.phone}
                 </a>
@@ -65,7 +65,7 @@ export function ResumeView({ data, colorTheme = "#18181b" }: ResumeViewProps) {
                 <a
                   href={personalInfo.linkedin}
                   target="_blank"
-                  className="text-blue-600 font-bold uppercase tracking-wider"
+                  className="text-lume-blue font-bold uppercase tracking-wider"
                 >
                   LinkedIn
                 </a>
@@ -77,7 +77,7 @@ export function ResumeView({ data, colorTheme = "#18181b" }: ResumeViewProps) {
                 <a
                   href={personalInfo.website}
                   target="_blank"
-                  className="text-blue-600 font-bold uppercase tracking-wider"
+                  className="text-lume-blue font-bold uppercase tracking-wider"
                 >
                   Portfólio
                 </a>

@@ -71,7 +71,7 @@ export function PortfolioView({
             {personalInfo.email && (
               <a
                 href={`mailto:${personalInfo.email}`}
-                className="flex items-center gap-2 text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors"
+                className="flex items-center gap-2 text-sm font-medium text-lume-blue hover:opacity-80 transition-colors"
               >
                 <Envelope size={18} weight="duotone" /> {personalInfo.email}
               </a>
@@ -80,7 +80,7 @@ export function PortfolioView({
               <a
                 href={`https://wa.me/${personalInfo.phone.replace(/\D/g, "")}?text=${encodeURIComponent("Vim pelo seu currículo")}`}
                 target="_blank"
-                className="flex items-center gap-2 text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors"
+                className="flex items-center gap-2 text-sm font-medium text-lume-blue hover:opacity-80 transition-colors"
               >
                 <Phone size={18} weight="duotone" /> {personalInfo.phone}
               </a>
@@ -94,7 +94,7 @@ export function PortfolioView({
               <a
                 href={personalInfo.linkedin}
                 target="_blank"
-                className="flex items-center gap-2 text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors"
+                className="flex items-center gap-2 text-sm font-medium text-lume-blue hover:opacity-80 transition-colors"
               >
                 <LinkIcon size={18} weight="duotone" /> LinkedIn
               </a>
@@ -103,7 +103,7 @@ export function PortfolioView({
               <a
                 href={personalInfo.website}
                 target="_blank"
-                className="flex items-center gap-2 text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors"
+                className="flex items-center gap-2 text-sm font-medium text-lume-blue hover:opacity-80 transition-colors"
               >
                 <LinkIcon size={18} weight="duotone" /> Portfólio
               </a>
