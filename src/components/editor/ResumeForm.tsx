@@ -515,25 +515,23 @@ export function ResumeForm({
                     )}
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-6">
-                  <div className="space-y-2.5 text-left">
-                    <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                      {t("editor.personalInfo.portfolio")}
-                    </Label>
-                    <Input
-                      {...register("personalInfo.website")}
-                      className={cn(
-                        "input-glow h-12 bg-muted/20 border-border/50",
-                        errors.personalInfo?.website &&
-                          "border-destructive/50 focus-visible:ring-destructive/20",
-                      )}
-                    />
-                    {errors.personalInfo?.website && (
-                      <span className="text-[10px] text-destructive font-bold uppercase tracking-widest ml-1">
-                        {errors.personalInfo.website.message}
-                      </span>
+                <div className="space-y-2.5 text-left">
+                  <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                    {t("editor.personalInfo.portfolio")}
+                  </Label>
+                  <Input
+                    {...register("personalInfo.website")}
+                    className={cn(
+                      "input-glow h-12 bg-muted/20 border-border/50",
+                      errors.personalInfo?.website &&
+                        "border-destructive/50 focus-visible:ring-destructive/20",
                     )}
-                  </div>
+                  />
+                  {errors.personalInfo?.website && (
+                    <span className="text-[10px] text-destructive font-bold uppercase tracking-widest ml-1">
+                      {errors.personalInfo.website.message}
+                    </span>
+                  )}
                 </div>
                 <div className="space-y-2.5">
                   <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
