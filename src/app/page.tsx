@@ -11,8 +11,6 @@ import {
   Sun,
   MagnifyingGlassPlus,
   MagnifyingGlassMinus,
-  CloudCheck,
-  ArrowsClockwise,
   ShareNetwork,
   FileArrowUp,
   FileArrowDown,
@@ -21,12 +19,35 @@ import {
   ChartLineUp,
   Browser,
   MagicWand,
+  List,
+  Gear,
+  Info,
+  Target,
+  CheckCircle,
+  WarningCircle,
 } from "@phosphor-icons/react";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import { Separator } from "@/components/ui/separator";
+import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import {
   saveResume,
@@ -44,6 +65,10 @@ import {
   SpellCheckResult,
 } from "@/lib/validations/spellchecker";
 import { parseLinkedInPDF } from "@/lib/validations/linkedin-parser";
+import {
+  analyzeJobMatch,
+  MatchResult,
+} from "@/lib/validations/keyword-matcher";
 
 const defaultData: ResumeData = {
   personalInfo: {
@@ -80,12 +105,14 @@ export default function Home() {
   const [colorTheme, setColorTheme] = useState("#18181b");
   const [resumeId, setResumeId] = useState<string | undefined>(undefined);
   const [mounted, setMounted] = useState(false);
-  const [isSyncing, setIsSyncing] = useState(false);
   const [zoom, setZoom] = useState(0.8);
   const [atsResult, setAtsResult] = useState<ATSResult | null>(null);
   const [spellResult, setSpellResult] = useState<SpellCheckResult | null>(null);
   const [isPortfolio, setIsPortfolio] = useState(false);
   const [analytics, setAnalytics] = useState({ views: 0, downloads: 0 });
+
+  const [jobDescription, setJobDescription] = useState("");
+  const [matchResult, setMatchResult] = useState<MatchResult | null>(null);
 
   const { theme, setTheme } = useTheme();
 
@@ -117,8 +144,12 @@ export default function Home() {
       localStorage.setItem("resume-color", colorTheme);
       setAtsResult(validateATS(data));
       setSpellResult(checkStrongVerbs(data));
+
+      if (jobDescription) {
+        setMatchResult(analyzeJobMatch(data, jobDescription));
+      }
     }
-  }, [colorTheme, data, mounted]);
+  }, [colorTheme, data, mounted, jobDescription]);
 
   const handleDataChange = useCallback((newData: ResumeData) => {
     setData(newData);
@@ -131,9 +162,9 @@ export default function Home() {
     reader.onload = (event) => {
       try {
         setData(JSON.parse(event.target?.result as string));
-        toast.success("JSON importado com sucesso!");
+        toast.success("JSON importado!");
       } catch (error) {
-        toast.error("Erro ao ler o arquivo JSON");
+        toast.error("Erro no JSON");
       }
     };
     reader.readAsText(file);
@@ -145,15 +176,15 @@ export default function Home() {
     const file = e.target.files?.[0];
     if (!file) return;
     try {
-      toast.info("Processando PDF do LinkedIn...");
+      toast.info("Processando LinkedIn...");
       const partialData = await parseLinkedInPDF(file);
       setData((prev) => ({
         ...prev,
         personalInfo: { ...prev.personalInfo, ...partialData.personalInfo },
       }));
-      toast.success("Dados do LinkedIn extraídos!");
+      toast.success("Dados extraídos!");
     } catch (error) {
-      toast.error("Erro ao processar o PDF do LinkedIn.");
+      toast.error("Erro no processamento");
     }
   };
 
@@ -164,33 +195,27 @@ export default function Home() {
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = `curriculo-${data.personalInfo.name?.toLowerCase().replace(/\s+/g, "-") || "lume"}.json`;
-    document.body.appendChild(link);
+    link.download = `curriculo-${data.personalInfo.name || "lume"}.json`;
     link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
     toast.success("JSON exportado!");
   };
 
   const handleShare = async () => {
     try {
-      setIsSyncing(true);
       const result = await saveResume(
         resumeId,
         data,
         "Meu Currículo",
         isPortfolio,
       );
-      setIsSyncing(false);
       setResumeId(result.id);
       localStorage.setItem("resume-id", result.id);
       await navigator.clipboard.writeText(
         `${window.location.origin}/share/${result.id}`,
       );
-      toast.success("Link copiado para a área de transferência!");
+      toast.success("Link de compartilhamento copiado!");
     } catch (error) {
-      setIsSyncing(false);
-      toast.error("Falha ao gerar link.");
+      toast.error("Falha ao gerar link");
     }
   };
 
@@ -200,7 +225,7 @@ export default function Home() {
     if (resumeId) {
       await saveResume(resumeId, data, "Meu Currículo", newValue);
       toast.success(
-        newValue ? "Modo Portfólio Ativado!" : "Modo Currículo Padrão Ativado!",
+        newValue ? "Modo Portfólio Ativado" : "Modo Currículo Ativado",
       );
     }
   };
@@ -209,18 +234,144 @@ export default function Home() {
 
   return (
     <main className="h-screen flex flex-col bg-background text-foreground overflow-hidden">
-      <header className="no-print h-16 border-b border-border/40 bg-background/50 backdrop-blur-xl flex items-center justify-between px-6 shrink-0 z-50">
-        <motion.div
-          className="flex items-center group cursor-pointer select-none"
-          whileHover="hover"
-        >
-          <span className="text-3xl font-black tracking-[0.2em] uppercase bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/60 transition-all duration-500 group-hover:from-primary group-hover:to-primary/70">
-            Lume
-          </span>
-        </motion.div>
-
+      <header className="no-print h-16 border-b border-border/40 bg-background/50 backdrop-blur-xl flex items-center justify-between px-4 md:px-8 shrink-0 z-50">
         <div className="flex items-center gap-4">
-          {/* Validador ATS e Spellchecker */}
+          <motion.div
+            className="flex items-center group cursor-pointer select-none"
+            whileHover="hover"
+          >
+            <span className="text-2xl md:text-3xl font-black tracking-[0.2em] uppercase bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/60 transition-all duration-500 group-hover:from-primary group-hover:to-primary/70">
+              Lume
+            </span>
+          </motion.div>
+        </div>
+
+        <div className="flex items-center gap-2 md:gap-4">
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="gap-2 rounded-full px-4 h-9 font-bold bg-primary/5 hover:bg-primary/10 border border-primary/10 transition-all text-primary"
+              >
+                <Target size={18} weight="bold" />
+                <span className="hidden lg:inline uppercase tracking-widest text-[10px]">
+                  Match de Vagas
+                </span>
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[500px] rounded-3xl bg-background/95 backdrop-blur-2xl border-border/40 shadow-2xl">
+              <DialogHeader>
+                <DialogTitle className="flex items-center gap-2 text-xl font-black uppercase tracking-tight">
+                  <Target size={24} weight="bold" className="text-primary" />{" "}
+                  Análise de Match
+                </DialogTitle>
+                <DialogDescription className="text-xs text-muted-foreground uppercase tracking-widest font-bold">
+                  Compare seu currículo com uma vaga real
+                </DialogDescription>
+              </DialogHeader>
+
+              <div className="space-y-6 pt-4">
+                <div className="space-y-3">
+                  <Textarea
+                    placeholder="Cole aqui a descrição completa da vaga..."
+                    className="h-[200px] rounded-2xl text-sm bg-muted/20 border-border/40 focus:ring-primary/20 transition-all resize-none p-4 custom-scrollbar"
+                    value={jobDescription}
+                    onChange={(e) => setJobDescription(e.target.value)}
+                  />
+                  <div className="flex justify-between items-center px-1">
+                    <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-widest">
+                      {jobDescription.length} caracteres
+                    </span>
+                    {jobDescription && (
+                      <button
+                        onClick={() => {
+                          setJobDescription("");
+                          setMatchResult(null);
+                        }}
+                        className="text-[10px] font-bold uppercase text-primary hover:underline"
+                      >
+                        Limpar texto
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                {matchResult && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="space-y-4"
+                  >
+                    <div className="p-5 rounded-2xl bg-primary/5 border border-primary/10 flex items-center justify-between">
+                      <div className="flex flex-col">
+                        <span className="text-[10px] font-black uppercase tracking-wider text-muted-foreground">
+                          Aderência técnica
+                        </span>
+                        <span className="text-sm font-medium text-muted-foreground">
+                          Baseado em palavras-chave
+                        </span>
+                      </div>
+                      <span
+                        className={cn(
+                          "text-4xl font-black tracking-tighter",
+                          matchResult.score > 70
+                            ? "text-emerald-500"
+                            : matchResult.score > 40
+                              ? "text-amber-500"
+                              : "text-rose-500",
+                        )}
+                      >
+                        {matchResult.score}%
+                      </span>
+                    </div>
+
+                    <div className="grid gap-4">
+                      {matchResult.missingKeywords.length > 0 && (
+                        <div className="space-y-2">
+                          <span className="text-[10px] font-black text-rose-500 uppercase tracking-widest flex items-center gap-2">
+                            <WarningCircle size={14} /> Faltando no seu
+                            currículo
+                          </span>
+                          <div className="flex flex-wrap gap-1.5">
+                            {matchResult.missingKeywords.map((k, i) => (
+                              <span
+                                key={i}
+                                className="px-2.5 py-1 rounded-lg bg-rose-500/5 text-rose-600 border border-rose-500/10 text-[9px] font-bold uppercase"
+                              >
+                                {k}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {matchResult.matchingKeywords.length > 0 && (
+                        <div className="space-y-2">
+                          <span className="text-[10px] font-black text-emerald-500 uppercase tracking-widest flex items-center gap-2">
+                            <CheckCircle size={14} /> Competências encontradas
+                          </span>
+                          <div className="flex flex-wrap gap-1.5">
+                            {matchResult.matchingKeywords.map((k, i) => (
+                              <span
+                                key={i}
+                                className="px-2.5 py-1 rounded-lg bg-emerald-500/5 text-emerald-600 border border-emerald-500/10 text-[9px] font-bold uppercase"
+                              >
+                                {k}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </motion.div>
+                )}
+              </div>
+            </DialogContent>
+          </Dialog>
+
+          <Separator orientation="vertical" className="h-6 hidden md:block" />
+
           <Popover>
             <PopoverTrigger asChild>
               <button className="flex items-center gap-2.5 px-4 py-2 bg-primary/5 hover:bg-primary/10 border border-primary/10 rounded-full transition-all duration-300 group shadow-sm">
@@ -257,21 +408,18 @@ export default function Home() {
               </button>
             </PopoverTrigger>
             <PopoverContent
-              className="w-[380px] p-0 rounded-3xl bg-background/95 backdrop-blur-2xl border border-border/40 shadow-2xl overflow-hidden"
+              className="w-[340px] md:w-[380px] p-0 rounded-3xl bg-background/95 backdrop-blur-2xl border border-border/40 shadow-2xl overflow-hidden"
               align="center"
             >
               <div className="bg-primary/5 p-4 border-b border-border/40">
                 <h3 className="text-xs font-black uppercase tracking-[0.2em] flex items-center gap-2 text-primary">
                   <ShieldCheck size={16} weight="bold" /> Health Check
-                  Profissional
                 </h3>
               </div>
-
-              <div className="p-5 space-y-6 max-h-[70vh] overflow-y-auto custom-scrollbar pr-3">
-                {/* ATS Suggestions */}
-                <div className="space-y-3">
-                  <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest px-1">
-                    Otimização de Leitura (ATS)
+              <div className="p-5 space-y-6 max-h-[60vh] overflow-y-auto custom-scrollbar pr-3 text-left">
+                <div className="space-y-3 text-left">
+                  <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+                    Estrutura (ATS)
                   </span>
                   <div className="grid gap-2">
                     {atsResult?.suggestions.map((s, i) => (
@@ -283,45 +431,29 @@ export default function Home() {
                         {s}
                       </div>
                     ))}
-                    {atsResult?.suggestions.length === 0 && (
-                      <div className="p-4 bg-emerald-500/5 rounded-2xl border border-emerald-500/10 text-[11px] text-emerald-600 font-bold text-center">
-                        ✨ Sua estrutura está impecável para o ATS!
-                      </div>
-                    )}
                   </div>
                 </div>
-
-                {/* Spellchecker Contextual */}
                 {spellResult?.hasIssues && (
-                  <div className="space-y-4">
-                    <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest px-1">
-                      Verbos de Ação e Impacto
+                  <div className="space-y-4 text-left">
+                    <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+                      Verbos de Impacto
                     </span>
                     <div className="space-y-4">
                       {spellResult.suggestions.map((s, i) => (
                         <div key={i} className="space-y-3">
-                          <div className="px-1 text-[10px] font-black text-primary/70 uppercase">
+                          <div className="text-[10px] font-black text-primary/70 uppercase">
                             {s.section}
                           </div>
                           {s.found.map((f, j) => (
                             <div
                               key={j}
-                              className="group relative p-4 bg-background border border-border/60 rounded-2xl shadow-sm hover:border-primary/30 transition-all"
+                              className="p-4 bg-background border border-border/60 rounded-2xl shadow-sm"
                             >
-                              <div className="text-[11px] text-muted-foreground mb-3 leading-relaxed">
-                                {f.context.split(f.word).map((part, k, arr) => (
-                                  <span key={k}>
-                                    {part}
-                                    {k < arr.length - 1 && (
-                                      <span className="px-1 py-0.5 bg-amber-500/10 text-amber-600 font-bold rounded mx-0.5">
-                                        {f.word}
-                                      </span>
-                                    )}
-                                  </span>
-                                ))}
+                              <div className="text-[11px] text-muted-foreground mb-3 leading-relaxed italic">
+                                "{f.context}"
                               </div>
                               <div className="flex flex-wrap gap-2 items-center">
-                                <span className="text-[9px] font-black text-emerald-500 uppercase tracking-tighter">
+                                <span className="text-[9px] font-black text-emerald-500 uppercase">
                                   Sugestões:
                                 </span>
                                 {f.alternatives.map((alt, k) => (
@@ -341,156 +473,32 @@ export default function Home() {
                   </div>
                 )}
               </div>
-
-              <div className="p-4 bg-muted/20 border-t border-border/40 text-center">
-                <p className="text-[9px] text-muted-foreground font-medium italic">
-                  Dica: Verbos fortes aumentam suas chances em até 40%
-                </p>
-              </div>
             </PopoverContent>
           </Popover>
 
-          <div className="h-4 w-[1px] bg-border/40" />
+          <Separator orientation="vertical" className="h-6 hidden md:block" />
 
-          {/* Importações / LinkedIn */}
-          <div className="flex items-center gap-1 bg-muted/20 rounded-full p-1 border border-border/30">
-            <div className="relative" title="Importar PDF do LinkedIn">
-              <input
-                type="file"
-                accept=".pdf"
-                onChange={handleLinkedInImport}
-                className="absolute inset-0 opacity-0 cursor-pointer"
-              />
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-7 w-7 rounded-full hover:bg-background/80 text-[#0A66C2]"
-              >
-                <LinkedinLogo size={16} weight="fill" />
-              </Button>
-            </div>
-            <div className="relative" title="Importar Backup JSON">
-              <input
-                type="file"
-                accept=".json"
-                onChange={handleImportJSON}
-                className="absolute inset-0 opacity-0 cursor-pointer"
-              />
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-7 w-7 rounded-full hover:bg-background/80"
-              >
-                <FileArrowUp size={16} />
-              </Button>
-            </div>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={handleExportJSON}
-              className="h-7 w-7 rounded-full hover:bg-background/80"
-              title="Exportar Backup JSON"
-            >
-              <FileArrowDown size={16} />
-            </Button>
-          </div>
-
-          {/* Share & Analytics */}
-          <div className="flex items-center gap-1 bg-muted/20 rounded-full p-1 border border-border/30">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={handleShare}
-              className="h-7 w-7 rounded-full hover:bg-background/80"
-              title="Gerar Link Público"
-            >
-              <ShareNetwork size={16} />
-            </Button>
-            {resumeId && (
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-7 w-7 rounded-full hover:bg-background/80"
-                    title="Analytics"
-                  >
-                    <ChartLineUp size={16} className="text-emerald-500" />
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent
-                  className="w-56 p-4 rounded-2xl bg-background/95 backdrop-blur-xl border border-border/40 shadow-2xl"
-                  align="center"
-                >
-                  <h3 className="text-[10px] font-black uppercase tracking-widest mb-3 text-muted-foreground text-center">
-                    Analytics do Link
-                  </h3>
-                  <div className="grid grid-cols-2 gap-2 text-center">
-                    <div className="bg-muted/30 rounded-xl p-3 border border-border/50">
-                      <span className="block text-2xl font-black text-primary">
-                        {analytics.views}
-                      </span>
-                      <span className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground">
-                        Views
-                      </span>
-                    </div>
-                    <div className="bg-muted/30 rounded-xl p-3 border border-border/50">
-                      <span className="block text-2xl font-black text-emerald-500">
-                        {analytics.downloads}
-                      </span>
-                      <span className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground">
-                        Downloads
-                      </span>
-                    </div>
-                  </div>
-                </PopoverContent>
-              </Popover>
-            )}
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={togglePortfolio}
-              className={cn(
-                "h-7 w-7 rounded-full hover:bg-background/80",
-                isPortfolio && "bg-primary/20 text-primary",
-              )}
-              title={
-                isPortfolio
-                  ? "Modo Portfólio Ativado"
-                  : "Ativar Modo Portfólio no Link"
-              }
-            >
-              <Browser size={16} weight={isPortfolio ? "fill" : "regular"} />
-            </Button>
-          </div>
-
-          <div className="h-4 w-[1px] bg-border/40" />
-
-          {/* Theme & Export */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1">
             <Button
               variant="ghost"
               size="icon"
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              className="rounded-full"
+              className="rounded-full h-9 w-9"
             >
-              {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
+              {theme === "dark" ? <Sun size={20} /> : <Moon size={20} />}
             </Button>
 
             <Popover>
               <PopoverTrigger asChild>
                 <Button
-                  variant="outline"
-                  size="sm"
-                  className="gap-2 rounded-full h-8 px-3"
+                  variant="ghost"
+                  size="icon"
+                  className="rounded-full h-9 w-9"
                 >
                   <div
-                    className="w-3 h-3 rounded-full shadow-sm"
+                    className="w-4 h-4 rounded-full border border-border shadow-sm"
                     style={{ backgroundColor: colorTheme }}
                   />
-                  <span className="text-[10px] font-bold uppercase tracking-wider">
-                    Cor
-                  </span>
                 </Button>
               </PopoverTrigger>
               <PopoverContent
@@ -514,7 +522,11 @@ export default function Home() {
                 </div>
               </PopoverContent>
             </Popover>
+          </div>
 
+          <Separator orientation="vertical" className="h-6 hidden md:block" />
+
+          <div className="flex items-center gap-2">
             <AnimatePresence mode="wait">
               <motion.div key={JSON.stringify(data) + colorTheme}>
                 <PDFDownloadLink
@@ -524,17 +536,194 @@ export default function Home() {
                   {({ loading }) => (
                     <Button
                       size="sm"
-                      className="gap-2 rounded-full px-5 h-8 text-xs font-bold shadow-lg shadow-primary/5 active:scale-95 transition-all"
+                      className="gap-2 rounded-full px-4 md:px-6 h-9 font-bold shadow-lg shadow-primary/10 active:scale-95 transition-all"
                       disabled={loading}
                       onClick={() => incrementDownload(resumeId)}
                     >
-                      <Printer size={16} weight="bold" />
-                      {loading ? "..." : "PDF"}
+                      <Printer size={18} weight="bold" />
+                      <span className="hidden sm:inline">
+                        {loading ? "Gerando..." : "Baixar PDF"}
+                      </span>
+                      <span className="sm:hidden">PDF</span>
                     </Button>
                   )}
                 </PDFDownloadLink>
               </motion.div>
             </AnimatePresence>
+
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="rounded-full h-10 w-10 bg-muted/30 hover:bg-muted/50 border border-border/20"
+                >
+                  <List size={22} weight="bold" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent
+                side="right"
+                className="w-[300px] sm:w-[400px] p-0 bg-background/95 backdrop-blur-xl border-l border-border/40 flex flex-col"
+              >
+                <SheetHeader className="p-6 border-b border-border/20 bg-primary/5">
+                  <SheetTitle className="text-sm font-black uppercase tracking-[0.2em] flex items-center gap-2">
+                    <Gear size={18} /> Ferramentas & Ajustes
+                  </SheetTitle>
+                </SheetHeader>
+
+                <div className="flex-1 overflow-y-auto custom-scrollbar p-6 space-y-8 text-left">
+                  <div className="space-y-4">
+                    <h4 className="text-[10px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-2">
+                      <FileArrowUp size={14} /> Importação & Exportação
+                    </h4>
+                    <div className="grid grid-cols-1 gap-2">
+                      <div className="relative w-full text-left">
+                        <input
+                          type="file"
+                          accept=".pdf"
+                          onChange={handleLinkedInImport}
+                          className="absolute inset-0 opacity-0 cursor-pointer z-10"
+                        />
+                        <Button
+                          variant="outline"
+                          className="w-full justify-start gap-3 rounded-xl py-6 border-border/40 hover:bg-[#0A66C2]/5 hover:text-[#0A66C2] transition-colors"
+                        >
+                          <LinkedinLogo size={20} weight="fill" />
+                          <div className="flex flex-col items-start leading-tight text-left">
+                            <span className="text-sm font-bold">
+                              Importar LinkedIn
+                            </span>
+                            <span className="text-[10px] opacity-60">
+                              Extrair do seu perfil PDF
+                            </span>
+                          </div>
+                        </Button>
+                      </div>
+                      <div className="relative w-full text-left">
+                        <input
+                          type="file"
+                          accept=".json"
+                          onChange={handleImportJSON}
+                          className="absolute inset-0 opacity-0 cursor-pointer z-10"
+                        />
+                        <Button
+                          variant="outline"
+                          className="w-full justify-start gap-3 rounded-xl py-6 border-border/40"
+                        >
+                          <FileArrowUp size={20} />
+                          <div className="flex flex-col items-start leading-tight text-left">
+                            <span className="text-sm font-bold">
+                              Carregar JSON
+                            </span>
+                            <span className="text-[10px] opacity-60">
+                              Restaurar de um backup
+                            </span>
+                          </div>
+                        </Button>
+                      </div>
+                      <Button
+                        variant="outline"
+                        onClick={handleExportJSON}
+                        className="w-full justify-start gap-3 rounded-xl py-6 border-border/40"
+                      >
+                        <FileArrowDown size={20} />
+                        <div className="flex flex-col items-start leading-tight text-left">
+                          <span className="text-sm font-bold">
+                            Salvar Backup
+                          </span>
+                          <span className="text-[10px] opacity-60">
+                            Exportar para arquivo .json
+                          </span>
+                        </div>
+                      </Button>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <h4 className="text-[10px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-2">
+                      <ShareNetwork size={14} /> Visibilidade & Link
+                    </h4>
+                    <div className="grid grid-cols-1 gap-2">
+                      <Button
+                        variant="outline"
+                        onClick={handleShare}
+                        className="w-full justify-start gap-3 rounded-xl py-6 border-border/40 hover:border-primary/40 hover:bg-primary/5 transition-all text-left"
+                      >
+                        <ShareNetwork
+                          size={20}
+                          weight="duotone"
+                          className="text-primary"
+                        />
+                        <div className="flex flex-col items-start leading-tight text-left">
+                          <span className="text-sm font-bold">
+                            Gerar Link Público
+                          </span>
+                          <span className="text-[10px] opacity-60">
+                            Compartilhe sua URL única
+                          </span>
+                        </div>
+                      </Button>
+                      <Button
+                        variant="outline"
+                        onClick={togglePortfolio}
+                        className={cn(
+                          "w-full justify-start gap-3 rounded-xl py-6 border-border/40 transition-all text-left",
+                          isPortfolio &&
+                            "bg-emerald-500/5 border-emerald-500/20 text-emerald-600",
+                        )}
+                      >
+                        <Browser
+                          size={20}
+                          weight={isPortfolio ? "fill" : "regular"}
+                        />
+                        <div className="flex flex-col items-start leading-tight text-left">
+                          <span className="text-sm font-bold">
+                            {isPortfolio
+                              ? "Modo Portfólio Ativo"
+                              : "Ativar Modo Portfólio"}
+                          </span>
+                          <span className="text-[10px] opacity-60">
+                            Exibir currículo como site
+                          </span>
+                        </div>
+                      </Button>
+                    </div>
+                  </div>
+
+                  {resumeId && (
+                    <div className="space-y-4">
+                      <h4 className="text-[10px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-2">
+                        <ChartLineUp size={14} /> Métricas de Acesso
+                      </h4>
+                      <div className="grid grid-cols-2 gap-3">
+                        <div className="bg-muted/30 rounded-2xl p-4 border border-border/40 text-center">
+                          <span className="block text-2xl font-black text-primary">
+                            {analytics.views}
+                          </span>
+                          <span className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground">
+                            Views
+                          </span>
+                        </div>
+                        <div className="bg-muted/30 rounded-2xl p-4 border border-border/40 text-center">
+                          <span className="block text-2xl font-black text-emerald-500">
+                            {analytics.downloads}
+                          </span>
+                          <span className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground">
+                            Downloads
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="pt-8 border-t border-border/20 text-center space-y-2">
+                    <div className="inline-flex items-center gap-2 text-[10px] font-bold text-muted-foreground/50 uppercase tracking-widest">
+                      <Info size={14} /> Lume v1.0
+                    </div>
+                  </div>
+                </div>
+              </SheetContent>
+            </Sheet>
           </div>
         </div>
       </header>
@@ -547,39 +736,10 @@ export default function Home() {
             onDataChange={handleDataChange}
             onIdGenerated={setResumeId}
           />
-
-          <div className="absolute bottom-6 left-6 no-print z-50">
-            <AnimatePresence mode="wait">
-              {isSyncing ? (
-                <motion.div
-                  key="syncing"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground bg-background/90 backdrop-blur-md border px-4 py-2 rounded-full shadow-sm"
-                >
-                  <ArrowsClockwise
-                    size={12}
-                    className="animate-spin text-primary"
-                  />{" "}
-                  Sincronizando...
-                </motion.div>
-              ) : (
-                <motion.div
-                  key="saved"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-emerald-600 bg-background/90 backdrop-blur-md border border-emerald-500/20 px-4 py-2 rounded-full shadow-sm"
-                >
-                  <CloudCheck size={16} weight="bold" /> Salvo
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
         </div>
 
         <div className="hidden lg:flex flex-1 bg-muted/5 relative overflow-hidden items-center justify-center">
-          <div className="absolute top-4 right-8 z-50 flex items-center bg-muted/20 rounded-full px-1 py-1 border border-border/30 backdrop-blur-md">
+          <div className="absolute top-4 right-8 z-50 flex items-center bg-muted/30 hover:bg-muted/50 rounded-full px-1 py-1 border border-border/30 backdrop-blur-md transition-all">
             <Button
               variant="ghost"
               size="icon"
