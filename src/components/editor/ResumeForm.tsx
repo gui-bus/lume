@@ -146,32 +146,41 @@ export function ResumeForm({
   return (
     <div className="flex flex-col h-full bg-background overflow-hidden">
       {/* Premium Step Indicator */}
-      <div className="px-6 pt-6 pb-2 flex items-center justify-center border-b bg-muted/10 shrink-0">
-        <div className="flex gap-1.5 p-1.5 bg-muted/30 rounded-2xl border border-border/50">
-          {STEPS.map((step, i) => (
-            <button
-              key={step.id}
-              onClick={() => setActiveStep(i)}
-              title={step.label}
-              className={cn(
-                "relative w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-500",
-                activeStep === i
-                  ? "bg-background text-primary shadow-xl ring-1 ring-border/50"
-                  : "text-muted-foreground hover:text-foreground hover:bg-background/50",
-              )}
-            >
-              <step.icon
-                size={20}
-                weight={activeStep === i ? "fill" : "duotone"}
-              />
-              {activeStep === i && (
-                <motion.div
-                  layoutId="activeStep"
-                  className="absolute -bottom-1 w-1 h-1 bg-primary rounded-full"
+      <div className="px-4 pt-6 pb-4 border-b bg-muted/5 shrink-0">
+        <div className="flex w-full gap-1.5 p-1.5 bg-muted/20 rounded-2xl border border-border/40">
+          {STEPS.map((step, i) => {
+            const isActive = activeStep === i;
+            return (
+              <button
+                key={step.id}
+                onClick={() => setActiveStep(i)}
+                className={cn(
+                  "relative flex-1 h-11 rounded-xl flex items-center justify-center transition-all duration-300 gap-2 overflow-hidden",
+                  isActive
+                    ? "bg-background text-primary shadow-sm ring-1 ring-border/50 flex-[2.5]"
+                    : "text-muted-foreground hover:text-foreground hover:bg-background/40",
+                )}
+              >
+                <step.icon
+                  size={20}
+                  weight={isActive ? "fill" : "duotone"}
+                  className="shrink-0"
                 />
-              )}
-            </button>
-          ))}
+                <AnimatePresence initial={false}>
+                  {isActive && (
+                    <motion.span
+                      initial={{ opacity: 0, x: -10, width: 0 }}
+                      animate={{ opacity: 1, x: 0, width: "auto" }}
+                      exit={{ opacity: 0, x: -10, width: 0 }}
+                      className="text-[10px] font-black uppercase tracking-widest overflow-hidden whitespace-nowrap"
+                    >
+                      {step.label}
+                    </motion.span>
+                  )}
+                </AnimatePresence>
+              </button>
+            );
+          })}
         </div>
       </div>
 
