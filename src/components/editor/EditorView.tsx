@@ -305,7 +305,7 @@ export function EditorView({
         </div>
       </header>
 
-      <div className="w-full lg:w-[480px] xl:w-[540px] h-[60vh] lg:h-full shrink-0 border-r bg-card/10 overflow-hidden relative flex flex-col text-left">
+      <div className="w-full lg:w-[480px] xl:w-[540px] flex-1 lg:h-full shrink-0 border-r bg-card/10 overflow-hidden relative flex flex-col text-left">
         <ResumeForm
           key={locale}
           initialData={initialData || defaultData}
@@ -316,27 +316,8 @@ export function EditorView({
         />
       </div>
 
-      <div className="flex-1 h-[40vh] lg:h-full flex flex-col bg-muted/5 relative overflow-hidden">
-        {/* Floating Download Button Mobile */}
-        <div className="lg:hidden fixed bottom-6 right-6 z-50">
-          <PDFDownloadLink
-            document={<ResumePDF data={data} colorTheme="#18181b" />}
-            fileName={`resume-${data.personalInfo.name || "lume"}.pdf`}
-          >
-            {({ loading }) => (
-              <Button
-                disabled={loading}
-                className="h-14 w-14 rounded-full shadow-2xl shadow-primary/40 flex items-center justify-center p-0"
-              >
-                {loading ? (
-                  <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                ) : (
-                  <FileArrowDown size={24} weight="duotone" />
-                )}
-              </Button>
-            )}
-          </PDFDownloadLink>
-        </div>
+      <div className="hidden lg:flex flex-1 flex-col bg-muted/5 relative overflow-hidden">
+        {/* Floating Download Button Mobile (Removido pois preview está oculto no mobile) */}
 
         <header className="hidden lg:flex no-print h-16 border-b border-border/40 bg-background/50 backdrop-blur-xl items-center justify-between px-8 shrink-0 z-50">
           <div className="flex items-center gap-4">
