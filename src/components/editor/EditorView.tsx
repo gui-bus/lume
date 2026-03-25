@@ -135,7 +135,14 @@ export function EditorView({
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      link.download = `resume-${data.personalInfo.name || "lume"}.pdf`;
+
+      const userName = (data.personalInfo.name || "LUME")
+        .toUpperCase()
+        .replace(/\s+/g, "_");
+      const pdfName =
+        locale === "pt" ? `CURRICULO_${userName}` : `RESUME_${userName}`;
+      link.download = `${pdfName}.pdf`;
+
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -224,7 +231,12 @@ export function EditorView({
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = `resume-${data.personalInfo.name || "lume"}.json`;
+
+    const userName = (data.personalInfo.name || "LUME")
+      .toUpperCase()
+      .replace(/\s+/g, "_");
+    link.download = `BACKUP_${userName}_${locale.toUpperCase()}.json`;
+
     link.click();
   };
 
