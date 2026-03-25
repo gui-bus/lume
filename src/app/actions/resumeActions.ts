@@ -97,7 +97,7 @@ export async function listUserResumes() {
   });
 
   const uniqueGroups = new Map<string, (typeof resumes)[0]>();
-  resumes.forEach((r) => {
+  resumes.forEach((r: (typeof resumes)[0]) => {
     if (r.groupId && !uniqueGroups.has(r.groupId)) {
       uniqueGroups.set(r.groupId, r);
     }
