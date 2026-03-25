@@ -219,8 +219,93 @@ export function EditorView({
   if (!mounted) return null;
 
   return (
-    <main className="h-screen flex bg-background text-foreground overflow-hidden text-left">
-      <div className="w-full lg:w-[480px] xl:w-[540px] shrink-0 border-r bg-card/10 overflow-hidden relative flex flex-col text-left">
+    <main className="h-screen flex flex-col lg:flex-row bg-background text-foreground overflow-hidden text-left">
+      {/* Header Mobile */}
+      <header className="lg:hidden no-print h-14 border-b border-border/40 bg-background/50 backdrop-blur-xl flex items-center justify-between px-4 shrink-0 z-[60]">
+        <span className="text-xl font-black tracking-tighter uppercase text-primary">
+          Lume
+        </span>
+        <div className="flex items-center gap-2">
+          <Show when="signed-in">
+            <UserButton
+              appearance={{
+                elements: {
+                  userButtonAvatarBox: "w-8 h-8 border border-border/40",
+                },
+              }}
+            />
+          </Show>
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="rounded-full h-9 w-9 bg-muted/30"
+              >
+                <List size={20} weight="duotone" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent
+              side="right"
+              className="w-[300px] bg-background/95 backdrop-blur-xl p-0 flex flex-col text-left"
+            >
+              <SheetHeader className="p-6 border-b border-border/20 bg-primary/5">
+                <SheetTitle className="text-sm font-black uppercase tracking-[0.2em] flex items-center gap-2">
+                  <Gear size={18} weight="duotone" /> {t("header.tools.title")}
+                </SheetTitle>
+              </SheetHeader>
+              <div className="flex-1 overflow-y-auto custom-scrollbar p-6 space-y-6">
+                <div className="flex items-center justify-between bg-muted/20 p-3 rounded-xl border border-border/40">
+                  <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                    Tema
+                  </span>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={toggleTheme}
+                    className="rounded-full h-8 w-8"
+                  >
+                    {theme === "dark" ? (
+                      <Sun size={18} weight="duotone" />
+                    ) : (
+                      <Moon size={18} weight="duotone" />
+                    )}
+                  </Button>
+                </div>
+                <div className="flex items-center justify-between bg-muted/20 p-3 rounded-xl border border-border/40">
+                  <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                    Idioma
+                  </span>
+                  <LanguageSwitcher />
+                </div>
+                <Separator className="bg-border/20" />
+                {/* Repetir seções do drawer aqui ou extrair para componente */}
+                <div className="space-y-4">
+                  <button
+                    onClick={handleShare}
+                    className="flex items-center gap-4 w-full p-4 rounded-2xl border border-border/40 bg-muted/5 group text-left"
+                  >
+                    <div className="w-8 h-8 rounded-lg bg-muted/20 flex items-center justify-center shrink-0">
+                      <ShareNetwork
+                        size={18}
+                        weight="duotone"
+                        className="text-muted-foreground"
+                      />
+                    </div>
+                    <div className="flex flex-col items-start leading-tight">
+                      <span className="text-xs font-bold text-foreground">
+                        {t("header.tools.generateLink")}
+                      </span>
+                    </div>
+                  </button>
+                </div>
+              </div>
+            </SheetContent>
+          </Sheet>
+        </div>
+      </header>
+
+      <div className="w-full lg:w-[480px] xl:w-[540px] h-[60vh] lg:h-full shrink-0 border-r bg-card/10 overflow-hidden relative flex flex-col text-left">
         <ResumeForm
           key={locale}
           initialData={initialData || defaultData}
@@ -231,8 +316,29 @@ export function EditorView({
         />
       </div>
 
-      <div className="hidden lg:flex flex-1 flex-col bg-muted/5 relative overflow-hidden">
-        <header className="no-print h-16 border-b border-border/40 bg-background/50 backdrop-blur-xl flex items-center justify-between px-8 shrink-0 z-50">
+      <div className="flex-1 h-[40vh] lg:h-full flex flex-col bg-muted/5 relative overflow-hidden">
+        {/* Floating Download Button Mobile */}
+        <div className="lg:hidden fixed bottom-6 right-6 z-50">
+          <PDFDownloadLink
+            document={<ResumePDF data={data} colorTheme="#18181b" />}
+            fileName={`resume-${data.personalInfo.name || "lume"}.pdf`}
+          >
+            {({ loading }) => (
+              <Button
+                disabled={loading}
+                className="h-14 w-14 rounded-full shadow-2xl shadow-primary/40 flex items-center justify-center p-0"
+              >
+                {loading ? (
+                  <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                ) : (
+                  <FileArrowDown size={24} weight="duotone" />
+                )}
+              </Button>
+            )}
+          </PDFDownloadLink>
+        </div>
+
+        <header className="hidden lg:flex no-print h-16 border-b border-border/40 bg-background/50 backdrop-blur-xl items-center justify-between px-8 shrink-0 z-50">
           <div className="flex items-center gap-4">
             <span className="text-2xl md:text-3xl font-black tracking-[0.2em] uppercase text-primary">
               Lume
