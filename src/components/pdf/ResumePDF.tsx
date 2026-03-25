@@ -6,8 +6,24 @@ import {
   Document,
   StyleSheet,
   Link,
+  Font,
 } from "@react-pdf/renderer";
 import { ResumeData } from "@/types/resume";
+
+// Registrar fontes para garantir que o negrito funcione
+Font.register({
+  family: "Inter",
+  fonts: [
+    {
+      src: "https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiA.woff2",
+      fontWeight: "normal",
+    },
+    {
+      src: "https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuGKYAZ9hiA.woff2",
+      fontWeight: "bold",
+    },
+  ],
+});
 
 const PX = 0.75;
 
@@ -15,7 +31,7 @@ const styles = StyleSheet.create({
   page: {
     padding: "25mm",
     backgroundColor: "#FFFFFF",
-    fontFamily: "Helvetica",
+    fontFamily: "Inter",
     color: "#1e293b",
   },
 
@@ -24,7 +40,7 @@ const styles = StyleSheet.create({
   },
   name: {
     fontSize: 28 * PX,
-    fontFamily: "Helvetica-Bold",
+    fontWeight: "bold",
     letterSpacing: -0.5,
     marginBottom: 6 * PX,
   },
@@ -52,13 +68,13 @@ const styles = StyleSheet.create({
     fontSize: 11 * PX,
     color: "#2563eb",
     textDecoration: "none",
-    fontFamily: "Helvetica-Bold",
+    fontWeight: "bold",
   },
   linkSmall: {
     fontSize: 9 * PX,
     color: "#2563eb",
     textDecoration: "none",
-    fontFamily: "Helvetica-Bold",
+    fontWeight: "bold",
   },
   summary: {
     fontSize: 12 * PX,
@@ -76,7 +92,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 10 * PX,
-    fontFamily: "Helvetica-Bold",
+    fontWeight: "bold",
     textTransform: "uppercase",
     letterSpacing: 1.5,
   },
@@ -97,12 +113,12 @@ const styles = StyleSheet.create({
   },
   itemTitle: {
     fontSize: 14 * PX,
-    fontFamily: "Helvetica-Bold",
+    fontWeight: "bold",
     color: "#0f172a",
   },
   itemDate: {
     fontSize: 10 * PX,
-    fontFamily: "Helvetica-Bold",
+    fontWeight: "bold",
     color: "#94a3b8",
     textTransform: "uppercase",
   },
@@ -113,7 +129,7 @@ const styles = StyleSheet.create({
   },
   company: {
     fontSize: 13 * PX,
-    fontFamily: "Helvetica-Bold",
+    fontWeight: "bold",
     color: "#475569",
   },
   location: {
@@ -135,7 +151,7 @@ const styles = StyleSheet.create({
   },
   skillTag: {
     fontSize: 10 * PX,
-    fontFamily: "Helvetica-Bold",
+    fontWeight: "bold",
     backgroundColor: "#f8fafc",
     borderWidth: 0.5 * PX,
     borderColor: "#e2e8f0",
@@ -152,7 +168,7 @@ const styles = StyleSheet.create({
   },
   langName: {
     fontSize: 11 * PX,
-    fontFamily: "Helvetica-Bold",
+    fontWeight: "bold",
     color: "#334155",
   },
   langLevel: {
