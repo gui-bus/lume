@@ -4,6 +4,7 @@ import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { ResumeData } from "@/types/resume";
 import { notFound } from "next/navigation";
 import { cookies } from "next/headers";
+import { Logo } from "@/components/ui/Logo";
 
 interface SharePageProps {
   params: Promise<{ id: string; locale: string }>;
@@ -44,8 +45,9 @@ export default async function SharePage({ params }: SharePageProps) {
           <ResumeView data={data} colorTheme={resume.colorTheme} />
 
           {/* Branding sutil ao final do scroll */}
-          <div className="mt-20 bg-background/80 backdrop-blur-md border px-6 py-2.5 rounded-full shadow-lg text-[11px] font-black uppercase tracking-[0.2em] text-muted-foreground animate-in fade-in slide-in-from-bottom-4 duration-1000">
-            Criado com <span className="text-primary">Lume</span>
+          <div className="mt-20 flex items-center gap-3 bg-background/80 backdrop-blur-md border px-6 py-2.5 rounded-full shadow-lg text-[11px] font-black uppercase tracking-[0.2em] text-muted-foreground animate-in fade-in slide-in-from-bottom-4 duration-1000">
+            <span>Criado com</span>
+            <Logo width={60} height={16} />
           </div>
         </div>
       </main>

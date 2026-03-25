@@ -3,7 +3,7 @@ import { Geist, Geist_Mono, Manrope } from "next/font/google";
 import "../globals.css";
 import { cn } from "@/lib/utils";
 import { Providers } from "@/components/providers";
-import { getMessages } from "next-intl/server";
+import { getMessages, getTranslations } from "next-intl/server";
 import { routing } from "@/i18n/routing";
 import { notFound } from "next/navigation";
 
@@ -19,10 +19,50 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  title: "Lume - Gerador de Currículos",
-  description: "Crie currículos profissionais com facilidade.",
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "common" });
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://lume.guibus.dev";
+
+  return {
+    title: {
+      template: `%s | ${t("title")}`,
+      default: t("seo.ogTitle"),
+    },
+    description: t("description"),
+    keywords: t("seo.keywords"),
+    authors: [{ name: "Lume" }],
+    metadataBase: new URL(baseUrl),
+    alternates: {
+      canonical: `/${locale}`,
+      languages: {
+        pt: "/pt",
+        en: "/en",
+      },
+    },
+    openGraph: {
+      title: t("seo.ogTitle"),
+      description: t("seo.ogDescription"),
+      url: `/${locale}`,
+      siteName: t("title"),
+      locale: locale,
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: t("seo.ogTitle"),
+      description: t("seo.ogDescription"),
+    },
+    robots: {
+      index: true,
+      follow: true,
+    },
+  };
+}
 
 export default async function RootLayout({
   children,

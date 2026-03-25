@@ -19,7 +19,11 @@ export function Providers({ children, messages, locale }: ProvidersProps) {
   return (
     <ClerkProvider localization={localization}>
       <ThemeProvider>
-        <NextIntlClientProvider messages={messages} locale={locale}>
+        <NextIntlClientProvider
+          messages={messages}
+          locale={locale}
+          timeZone="America/Sao_Paulo"
+        >
           {children}
           <Toaster />
         </NextIntlClientProvider>

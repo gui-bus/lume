@@ -1,7 +1,14 @@
 {
   "common": {
     "title": "Lume",
-    "description": "Gerador de Currículos",
+    "description": "Gerador de currículos profissionais otimizados para ATS com inteligência e design premium.",
+    "seo": {
+      "keywords": "gerador de currículo, currículo online, ats, currículo profissional, builder de currículo",
+      "ogTitle": "Lume — Engenharia de Carreira & Design de Currículos",
+      "ogDescription": "Crie currículos de alta performance, valide contra sistemas ATS e compartilhe seu perfil profissional com design de elite.",
+      "shareTitle": "Currículo Profissional — {name}",
+      "shareDescription": "Confira o currículo profissional de {name} criado no Lume."
+    },
     "next": "Próximo",
     "previous": "Anterior",
     "save": "Salvar",

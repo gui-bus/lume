@@ -7,6 +7,7 @@ import { useTheme } from "@/components/theme-provider";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { Button } from "@/components/ui/button";
 import { useTranslations, useLocale } from "next-intl";
+import Image from "next/image";
 
 export default function SignUpPage() {
   const { theme, setTheme } = useTheme();
@@ -31,9 +32,14 @@ export default function SignUpPage() {
             animate={{ opacity: 1, x: 0 }}
             className="flex items-center gap-4"
           >
-            <span className="text-4xl font-black tracking-tighter uppercase text-white font-sans">
-              Lume
-            </span>
+            <Image
+              src="/LUME_WHITE.svg"
+              alt="Lume Logo"
+              width={120}
+              height={31}
+              priority
+              className="object-contain"
+            />
             <div className="h-px w-12 bg-primary" />
           </motion.div>
 
@@ -91,9 +97,14 @@ export default function SignUpPage() {
         </div>
 
         <div className="lg:hidden absolute top-10 left-12">
-          <span className="text-2xl font-black uppercase tracking-tighter text-primary">
-            Lume
-          </span>
+          <Image
+            src="/LUME_WHITE.svg"
+            alt="Lume Logo"
+            width={100}
+            height={26}
+            priority
+            className="object-contain brightness-0 dark:brightness-100"
+          />
         </div>
 
         <div className="w-full max-w-[400px] space-y-10">
@@ -112,7 +123,7 @@ export default function SignUpPage() {
         </div>
 
         <p className="absolute bottom-10 text-[9px] font-black text-muted-foreground/20 uppercase tracking-[0.6em] select-none">
-          Lume &bull; Global Suite &bull; 2026
+          LUME &bull; Global Suite &bull; 2026
         </p>
       </div>
     </div>

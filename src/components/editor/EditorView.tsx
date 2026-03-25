@@ -53,6 +53,7 @@ import { useTheme } from "@/components/theme-provider";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { Logo } from "@/components/ui/Logo";
 import { validateATS } from "@/lib/validations/ats-validator";
 import { checkStrongVerbs } from "@/lib/validations/spellchecker";
 import { parseLinkedInPDF } from "@/lib/validations/linkedin-parser";
@@ -453,9 +454,7 @@ export function EditorView({
     <main className="h-screen flex flex-col lg:flex-row bg-background text-foreground overflow-hidden text-left">
       {/* Header Mobile */}
       <header className="lg:hidden no-print h-14 border-b border-border/40 bg-background/50 backdrop-blur-xl flex items-center justify-between px-4 shrink-0 z-40">
-        <span className="text-xl font-black tracking-tighter uppercase text-primary">
-          Lume
-        </span>
+        <Logo width={80} height={20} />
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2">
             <Dialog>
@@ -588,9 +587,7 @@ export function EditorView({
 
         <header className="hidden lg:flex no-print h-16 border-b border-border/40 bg-background/50 backdrop-blur-xl items-center justify-between px-8 shrink-0 z-50">
           <div className="flex items-center gap-4">
-            <span className="text-2xl md:text-3xl font-black tracking-[0.2em] uppercase text-primary">
-              Lume
-            </span>
+            <Logo width={100} height={26} />
           </div>
 
           <div className="flex items-center gap-2 md:gap-4">

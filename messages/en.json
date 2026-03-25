@@ -1,7 +1,14 @@
 {
   "common": {
     "title": "Lume",
-    "description": "Resume Builder",
+    "description": "ATS-optimized professional resume builder with intelligence and premium design.",
+    "seo": {
+      "keywords": "resume builder, online resume, ats, professional resume, curriculum vitae, career builder",
+      "ogTitle": "Lume — Career Engineering & Resume Design",
+      "ogDescription": "Build high-performance resumes, validate against ATS systems and share your professional profile with elite design.",
+      "shareTitle": "Professional Resume — {name}",
+      "shareDescription": "Check out {name}'s professional resume created on Lume."
+    },
     "next": "Next",
     "previous": "Previous",
     "save": "Save",
