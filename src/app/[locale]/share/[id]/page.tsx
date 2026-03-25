@@ -1,4 +1,4 @@
-import { getResume, incrementView } from "@/app/actions/resume-actions";
+import { getResume, incrementView } from "@/app/actions/resumeActions";
 import { ResumeView } from "@/components/preview/ResumeView";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { ResumeData } from "@/types/resume";

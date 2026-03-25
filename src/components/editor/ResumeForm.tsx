@@ -44,7 +44,7 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 import { useEffect, useState, useCallback, useRef } from "react";
 import { useDebounce } from "@/hooks/use-debounce";
-import { saveResume } from "@/app/actions/resume-actions";
+import { saveResume } from "@/app/actions/resumeActions";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { useTranslations, useLocale } from "next-intl";

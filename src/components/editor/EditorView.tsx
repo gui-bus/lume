@@ -48,7 +48,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { saveResume, incrementDownload } from "@/app/actions/resume-actions";
+import { saveResume, incrementDownload } from "@/app/actions/resumeActions";
 import { useTheme } from "@/components/theme-provider";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { motion } from "framer-motion";

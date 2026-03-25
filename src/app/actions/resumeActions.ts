@@ -96,9 +96,9 @@ export async function listUserResumes() {
     orderBy: { updatedAt: "desc" },
   });
 
-  const uniqueGroups = new Map();
+  const uniqueGroups = new Map<string, (typeof resumes)[0]>();
   resumes.forEach((r) => {
-    if (!uniqueGroups.has(r.groupId)) {
+    if (r.groupId && !uniqueGroups.has(r.groupId)) {
       uniqueGroups.set(r.groupId, r);
     }
   });

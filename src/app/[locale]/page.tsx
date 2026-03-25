@@ -1,7 +1,7 @@
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { EditorView } from "@/components/editor/EditorView";
-import { getResume, listUserResumes } from "@/app/actions/resume-actions";
+import { getResume, listUserResumes } from "@/app/actions/resumeActions";
 import { ResumeData } from "@/types/resume";
 
 export default async function Page({
