@@ -1307,9 +1307,10 @@ export function ResumeForm({
           variant="ghost"
           disabled={activeStep === 0}
           onClick={() => setActiveStep((s) => s - 1)}
-          className="rounded-xl px-6 h-11 font-bold text-muted-foreground hover:text-foreground hover:bg-muted/50"
+          className="rounded-xl px-4 lg:px-6 h-11 font-bold text-muted-foreground hover:text-foreground hover:bg-muted/50"
         >
-          <CaretLeft weight="duotone" className="mr-2" /> {t("previous")}
+          <CaretLeft weight="duotone" className="lg:mr-2" />
+          <span className="hidden lg:inline">{t("previous")}</span>
         </Button>
         <div className="flex gap-1.5">
           {[0, 1, 2, 3, 4, 5].map((i) => (
@@ -1325,9 +1326,10 @@ export function ResumeForm({
         <Button
           onClick={() => activeStep < 5 && setActiveStep((s) => s + 1)}
           disabled={activeStep === 5}
-          className="rounded-xl px-10 h-11 shadow-xl shadow-primary/10 transition-all hover:scale-[1.03] active:scale-95 font-black uppercase tracking-widest text-xs"
+          className="rounded-xl px-4 lg:px-10 h-11 shadow-xl shadow-primary/10 transition-all hover:scale-[1.03] active:scale-95 font-black uppercase tracking-widest text-xs"
         >
-          {t("next")} <CaretRight weight="duotone" className="ml-2" />
+          <span className="hidden lg:inline mr-2">{t("next")}</span>
+          <CaretRight weight="duotone" />
         </Button>
       </div>
     </div>

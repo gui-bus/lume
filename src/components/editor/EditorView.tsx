@@ -221,7 +221,7 @@ export function EditorView({
   return (
     <main className="h-screen flex flex-col lg:flex-row bg-background text-foreground overflow-hidden text-left">
       {/* Header Mobile */}
-      <header className="lg:hidden no-print h-14 border-b border-border/40 bg-background/50 backdrop-blur-xl flex items-center justify-between px-4 shrink-0 z-[60]">
+      <header className="lg:hidden no-print h-14 border-b border-border/40 bg-background/50 backdrop-blur-xl flex items-center justify-between px-4 shrink-0 z-40">
         <span className="text-xl font-black tracking-tighter uppercase text-primary">
           Lume
         </span>
