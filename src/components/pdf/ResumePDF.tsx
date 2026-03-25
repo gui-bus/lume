@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
   },
   name: {
     fontSize: 28 * PX,
-    fontWeight: "bold",
+    fontFamily: "Helvetica-Bold",
     letterSpacing: -0.5,
     marginBottom: 6 * PX,
   },
@@ -52,13 +52,13 @@ const styles = StyleSheet.create({
     fontSize: 11 * PX,
     color: "#2563eb",
     textDecoration: "none",
-    fontWeight: "bold",
+    fontFamily: "Helvetica-Bold",
   },
   linkSmall: {
     fontSize: 9 * PX,
     color: "#2563eb",
     textDecoration: "none",
-    fontWeight: "bold",
+    fontFamily: "Helvetica-Bold",
   },
   summary: {
     fontSize: 12 * PX,
@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 10 * PX,
-    fontWeight: "bold",
+    fontFamily: "Helvetica-Bold",
     textTransform: "uppercase",
     letterSpacing: 1.5,
   },
@@ -97,12 +97,12 @@ const styles = StyleSheet.create({
   },
   itemTitle: {
     fontSize: 14 * PX,
-    fontWeight: "bold",
+    fontFamily: "Helvetica-Bold",
     color: "#0f172a",
   },
   itemDate: {
     fontSize: 10 * PX,
-    fontWeight: "bold",
+    fontFamily: "Helvetica-Bold",
     color: "#94a3b8",
     textTransform: "uppercase",
   },
@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
   },
   company: {
     fontSize: 13 * PX,
-    fontWeight: "bold",
+    fontFamily: "Helvetica-Bold",
     color: "#475569",
   },
   location: {
@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
   },
   skillTag: {
     fontSize: 10 * PX,
-    fontWeight: "bold",
+    fontFamily: "Helvetica-Bold",
     backgroundColor: "#f8fafc",
     borderWidth: 0.5 * PX,
     borderColor: "#e2e8f0",
@@ -152,7 +152,7 @@ const styles = StyleSheet.create({
   },
   langName: {
     fontSize: 11 * PX,
-    fontWeight: "bold",
+    fontFamily: "Helvetica-Bold",
     color: "#334155",
   },
   langLevel: {
