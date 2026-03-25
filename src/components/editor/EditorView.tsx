@@ -216,6 +216,175 @@ export function EditorView({
     });
   };
 
+  const ToolsDrawerContent = () => (
+    <div className="flex-1 overflow-y-auto custom-scrollbar p-6 space-y-8 text-left">
+      <div className="lg:hidden space-y-6 pb-6 border-b border-border/20">
+        <div className="flex items-center justify-between bg-muted/20 p-3 rounded-xl border border-border/40">
+          <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+            Tema
+          </span>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={toggleTheme}
+            className="rounded-full h-8 w-8"
+          >
+            {theme === "dark" ? (
+              <Sun size={18} weight="duotone" />
+            ) : (
+              <Moon size={18} weight="duotone" />
+            )}
+          </Button>
+        </div>
+        <div className="flex items-center justify-between bg-muted/20 p-3 rounded-xl border border-border/40">
+          <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+            Idioma
+          </span>
+          <LanguageSwitcher />
+        </div>
+      </div>
+
+      {/* LinkedIn Section */}
+      <div className="space-y-4">
+        <h4 className="text-[10px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-2">
+          <LinkedinLogo size={14} weight="duotone" /> LinkedIn Import
+        </h4>
+        <div className="relative w-full group">
+          <input
+            type="file"
+            accept=".pdf"
+            onChange={handleLinkedInImport}
+            className="absolute inset-0 opacity-0 cursor-pointer z-20"
+          />
+          <div className="flex items-center gap-4 w-full p-4 rounded-2xl border border-border/40 bg-muted/5 transition-all duration-300 group-hover:bg-muted/20 group-hover:border-border/80">
+            <div className="w-10 h-10 rounded-xl bg-muted/20 flex items-center justify-center shrink-0 transition-colors group-hover:bg-background">
+              <LinkedinLogo
+                size={22}
+                weight="duotone"
+                className="text-muted-foreground group-hover:text-foreground"
+              />
+            </div>
+            <div className="flex flex-col items-start leading-tight gap-1">
+              <span className="text-sm font-bold text-foreground">
+                {t("header.tools.importLinkedIn")}
+              </span>
+              <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-tight">
+                {t("header.tools.importLinkedInDesc")}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Slug Section */}
+      <div className="space-y-4">
+        <h4 className="text-[10px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-2">
+          <Browser size={14} weight="duotone" />{" "}
+          {t("header.tools.visibilityLink")}
+        </h4>
+        <div className="space-y-3">
+          <div className="space-y-2 text-left">
+            <Label
+              htmlFor="slug"
+              className="text-[10px] uppercase font-bold text-muted-foreground ml-1"
+            >
+              Custom URL
+            </Label>
+            <Input
+              id="slug"
+              value={slug}
+              onChange={(e) =>
+                setSlug(e.target.value.toLowerCase().replace(/\s+/g, "-"))
+              }
+              placeholder="seu-nome"
+              className="h-12 bg-muted/10 border-border/40 rounded-xl focus:ring-primary/20"
+            />
+          </div>
+          <button
+            onClick={handleShare}
+            className="flex items-center gap-4 w-full p-4 rounded-2xl border border-border/40 bg-muted/5 transition-all duration-300 hover:bg-muted/20 hover:border-border/80 group text-left"
+          >
+            <div className="w-10 h-10 rounded-xl bg-muted/20 flex items-center justify-center shrink-0 transition-colors group-hover:bg-background">
+              <ShareNetwork
+                size={22}
+                weight="duotone"
+                className="text-muted-foreground group-hover:text-foreground"
+              />
+            </div>
+            <div className="flex flex-col items-start leading-tight gap-1">
+              <span className="text-sm font-bold text-foreground">
+                {t("header.tools.generateLink")}
+              </span>
+              <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-tight">
+                {t("header.tools.generateLinkDesc")}
+              </span>
+            </div>
+          </button>
+        </div>
+      </div>
+
+      {/* Import/Export Section */}
+      <div className="space-y-4">
+        <h4 className="text-[10px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-2">
+          <FileArrowUp size={14} weight="duotone" /> Backup & Restore
+        </h4>
+        <div className="grid grid-cols-1 gap-3">
+          <div className="relative w-full group">
+            <input
+              type="file"
+              accept=".json"
+              onChange={handleImportJSON}
+              className="absolute inset-0 opacity-0 cursor-pointer z-20"
+            />
+            <div className="flex items-center gap-4 w-full p-4 rounded-2xl border border-border/40 bg-muted/5 transition-all duration-300 group-hover:bg-muted/20 group-hover:border-border/80">
+              <div className="w-10 h-10 rounded-xl bg-muted/20 flex items-center justify-center shrink-0 transition-colors group-hover:bg-background">
+                <FileArrowUp
+                  size={22}
+                  weight="duotone"
+                  className="text-muted-foreground group-hover:text-foreground"
+                />
+              </div>
+              <div className="flex flex-col items-start leading-tight gap-1">
+                <span className="text-sm font-bold text-foreground">
+                  {t("header.tools.loadJson")}
+                </span>
+                <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-tight">
+                  {t("header.tools.loadJsonDesc")}
+                </span>
+              </div>
+            </div>
+          </div>
+          <button
+            onClick={handleExportJSON}
+            className="flex items-center gap-4 w-full p-4 rounded-2xl border border-border/40 bg-muted/5 transition-all duration-300 hover:bg-muted/20 hover:border-border/80 group text-left"
+          >
+            <div className="w-10 h-10 rounded-xl bg-muted/20 flex items-center justify-center shrink-0 transition-colors group-hover:bg-background">
+              <FileArrowDown
+                size={22}
+                weight="duotone"
+                className="text-muted-foreground group-hover:text-foreground"
+              />
+            </div>
+            <div className="flex flex-col items-start leading-tight gap-1">
+              <span className="text-sm font-bold text-foreground">
+                {t("header.tools.saveBackup")}
+              </span>
+              <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-tight">
+                {t("header.tools.saveBackupDesc")}
+              </span>
+            </div>
+          </button>
+        </div>
+      </div>
+
+      <div className="pt-8 border-t border-border/20 text-center">
+        <div className="inline-flex items-center gap-2 text-[10px] font-bold text-muted-foreground/50 uppercase tracking-widest">
+          <Info size={14} weight="duotone" /> {t("header.tools.version")}
+        </div>
+      </div>
+    </div>
+  );
+
   if (!mounted) return null;
 
   return (
@@ -225,87 +394,105 @@ export function EditorView({
         <span className="text-xl font-black tracking-tighter uppercase text-primary">
           Lume
         </span>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-9 w-9 rounded-full bg-muted/20"
+                >
+                  <Target size={20} weight="duotone" />
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="w-[95vw] max-w-[500px] rounded-3xl bg-background/95 backdrop-blur-2xl">
+                <DialogHeader>
+                  <DialogTitle>{t("header.jobMatch.title")}</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-4 pt-4">
+                  <Textarea
+                    placeholder={t("header.jobMatch.placeholder")}
+                    className="h-[150px] rounded-2xl bg-muted/20"
+                    value={jobDescription}
+                    onChange={(e) => setJobDescription(e.target.value)}
+                  />
+                  {matchResult && (
+                    <div className="p-4 rounded-2xl bg-primary/5 border border-primary/10 text-center">
+                      <span className="text-3xl font-black text-primary">
+                        {matchResult.score}%
+                      </span>
+                    </div>
+                  )}
+                </div>
+              </DialogContent>
+            </Dialog>
+
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-9 w-9 rounded-full bg-muted/20"
+                >
+                  <ShieldCheck
+                    size={20}
+                    weight="duotone"
+                    className={cn(
+                      (atsResult?.score || 0) > 70
+                        ? "text-emerald-500"
+                        : "text-amber-500",
+                    )}
+                  />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-[90vw] max-w-[350px] rounded-3xl">
+                <h3 className="text-xs font-black uppercase tracking-widest text-primary mb-4">
+                  {t("header.healthCheck.title")}
+                </h3>
+                <div className="space-y-2 max-h-[30vh] overflow-y-auto">
+                  {atsResult?.suggestions.map((s, i) => (
+                    <div
+                      key={i}
+                      className="p-3 bg-muted/30 rounded-xl text-[10px] text-muted-foreground"
+                    >
+                      {s}
+                    </div>
+                  ))}
+                </div>
+              </PopoverContent>
+            </Popover>
+          </div>
+
           <Show when="signed-in">
             <UserButton
-              appearance={{
-                elements: {
-                  userButtonAvatarBox: "w-8 h-8 border border-border/40",
-                },
-              }}
+              appearance={{ elements: { userButtonAvatarBox: "w-8 h-8" } }}
             />
           </Show>
+
           <Sheet>
             <SheetTrigger asChild>
               <Button
                 variant="ghost"
                 size="icon"
-                className="rounded-full h-9 w-9 bg-muted/30"
+                className="rounded-full h-9 w-9 bg-primary/10 text-primary"
               >
                 <List size={20} weight="duotone" />
               </Button>
             </SheetTrigger>
-            <SheetContent
-              side="right"
-              className="w-[300px] bg-background/95 backdrop-blur-xl p-0 flex flex-col text-left"
-            >
+            <SheetContent side="right" className="w-full sm:w-[350px] p-0">
               <SheetHeader className="p-6 border-b border-border/20 bg-primary/5">
                 <SheetTitle className="text-sm font-black uppercase tracking-[0.2em] flex items-center gap-2">
                   <Gear size={18} weight="duotone" /> {t("header.tools.title")}
                 </SheetTitle>
               </SheetHeader>
-              <div className="flex-1 overflow-y-auto custom-scrollbar p-6 space-y-6">
-                <div className="flex items-center justify-between bg-muted/20 p-3 rounded-xl border border-border/40">
-                  <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-                    Tema
-                  </span>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={toggleTheme}
-                    className="rounded-full h-8 w-8"
-                  >
-                    {theme === "dark" ? (
-                      <Sun size={18} weight="duotone" />
-                    ) : (
-                      <Moon size={18} weight="duotone" />
-                    )}
-                  </Button>
-                </div>
-                <div className="flex items-center justify-between bg-muted/20 p-3 rounded-xl border border-border/40">
-                  <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-                    Idioma
-                  </span>
-                  <LanguageSwitcher />
-                </div>
-                <Separator className="bg-border/20" />
-                {/* Repetir seções do drawer aqui ou extrair para componente */}
-                <div className="space-y-4">
-                  <button
-                    onClick={handleShare}
-                    className="flex items-center gap-4 w-full p-4 rounded-2xl border border-border/40 bg-muted/5 group text-left"
-                  >
-                    <div className="w-8 h-8 rounded-lg bg-muted/20 flex items-center justify-center shrink-0">
-                      <ShareNetwork
-                        size={18}
-                        weight="duotone"
-                        className="text-muted-foreground"
-                      />
-                    </div>
-                    <div className="flex flex-col items-start leading-tight">
-                      <span className="text-xs font-bold text-foreground">
-                        {t("header.tools.generateLink")}
-                      </span>
-                    </div>
-                  </button>
-                </div>
-              </div>
+              <ToolsDrawerContent />
             </SheetContent>
           </Sheet>
         </div>
       </header>
 
-      <div className="w-full lg:w-[480px] xl:w-[540px] flex-1 lg:h-full shrink-0 border-r bg-card/10 overflow-hidden relative flex flex-col text-left">
+      <div className="w-full lg:w-[480px] xl:w-[540px] lg:flex-none flex-1 lg:h-full shrink-0 border-r bg-card/10 overflow-hidden relative flex flex-col text-left">
         <ResumeForm
           key={locale}
           initialData={initialData || defaultData}
@@ -313,6 +500,30 @@ export function EditorView({
           groupId={groupId}
           onDataChange={handleDataChange}
           onIdGenerated={handleIdGenerated}
+          downloadButton={
+            <div className="lg:hidden w-full px-10 py-4 border-t bg-card/10">
+              <PDFDownloadLink
+                document={<ResumePDF data={data} colorTheme="#18181b" />}
+                fileName={`resume-${data.personalInfo.name || "lume"}.pdf`}
+              >
+                {({ loading }) => (
+                  <Button
+                    disabled={loading}
+                    className="w-full h-12 rounded-xl shadow-xl shadow-primary/20 gap-3 font-black uppercase tracking-widest text-xs"
+                  >
+                    {loading ? (
+                      <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    ) : (
+                      <FileArrowDown size={18} weight="duotone" />
+                    )}
+                    {loading
+                      ? t("header.actions.generatingPdf")
+                      : t("header.actions.downloadPdf")}
+                  </Button>
+                )}
+              </PDFDownloadLink>
+            </div>
+          }
         />
       </div>
 

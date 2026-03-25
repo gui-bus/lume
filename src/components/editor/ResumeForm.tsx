@@ -56,6 +56,7 @@ interface ResumeFormProps {
   groupId?: string;
   onDataChange: (data: ResumeData) => void;
   onIdGenerated: (id: string, groupId: string) => void;
+  downloadButton?: React.ReactNode;
 }
 
 const defaultValues: ResumeData = {
@@ -137,6 +138,7 @@ export function ResumeForm({
   groupId,
   onDataChange,
   onIdGenerated,
+  downloadButton,
 }: ResumeFormProps) {
   const t = useTranslations("common");
   const locale = useLocale();
@@ -1301,6 +1303,8 @@ export function ResumeForm({
           </motion.div>
         </AnimatePresence>
       </div>
+
+      {downloadButton}
 
       <div className="px-10 py-6 border-t bg-background/80 backdrop-blur-xl shrink-0 flex justify-between items-center">
         <Button
