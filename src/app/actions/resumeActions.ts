@@ -4,6 +4,7 @@ import prisma from "@/lib/prisma";
 import { ResumeData } from "@/types/resume";
 import { revalidatePath } from "next/cache";
 import { auth, currentUser } from "@clerk/nextjs/server";
+import crypto from "node:crypto";
 
 export async function saveResume(
   id: string | undefined,
@@ -20,19 +21,39 @@ export async function saveResume(
     throw new Error("Usuário não autenticado");
   }
 
-  // Sincronizar Usuário
-  await prisma.user.upsert({
-    where: { id: userId },
-    update: {
-      email: user.emailAddresses[0].emailAddress,
-      name: `${user.firstName} ${user.lastName}`.trim(),
-    },
-    create: {
-      id: userId,
-      email: user.emailAddresses[0].emailAddress,
-      name: `${user.firstName} ${user.lastName}`.trim(),
+  // Sincronizar Usuário de forma robusta
+  const email = user.emailAddresses[0].emailAddress;
+  const name = `${user.firstName} ${user.lastName}`.trim();
+
+  const existingUser = await prisma.user.findFirst({
+    where: {
+      OR: [{ id: userId }, { email }],
     },
   });
+
+  if (!existingUser) {
+    await prisma.user.create({
+      data: { id: userId, email, name },
+    });
+  } else if (existingUser.id !== userId) {
+    // Conflito: O e-mail existe sob outro ID. Migramos tudo para o novo ID do Clerk.
+    await prisma.$transaction([
+      prisma.resume.updateMany({
+        where: { userId: existingUser.id },
+        data: { userId: userId },
+      }),
+      prisma.user.delete({ where: { id: existingUser.id } }),
+      prisma.user.create({
+        data: { id: userId, email, name },
+      }),
+    ]);
+  } else {
+    // Mesmo ID, apenas atualizamos os dados se necessário
+    await prisma.user.update({
+      where: { id: userId },
+      data: { email, name },
+    });
+  }
 
   const finalGroupId = groupId || crypto.randomUUID();
 
