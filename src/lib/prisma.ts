@@ -1,7 +1,22 @@
+import { Pool, types } from "pg";
+import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "@prisma/client";
 
+// Forçar que campos numéricos do Postgres (como Int e Float) não sejam retornados como string
+types.setTypeParser(20, (val) => parseInt(val, 10));
+
 const prismaClientSingleton = () => {
-  return new PrismaClient();
+  const connectionString = process.env.DATABASE_URL;
+
+  const pool = new Pool({
+    connectionString,
+    ssl: {
+      rejectUnauthorized: false, // Necessário para conexões Neon/Vercel via pg
+    },
+  });
+
+  const adapter = new PrismaPg(pool);
+  return new PrismaClient({ adapter });
 };
 
 declare global {
