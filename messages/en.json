@@ -40,7 +40,8 @@
         "shareError": "Error generating share link.",
         "generatingPdf": "Generating...",
         "downloadPdf": "Download PDF",
-        "pdfShort": "PDF"
+        "pdfShort": "PDF",
+        "errorPdf": "Error generating PDF. Please try again."
       },
       "export": {
         "jsonFilename": "resume-{name}",

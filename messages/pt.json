@@ -40,7 +40,8 @@
         "shareError": "Erro ao gerar link de compartilhamento.",
         "generatingPdf": "Gerando...",
         "downloadPdf": "Baixar PDF",
-        "pdfShort": "PDF"
+        "pdfShort": "PDF",
+        "errorPdf": "Erro ao gerar PDF. Tente novamente."
       },
       "export": {
         "jsonFilename": "curriculo-{name}",

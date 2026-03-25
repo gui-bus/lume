@@ -52,8 +52,6 @@ import { saveResume, incrementDownload } from "@/app/actions/resumeActions";
 import { useTheme } from "@/components/theme-provider";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { motion } from "framer-motion";
-import { PDFDownloadLink } from "@react-pdf/renderer";
-import { ResumePDF } from "@/components/pdf/ResumePDF";
 import { cn } from "@/lib/utils";
 import { validateATS } from "@/lib/validations/ats-validator";
 import { checkStrongVerbs } from "@/lib/validations/spellchecker";
@@ -101,6 +99,40 @@ export function EditorView({
   const [resumeId, setResumeId] = useState<string | undefined>(serverResumeId);
   const [groupId, setGroupId] = useState<string | undefined>(serverGroupId);
   const [slug, setSlug] = useState<string>(initialSlug || "");
+  const [isGenerating, setIsGenerating] = useState(false);
+
+  const handleDownload = async () => {
+    if (!data) return;
+
+    setIsGenerating(true);
+
+    try {
+      // Importações dinâmicas para evitar problemas de SSR e reduzir o bundle inicial
+      const { pdf } = await import("@react-pdf/renderer");
+      const { ResumePDF } = await import("@/components/pdf/ResumePDF");
+
+      const blob = await pdf(
+        <ResumePDF data={data} colorTheme="#18181b" />,
+      ).toBlob();
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `resume-${data.personalInfo.name || "lume"}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+
+      if (resumeId) {
+        incrementDownload(resumeId);
+      }
+    } catch (error) {
+      console.error("Erro ao gerar PDF:", error);
+      toast.error(t("header.actions.errorPdf") || "Erro ao gerar PDF");
+    } finally {
+      setIsGenerating(false);
+    }
+  };
 
   const [mounted, setMounted] = useState(false);
   const [zoom, setZoom] = useState(0.8);
@@ -502,26 +534,20 @@ export function EditorView({
           onIdGenerated={handleIdGenerated}
           downloadButton={
             <div className="lg:hidden w-full px-10 py-4 border-t bg-card/10">
-              <PDFDownloadLink
-                document={<ResumePDF data={data} colorTheme="#18181b" />}
-                fileName={`resume-${data.personalInfo.name || "lume"}.pdf`}
+              <Button
+                disabled={isGenerating}
+                onClick={handleDownload}
+                className="w-full h-12 rounded-xl shadow-xl shadow-primary/20 gap-3 font-black uppercase tracking-widest text-xs"
               >
-                {({ loading }) => (
-                  <Button
-                    disabled={loading}
-                    className="w-full h-12 rounded-xl shadow-xl shadow-primary/20 gap-3 font-black uppercase tracking-widest text-xs"
-                  >
-                    {loading ? (
-                      <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                    ) : (
-                      <FileArrowDown size={18} weight="duotone" />
-                    )}
-                    {loading
-                      ? t("header.actions.generatingPdf")
-                      : t("header.actions.downloadPdf")}
-                  </Button>
+                {isGenerating ? (
+                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                ) : (
+                  <FileArrowDown size={18} weight="duotone" />
                 )}
-              </PDFDownloadLink>
+                {isGenerating
+                  ? t("header.actions.generatingPdf")
+                  : t("header.actions.downloadPdf")}
+              </Button>
             </div>
           }
         />
@@ -842,24 +868,21 @@ export function EditorView({
 
             <Separator orientation="vertical" className="h-4 bg-border/40" />
 
-            <PDFDownloadLink
-              document={<ResumePDF data={data} colorTheme="#18181b" />}
-              fileName={`resume-${data.personalInfo.name || "lume"}.pdf`}
+            <Button
+              size="sm"
+              onClick={handleDownload}
+              className="gap-2 rounded-full px-4 h-8 font-bold text-[10px] uppercase tracking-widest active:scale-95 transition-all shadow-lg shadow-primary/10"
+              disabled={isGenerating}
             >
-              {({ loading }) => (
-                <Button
-                  size="sm"
-                  onClick={() => resumeId && incrementDownload(resumeId)}
-                  className="gap-2 rounded-full px-4 h-8 font-bold text-[10px] uppercase tracking-widest active:scale-95 transition-all shadow-lg shadow-primary/10"
-                  disabled={loading}
-                >
-                  <FileArrowDown size={16} weight="duotone" />
-                  {loading
-                    ? t("header.actions.generatingPdf")
-                    : t("header.actions.pdfShort")}
-                </Button>
+              {isGenerating ? (
+                <div className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              ) : (
+                <FileArrowDown size={16} weight="duotone" />
               )}
-            </PDFDownloadLink>
+              {isGenerating
+                ? t("header.actions.generatingPdf")
+                : t("header.actions.pdfShort")}
+            </Button>
           </div>
           <div className="absolute inset-0 overflow-auto custom-scrollbar flex items-start justify-center p-12 bg-neutral-50 dark:bg-neutral-950/50">
             <div className="absolute inset-0 z-0 opacity-[0.03] dark:opacity-[0.05] pointer-events-none [background-image:radial-gradient(circle_at_center,#000_1px,transparent_1px)] [background-size:24px_24px] dark:[background-image:radial-gradient(circle_at_center,#fff_1px,transparent_1px)]" />
