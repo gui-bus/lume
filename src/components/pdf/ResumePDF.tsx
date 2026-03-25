@@ -10,20 +10,24 @@ import {
 } from "@react-pdf/renderer";
 import { ResumeData } from "@/types/resume";
 
-// Registrar fontes para garantir que o negrito funcione
+// Registrar fontes para garantir estabilidade máxima em produção
+// Roboto é a fonte com melhor suporte no motor do react-pdf
 Font.register({
-  family: "Inter",
+  family: "Roboto",
   fonts: [
     {
-      src: "https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiA.woff2",
+      src: "https://cdnjs.cloudflare.com/ajax/libs/ink/3.1.10/fonts/Roboto/roboto-light-webfont.ttf",
       fontWeight: "normal",
     },
     {
-      src: "https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuGKYAZ9hiA.woff2",
+      src: "https://cdnjs.cloudflare.com/ajax/libs/ink/3.1.10/fonts/Roboto/roboto-bold-webfont.ttf",
       fontWeight: "bold",
     },
   ],
 });
+
+// Desativar hifenização para evitar erros de cálculo de layout
+Font.registerHyphenationCallback((word) => [word]);
 
 const PX = 0.75;
 
@@ -31,7 +35,7 @@ const styles = StyleSheet.create({
   page: {
     padding: "25mm",
     backgroundColor: "#FFFFFF",
-    fontFamily: "Inter",
+    fontFamily: "Roboto",
     color: "#1e293b",
   },
 

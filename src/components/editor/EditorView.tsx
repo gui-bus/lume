@@ -124,9 +124,9 @@ export function EditorView({
       URL.revokeObjectURL(url);
 
       if (resumeId) {
-        incrementDownload(resumeId);
+        await incrementDownload(resumeId);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Erro ao gerar PDF:", error);
       toast.error(t("header.actions.errorPdf") || "Erro ao gerar PDF");
     } finally {
