@@ -192,6 +192,57 @@ export function ResumeView({ data, colorTheme = "#18181b" }: ResumeViewProps) {
             </section>
           )}
 
+          {languages?.length > 0 && (
+            <section>
+              <div className="flex items-center gap-4 mb-4">
+                <h2
+                  className="text-[10px] font-bold uppercase tracking-[0.2em]"
+                  style={{ color: colorTheme }}
+                >
+                  Idiomas
+                </h2>
+                <div className="flex-1 h-[0.5px] bg-slate-200" />
+              </div>
+              <div className="space-y-1.5">
+                {languages.map((l, i) => (
+                  <div key={i} className="flex gap-2 items-center text-[11px]">
+                    <span className="font-bold text-slate-700">{l.name}:</span>
+                    <span className="text-slate-500 uppercase text-[10px]">
+                      {l.level}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {certifications?.length > 0 && (
+            <section>
+              <div className="flex items-center gap-4 mb-4">
+                <h2
+                  className="text-[10px] font-bold uppercase tracking-[0.2em]"
+                  style={{ color: colorTheme }}
+                >
+                  Certificações
+                </h2>
+                <div className="flex-1 h-[0.5px] bg-slate-200" />
+              </div>
+              {certifications.map((c, i) => (
+                <div key={i} className="mb-3 last:mb-0">
+                  <div className="flex justify-between items-baseline">
+                    <h3 className="font-bold text-[12px] text-slate-900">
+                      {c.name}
+                    </h3>
+                    <span className="text-[10px] text-slate-400 font-bold uppercase">
+                      {c.date}
+                    </span>
+                  </div>
+                  <p className="text-slate-600 text-[11px]">{c.issuer}</p>
+                </div>
+              ))}
+            </section>
+          )}
+
           {projects?.length > 0 && (
             <section>
               <div className="flex items-center gap-4 mb-4">
@@ -233,6 +284,37 @@ export function ResumeView({ data, colorTheme = "#18181b" }: ResumeViewProps) {
                   {p.description && (
                     <p className="text-[11.5px] text-slate-600 leading-relaxed">
                       {p.description}
+                    </p>
+                  )}
+                </div>
+              ))}
+            </section>
+          )}
+
+          {volunteering?.length > 0 && (
+            <section>
+              <div className="flex items-center gap-4 mb-4">
+                <h2
+                  className="text-[10px] font-bold uppercase tracking-[0.2em]"
+                  style={{ color: colorTheme }}
+                >
+                  Voluntariado
+                </h2>
+                <div className="flex-1 h-[0.5px] bg-slate-200" />
+              </div>
+              {volunteering.map((v, i) => (
+                <div key={i} className="mb-4 last:mb-0">
+                  <div className="flex justify-between items-baseline">
+                    <h3 className="font-bold text-[13px] text-slate-900">
+                      {v.organization}
+                    </h3>
+                    <span className="text-[10px] text-slate-400 font-bold uppercase">
+                      {v.role}
+                    </span>
+                  </div>
+                  {v.description && (
+                    <p className="text-[11.5px] text-slate-600 leading-relaxed mt-1">
+                      {v.description}
                     </p>
                   )}
                 </div>
