@@ -192,9 +192,26 @@ const styles = StyleSheet.create({
 export const ResumePDF = ({
   data,
   colorTheme = "#18181b",
+  labels,
 }: {
   data: ResumeData;
   colorTheme?: string;
+  labels: {
+    title: string;
+    yourName: string;
+    portfolio: string;
+    experience: string;
+    education: string;
+    skills: string;
+    languages: string;
+    certifications: string;
+    projects: string;
+    volunteering: string;
+    current: string;
+    at: string;
+    repo: string;
+    demo: string;
+  };
 }) => {
   const {
     personalInfo,
@@ -216,7 +233,7 @@ export const ResumePDF = ({
 
   return (
     <Document
-      title={`Currículo - ${personalInfo.name || "Lume"}`}
+      title={`${labels.title} - ${personalInfo.name || "Lume"}`}
       author="Lume"
     >
       <Page size="A4" style={styles.page}>
@@ -228,7 +245,7 @@ export const ResumePDF = ({
               { color: colorTheme, textTransform: "uppercase" },
             ]}
           >
-            {personalInfo.name || "Seu Nome"}
+            {personalInfo.name || labels.yourName}
           </Text>
           <View style={styles.contactRow}>
             {personalInfo.email && (
@@ -241,7 +258,7 @@ export const ResumePDF = ({
                 <Text style={styles.bullet}>•</Text>
                 <Link
                   style={styles.link}
-                  src={`https://wa.me/${personalInfo.phone.replace(/\D/g, "")}?text=${encodeURIComponent("Vim pelo seu currículo")}`}
+                  src={`https://wa.me/${personalInfo.phone.replace(/\D/g, "")}?text=${encodeURIComponent(labels.demo === "Demo" ? "I saw your resume" : "Vim pelo seu currículo")}`}
                 >
                   {personalInfo.phone}
                 </Link>
@@ -273,7 +290,7 @@ export const ResumePDF = ({
               <>
                 <Text style={styles.bullet}>•</Text>
                 <Link style={styles.link} src={personalInfo.website}>
-                  PORTFÓLIO
+                  {labels.portfolio.toUpperCase()}
                 </Link>
               </>
             )}
@@ -286,13 +303,14 @@ export const ResumePDF = ({
         {/* 2. Experiência */}
         {experiences?.length > 0 && (
           <View>
-            {renderSectionTitle("Experiência Profissional")}
+            {renderSectionTitle(labels.experience)}
             {experiences.map((exp, i) => (
               <View key={i} style={styles.item} wrap={false}>
                 <View style={styles.itemHeader}>
                   <Text style={styles.itemTitle}>{exp.position}</Text>
                   <Text style={styles.itemDate}>
-                    {exp.startDate} — {exp.current ? "Presente" : exp.endDate}
+                    {exp.startDate} —{" "}
+                    {exp.current ? labels.current : exp.endDate}
                   </Text>
                 </View>
                 <View style={styles.itemSubHeader}>
@@ -314,12 +332,12 @@ export const ResumePDF = ({
         {/* 3. Educação */}
         {educations?.length > 0 && (
           <View>
-            {renderSectionTitle("Formação Acadêmica")}
+            {renderSectionTitle(labels.education)}
             {educations.map((edu, i) => (
               <View key={i} style={{ marginBottom: 12 * PX }} wrap={false}>
                 <View style={styles.itemHeader}>
                   <Text style={[styles.itemTitle, { fontSize: 13 * PX }]}>
-                    {edu.degree} em {edu.field}
+                    {edu.degree} {labels.at} {edu.field}
                   </Text>
                   <Text style={styles.itemDate}>{edu.graduationDate}</Text>
                 </View>
@@ -332,7 +350,7 @@ export const ResumePDF = ({
         {/* 4. Habilidades */}
         {skills?.length > 0 && (
           <View>
-            {renderSectionTitle("Habilidades")}
+            {renderSectionTitle(labels.skills)}
             <View style={styles.skillsGrid}>
               {skills.map((s, i) => (
                 <Text key={i} style={styles.skillTag}>
@@ -346,7 +364,7 @@ export const ResumePDF = ({
         {/* 5. Idiomas */}
         {languages?.length > 0 && (
           <View>
-            {renderSectionTitle("Idiomas")}
+            {renderSectionTitle(labels.languages)}
             <View style={{ marginBottom: 24 * PX }}>
               {languages.map((l, i) => (
                 <View key={i} style={styles.languageItem} wrap={false}>
@@ -361,7 +379,7 @@ export const ResumePDF = ({
         {/* 6. Certificações */}
         {certifications?.length > 0 && (
           <View>
-            {renderSectionTitle("Certificações")}
+            {renderSectionTitle(labels.certifications)}
             {certifications.map((c, i) => (
               <View key={i} style={{ marginBottom: 12 * PX }} wrap={false}>
                 <View style={styles.itemHeader}>
@@ -379,7 +397,7 @@ export const ResumePDF = ({
         {/* 7. Projetos */}
         {projects?.length > 0 && (
           <View>
-            {renderSectionTitle("Projetos")}
+            {renderSectionTitle(labels.projects)}
             {projects.map((proj, i) => (
               <View key={i} style={styles.item} wrap={false}>
                 <View style={styles.projectHeader}>
@@ -389,12 +407,12 @@ export const ResumePDF = ({
                   <View style={{ flexDirection: "row", gap: 12 * PX }}>
                     {proj.github && (
                       <Link style={styles.linkSmall} src={proj.github}>
-                        Repositório
+                        {labels.repo}
                       </Link>
                     )}
                     {proj.deploy && (
                       <Link style={styles.linkSmall} src={proj.deploy}>
-                        Demo
+                        {labels.demo}
                       </Link>
                     )}
                   </View>
@@ -410,7 +428,7 @@ export const ResumePDF = ({
         {/* 8. Voluntariado */}
         {volunteering?.length > 0 && (
           <View>
-            {renderSectionTitle("Voluntariado")}
+            {renderSectionTitle(labels.volunteering)}
             {volunteering.map((v, i) => (
               <View key={i} style={{ marginBottom: 12 * PX }} wrap={false}>
                 <View style={styles.itemHeader}>

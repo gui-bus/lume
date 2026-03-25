@@ -3,6 +3,7 @@
 import { ResumeData } from "@/types/resume";
 import ReactMarkdown from "react-markdown";
 import { useMemo } from "react";
+import { useTranslations } from "next-intl";
 
 interface ResumeViewProps {
   data: ResumeData;
@@ -10,6 +11,7 @@ interface ResumeViewProps {
 }
 
 export function ResumeView({ data, colorTheme = "#18181b" }: ResumeViewProps) {
+  const t = useTranslations("common.resume");
   const {
     personalInfo,
     experiences,
@@ -30,7 +32,7 @@ export function ResumeView({ data, colorTheme = "#18181b" }: ResumeViewProps) {
             className="text-[28px] font-bold tracking-tight leading-tight uppercase"
             style={{ color: colorTheme }}
           >
-            {personalInfo.name || "Seu Nome"}
+            {personalInfo.name || t("yourName")}
           </h1>
           <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] font-bold text-slate-500">
             {personalInfo.email && (
@@ -45,7 +47,7 @@ export function ResumeView({ data, colorTheme = "#18181b" }: ResumeViewProps) {
               <>
                 <span className="text-slate-300 font-medium">•</span>
                 <a
-                  href={`https://wa.me/${personalInfo.phone.replace(/\D/g, "")}?text=${encodeURIComponent("Vim pelo seu currículo")}`}
+                  href={`https://wa.me/${personalInfo.phone.replace(/\D/g, "")}?text=${encodeURIComponent(t("demo") === "Demo" ? "I saw your resume" : "Vim pelo seu currículo")}`}
                   target="_blank"
                   className="text-lume-blue hover:underline"
                 >
@@ -91,7 +93,7 @@ export function ResumeView({ data, colorTheme = "#18181b" }: ResumeViewProps) {
                   target="_blank"
                   className="text-lume-blue font-bold uppercase tracking-wider"
                 >
-                  Portfólio
+                  {t("portfolio")}
                 </a>
               </>
             )}
@@ -112,7 +114,7 @@ export function ResumeView({ data, colorTheme = "#18181b" }: ResumeViewProps) {
                   className="text-[10px] font-bold uppercase tracking-[0.2em]"
                   style={{ color: colorTheme }}
                 >
-                  Experiência Profissional
+                  {t("experience")}
                 </h2>
                 <div className="flex-1 h-[0.5px] bg-slate-200" />
               </div>
@@ -123,7 +125,8 @@ export function ResumeView({ data, colorTheme = "#18181b" }: ResumeViewProps) {
                       {exp.position}
                     </h3>
                     <span className="text-[10px] text-slate-400 font-bold uppercase">
-                      {exp.startDate} — {exp.current ? "Presente" : exp.endDate}
+                      {exp.startDate} —{" "}
+                      {exp.current ? t("current") : exp.endDate}
                     </span>
                   </div>
                   <div className="flex justify-between items-baseline">
@@ -148,7 +151,7 @@ export function ResumeView({ data, colorTheme = "#18181b" }: ResumeViewProps) {
                   className="text-[10px] font-bold uppercase tracking-[0.2em]"
                   style={{ color: colorTheme }}
                 >
-                  Formação Acadêmica
+                  {t("education")}
                 </h2>
                 <div className="flex-1 h-[0.5px] bg-slate-200" />
               </div>
@@ -156,7 +159,7 @@ export function ResumeView({ data, colorTheme = "#18181b" }: ResumeViewProps) {
                 <div key={i} className="mb-4 last:mb-0">
                   <div className="flex justify-between items-baseline">
                     <h3 className="font-bold text-[13px] text-slate-900">
-                      {edu.degree} em {edu.field}
+                      {edu.degree} {t("at")} {edu.field}
                     </h3>
                     <span className="text-[10px] text-slate-400 font-bold uppercase">
                       {edu.graduationDate}
@@ -175,7 +178,7 @@ export function ResumeView({ data, colorTheme = "#18181b" }: ResumeViewProps) {
                   className="text-[10px] font-bold uppercase tracking-[0.2em]"
                   style={{ color: colorTheme }}
                 >
-                  Habilidades
+                  {t("skills")}
                 </h2>
                 <div className="flex-1 h-[0.5px] bg-slate-200" />
               </div>
@@ -199,7 +202,7 @@ export function ResumeView({ data, colorTheme = "#18181b" }: ResumeViewProps) {
                   className="text-[10px] font-bold uppercase tracking-[0.2em]"
                   style={{ color: colorTheme }}
                 >
-                  Idiomas
+                  {t("languages")}
                 </h2>
                 <div className="flex-1 h-[0.5px] bg-slate-200" />
               </div>
@@ -223,7 +226,7 @@ export function ResumeView({ data, colorTheme = "#18181b" }: ResumeViewProps) {
                   className="text-[10px] font-bold uppercase tracking-[0.2em]"
                   style={{ color: colorTheme }}
                 >
-                  Certificações
+                  {t("certifications")}
                 </h2>
                 <div className="flex-1 h-[0.5px] bg-slate-200" />
               </div>
@@ -250,7 +253,7 @@ export function ResumeView({ data, colorTheme = "#18181b" }: ResumeViewProps) {
                   className="text-[10px] font-bold uppercase tracking-[0.2em]"
                   style={{ color: colorTheme }}
                 >
-                  Projetos
+                  {t("projects")}
                 </h2>
                 <div className="flex-1 h-[0.5px] bg-slate-200" />
               </div>
@@ -267,7 +270,7 @@ export function ResumeView({ data, colorTheme = "#18181b" }: ResumeViewProps) {
                           target="_blank"
                           className="text-blue-600"
                         >
-                          GitHub
+                          {t("repo")}
                         </a>
                       )}
                       {p.deploy && (
@@ -276,7 +279,7 @@ export function ResumeView({ data, colorTheme = "#18181b" }: ResumeViewProps) {
                           target="_blank"
                           className="text-blue-600"
                         >
-                          Demo
+                          {t("demo")}
                         </a>
                       )}
                     </div>
@@ -298,7 +301,7 @@ export function ResumeView({ data, colorTheme = "#18181b" }: ResumeViewProps) {
                   className="text-[10px] font-bold uppercase tracking-[0.2em]"
                   style={{ color: colorTheme }}
                 >
-                  Voluntariado
+                  {t("volunteering")}
                 </h2>
                 <div className="flex-1 h-[0.5px] bg-slate-200" />
               </div>
@@ -324,7 +327,7 @@ export function ResumeView({ data, colorTheme = "#18181b" }: ResumeViewProps) {
         </div>
       </div>
     );
-  }, [data, colorTheme]);
+  }, [data, colorTheme, t]);
 
   return (
     <div className="flex flex-col items-center gap-10 no-print">{content}</div>

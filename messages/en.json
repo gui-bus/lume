@@ -9,6 +9,22 @@
     "loading": "Loading...",
     "atsScore": "ATS Score: {score}%",
     "myResume": "My Resume",
+    "resume": {
+      "title": "Resume",
+      "yourName": "Your Name",
+      "portfolio": "Portfolio",
+      "experience": "Professional Experience",
+      "education": "Academic Background",
+      "skills": "Skills",
+      "languages": "Languages",
+      "certifications": "Certifications",
+      "projects": "Projects",
+      "volunteering": "Volunteer Work",
+      "current": "Present",
+      "at": "at",
+      "repo": "Repository",
+      "demo": "Demo"
+    },
     "step": "Step {number}",
     "header": {
       "jobMatch": {

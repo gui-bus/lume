@@ -93,6 +93,7 @@ export function EditorView({
   initialSlug,
 }: EditorViewProps) {
   const t = useTranslations("common");
+  const tResume = useTranslations("common.resume");
   const locale = useLocale();
 
   const [data, setData] = useState<ResumeData>(initialData || defaultData);
@@ -111,8 +112,25 @@ export function EditorView({
       const { pdf } = await import("@react-pdf/renderer");
       const { ResumePDF } = await import("@/components/pdf/ResumePDF");
 
+      const labels = {
+        title: tResume("title"),
+        yourName: tResume("yourName"),
+        portfolio: tResume("portfolio"),
+        experience: tResume("experience"),
+        education: tResume("education"),
+        skills: tResume("skills"),
+        languages: tResume("languages"),
+        certifications: tResume("certifications"),
+        projects: tResume("projects"),
+        volunteering: tResume("volunteering"),
+        current: tResume("current"),
+        at: tResume("at"),
+        repo: tResume("repo"),
+        demo: tResume("demo"),
+      };
+
       const blob = await pdf(
-        <ResumePDF data={data} colorTheme="#18181b" />,
+        <ResumePDF data={data} colorTheme="#18181b" labels={labels} />,
       ).toBlob();
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
