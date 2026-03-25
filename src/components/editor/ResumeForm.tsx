@@ -1,54 +1,52 @@
 "use client";
 
-import { useForm, useFieldArray } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { ResumeSchema } from "@/lib/validations/resume-schema";
-import { ResumeData } from "@/types/resume";
+import { saveResume } from "@/app/actions/resumeActions";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent } from "@/components/ui/card";
+import { useDebounce } from "@/hooks/use-debounce";
+import { cn } from "@/lib/utils";
+import { ResumeSchema } from "@/lib/validations/resume-schema";
+import { ResumeData } from "@/types/resume";
 import {
-  Plus,
-  Trash,
-  User,
-  Toolbox,
-  Briefcase,
-  GraduationCap,
-  GitBranch,
-  CaretRight,
-  CaretLeft,
-  Translate,
-  Certificate,
-  HandHeart,
-  PlusCircle,
-  DotsSixVertical,
-} from "@phosphor-icons/react";
-import {
-  DndContext,
   closestCenter,
+  DndContext,
+  DragEndEvent,
   KeyboardSensor,
   PointerSensor,
   useSensor,
   useSensors,
-  DragEndEvent,
 } from "@dnd-kit/core";
 import {
-  arrayMove,
   SortableContext,
   sortableKeyboardCoordinates,
-  verticalListSortingStrategy,
   useSortable,
+  verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { useEffect, useState, useCallback, useRef } from "react";
-import { useDebounce } from "@/hooks/use-debounce";
-import { saveResume } from "@/app/actions/resumeActions";
-import { motion, AnimatePresence } from "framer-motion";
-import { cn } from "@/lib/utils";
-import { useTranslations, useLocale } from "next-intl";
-import { toast } from "sonner";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  Briefcase,
+  CaretLeft,
+  CaretRight,
+  Certificate,
+  DotsSixVertical,
+  GitBranch,
+  GraduationCap,
+  HandHeart,
+  Plus,
+  PlusCircle,
+  Toolbox,
+  Translate,
+  Trash,
+  User,
+} from "@phosphor-icons/react";
+import { AnimatePresence, motion } from "framer-motion";
+import { useLocale, useTranslations } from "next-intl";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useFieldArray, useForm } from "react-hook-form";
 
 interface ResumeFormProps {
   initialData: ResumeData;

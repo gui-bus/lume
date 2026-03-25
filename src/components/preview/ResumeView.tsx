@@ -1,9 +1,9 @@
 "use client";
 
 import { ResumeData } from "@/types/resume";
-import ReactMarkdown from "react-markdown";
-import { useMemo } from "react";
 import { useTranslations } from "next-intl";
+import { useMemo } from "react";
+import ReactMarkdown from "react-markdown";
 
 interface ResumeViewProps {
   data: ResumeData;

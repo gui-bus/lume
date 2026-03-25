@@ -1,11 +1,11 @@
 "use client";
 
-import React, { useTransition } from "react";
-import ReactCountryFlag from "react-country-flag";
-import { useLocale } from "next-intl";
-import { useRouter, usePathname } from "@/i18n/navigation";
+import { usePathname, useRouter } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
+import { useLocale } from "next-intl";
 import { useSearchParams } from "next/navigation";
+import { useTransition } from "react";
+import ReactCountryFlag from "react-country-flag";
 
 export function LanguageSwitcher() {
   const [isPending, startTransition] = useTransition();

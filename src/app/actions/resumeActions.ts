@@ -2,8 +2,8 @@
 
 import prisma from "@/lib/prisma";
 import { ResumeData } from "@/types/resume";
-import { revalidatePath } from "next/cache";
 import { auth, currentUser } from "@clerk/nextjs/server";
+import { revalidatePath } from "next/cache";
 import crypto from "node:crypto";
 
 export async function saveResume(

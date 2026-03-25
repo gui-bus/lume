@@ -1,11 +1,10 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono, Manrope } from "next/font/google";
-import "../globals.css";
-import { cn } from "@/lib/utils";
 import { Providers } from "@/components/providers";
-import { getMessages, getTranslations } from "next-intl/server";
 import { routing } from "@/i18n/routing";
+import { cn } from "@/lib/utils";
+import { getMessages, getTranslations } from "next-intl/server";
+import { Geist, Geist_Mono, Manrope } from "next/font/google";
 import { notFound } from "next/navigation";
+import "../globals.css";
 
 const manrope = Manrope({ subsets: ["latin"], variable: "--font-sans" });
 

@@ -1,10 +1,10 @@
 import { getResume, incrementView } from "@/app/actions/resumeActions";
-import { ResumeView } from "@/components/preview/ResumeView";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
-import { ResumeData } from "@/types/resume";
-import { notFound } from "next/navigation";
-import { cookies } from "next/headers";
+import { ResumeView } from "@/components/preview/ResumeView";
 import { Logo } from "@/components/ui/Logo";
+import { ResumeData } from "@/types/resume";
+import { cookies } from "next/headers";
+import { notFound } from "next/navigation";
 
 interface SharePageProps {
   params: Promise<{ id: string; locale: string }>;

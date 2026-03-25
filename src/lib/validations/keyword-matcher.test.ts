@@ -1,6 +1,6 @@
-import { describe, it, expect } from "vitest";
-import { analyzeJobMatch } from "./keyword-matcher";
 import { ResumeData } from "@/types/resume";
+import { describe, expect, it } from "vitest";
+import { analyzeJobMatch } from "./keyword-matcher";
 
 describe("Keyword Matcher", () => {
   const mockResume: ResumeData = {

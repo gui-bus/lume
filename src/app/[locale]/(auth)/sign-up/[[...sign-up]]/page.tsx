@@ -1,12 +1,12 @@
 "use client";
 
-import { SignUp } from "@clerk/nextjs";
-import { ShieldCheck, Target, Moon, Sun, Sparkle } from "@phosphor-icons/react";
-import { motion } from "framer-motion";
-import { useTheme } from "@/components/theme-provider";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { useTheme } from "@/components/theme-provider";
 import { Button } from "@/components/ui/button";
-import { useTranslations, useLocale } from "next-intl";
+import { SignUp } from "@clerk/nextjs";
+import { Moon, Sun } from "@phosphor-icons/react";
+import { motion } from "framer-motion";
+import { useLocale, useTranslations } from "next-intl";
 import Image from "next/image";
 
 export default function SignUpPage() {

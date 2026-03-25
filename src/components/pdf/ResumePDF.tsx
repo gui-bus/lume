@@ -1,14 +1,13 @@
-import React from "react";
+import { ResumeData } from "@/types/resume";
 import {
+  Document,
+  Font,
+  Link,
   Page,
+  StyleSheet,
   Text,
   View,
-  Document,
-  StyleSheet,
-  Link,
-  Font,
 } from "@react-pdf/renderer";
-import { ResumeData } from "@/types/resume";
 
 // Registrar fontes para garantir estabilidade máxima em produção
 // Roboto é a fonte com melhor suporte no motor do react-pdf

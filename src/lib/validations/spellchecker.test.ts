@@ -1,6 +1,6 @@
-import { describe, it, expect } from "vitest";
-import { checkStrongVerbs } from "./spellchecker";
 import { ResumeData } from "@/types/resume";
+import { describe, expect, it } from "vitest";
+import { checkStrongVerbs } from "./spellchecker";
 
 describe("Spellchecker (Strong Verbs)", () => {
   const mockData: ResumeData = {

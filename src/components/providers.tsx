@@ -1,11 +1,11 @@
 "use client";
 
+import { Toaster } from "@/components/ui/sonner";
+import { enUS, ptBR } from "@clerk/localizations";
+import { ClerkProvider } from "@clerk/nextjs";
+import { AbstractIntlMessages, NextIntlClientProvider } from "next-intl";
 import * as React from "react";
 import { ThemeProvider } from "./theme-provider";
-import { NextIntlClientProvider, AbstractIntlMessages } from "next-intl";
-import { Toaster } from "@/components/ui/sonner";
-import { ClerkProvider } from "@clerk/nextjs";
-import { ptBR, enUS } from "@clerk/localizations";
 
 interface ProvidersProps {
   children: React.ReactNode;

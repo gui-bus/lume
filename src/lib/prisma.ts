@@ -1,6 +1,6 @@
-import { Pool, types } from "pg";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "@prisma/client";
+import { Pool, types } from "pg";
 
 // Forçar que campos numéricos do Postgres (como Int e Float) não sejam retornados como string
 types.setTypeParser(20, (val) => parseInt(val, 10));

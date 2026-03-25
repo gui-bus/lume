@@ -1,65 +1,64 @@
 "use client";
 
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { incrementDownload, saveResume } from "@/app/actions/resumeActions";
 import { ResumeForm } from "@/components/editor/ResumeForm";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { ResumeView } from "@/components/preview/ResumeView";
-import { ResumeData } from "@/types/resume";
+import { useTheme } from "@/components/theme-provider";
 import { Button } from "@/components/ui/button";
 import {
-  Moon,
-  Sun,
-  MagnifyingGlassPlus,
-  MagnifyingGlassMinus,
-  ShareNetwork,
-  FileArrowUp,
-  FileArrowDown,
-  ShieldCheck,
-  LinkedinLogo,
-  ChartLineUp,
-  Browser,
-  List,
-  Gear,
-  Info,
-  Target,
-} from "@phosphor-icons/react";
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Logo } from "@/components/ui/Logo";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { Separator } from "@/components/ui/separator";
 import {
   Sheet,
   SheetContent,
+  SheetDescription,
   SheetHeader,
   SheetTitle,
-  SheetDescription,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-  DialogDescription,
-} from "@/components/ui/dialog";
-import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { toast } from "sonner";
-import { saveResume, incrementDownload } from "@/app/actions/resumeActions";
-import { useTheme } from "@/components/theme-provider";
-import { LanguageSwitcher } from "@/components/LanguageSwitcher";
-import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { Logo } from "@/components/ui/Logo";
 import { validateATS } from "@/lib/validations/ats-validator";
-import { checkStrongVerbs } from "@/lib/validations/spellchecker";
-import { parseLinkedInPDF } from "@/lib/validations/linkedin-parser";
 import { analyzeJobMatch } from "@/lib/validations/keyword-matcher";
+import { parseLinkedInPDF } from "@/lib/validations/linkedin-parser";
+import { checkStrongVerbs } from "@/lib/validations/spellchecker";
+import { ResumeData } from "@/types/resume";
+import { Show, UserButton } from "@clerk/nextjs";
+import {
+  Browser,
+  FileArrowDown,
+  FileArrowUp,
+  Gear,
+  Info,
+  LinkedinLogo,
+  List,
+  MagnifyingGlassMinus,
+  MagnifyingGlassPlus,
+  Moon,
+  ShareNetwork,
+  ShieldCheck,
+  Sun,
+  Target,
+} from "@phosphor-icons/react";
+import { motion } from "framer-motion";
 import { useLocale, useTranslations } from "next-intl";
-import { UserButton, Show } from "@clerk/nextjs";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { toast } from "sonner";
 
 const defaultData: ResumeData = {
   personalInfo: {
