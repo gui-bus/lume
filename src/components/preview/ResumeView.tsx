@@ -27,12 +27,12 @@ export function ResumeView({ data, colorTheme = "#18181b" }: ResumeViewProps) {
         {/* Header */}
         <div className="flex flex-col gap-2 pb-8">
           <h1
-            className="text-[28px] font-bold tracking-tight leading-tight"
+            className="text-[28px] font-bold tracking-tight leading-tight uppercase"
             style={{ color: colorTheme }}
           >
             {personalInfo.name || "Seu Nome"}
           </h1>
-          <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] font-medium text-slate-500">
+          <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] font-bold text-slate-500">
             {personalInfo.email && (
               <a
                 href={`mailto:${personalInfo.email}`}
@@ -43,7 +43,7 @@ export function ResumeView({ data, colorTheme = "#18181b" }: ResumeViewProps) {
             )}
             {personalInfo.phone && (
               <>
-                <span className="text-slate-300">•</span>
+                <span className="text-slate-300 font-medium">•</span>
                 <a
                   href={`https://wa.me/${personalInfo.phone.replace(/\D/g, "")}?text=${encodeURIComponent("Vim pelo seu currículo")}`}
                   target="_blank"

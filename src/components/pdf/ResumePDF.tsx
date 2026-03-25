@@ -202,15 +202,17 @@ export const ResumePDF = ({
       <Page size="A4" style={styles.page}>
         {/* 1. Cabeçalho */}
         <View style={styles.header}>
-          <Text style={[styles.name, { color: colorTheme }]}>
+          <Text
+            style={[
+              styles.name,
+              { color: colorTheme, textTransform: "uppercase" },
+            ]}
+          >
             {personalInfo.name || "Seu Nome"}
           </Text>
           <View style={styles.contactRow}>
             {personalInfo.email && (
-              <Link
-                style={[styles.link, { fontWeight: "normal" }]}
-                src={`mailto:${personalInfo.email}`}
-              >
+              <Link style={styles.link} src={`mailto:${personalInfo.email}`}>
                 {personalInfo.email}
               </Link>
             )}
@@ -218,7 +220,7 @@ export const ResumePDF = ({
               <>
                 <Text style={styles.bullet}>•</Text>
                 <Link
-                  style={[styles.link, { fontWeight: "normal" }]}
+                  style={styles.link}
                   src={`https://wa.me/${personalInfo.phone.replace(/\D/g, "")}?text=${encodeURIComponent("Vim pelo seu currículo")}`}
                 >
                   {personalInfo.phone}
