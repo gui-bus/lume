@@ -183,19 +183,19 @@ export function ResumeView({ data, colorTheme = "#18181b" }: ResumeViewProps) {
                 </h2>
                 <div className="flex-1 h-[0.5px] bg-slate-200" />
               </div>
-              {courses.map((c, i) => (
-                <div key={i} className="mb-4 last:mb-0">
-                  <div className="flex justify-between items-baseline">
-                    <h3 className="font-bold text-[13px] text-slate-900">
+              <div className="grid grid-cols-2 gap-x-8 gap-y-2">
+                {courses.map((c, i) => (
+                  <div key={i} className="flex justify-between items-baseline">
+                    <h3 className="font-bold text-[12px] text-slate-900 truncate pr-2">
                       {c.name}
                     </h3>
-                    <span className="text-[10px] text-slate-400 font-bold uppercase">
+                    <span className="text-[9px] text-slate-400 font-bold uppercase whitespace-nowrap">
                       {c.startDate && `${c.startDate} — `}
                       {c.current ? t("current") : c.endDate}
                     </span>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </section>
           )}
 

@@ -388,19 +388,45 @@ export const ResumePDF = ({
         {courses?.length > 0 && (
           <View>
             {renderSectionTitle(labels.courses)}
-            {courses.map((c, i) => (
-              <View key={i} style={{ marginBottom: 12 * PX }} wrap={false}>
-                <View style={styles.itemHeader}>
-                  <Text style={[styles.itemTitle, { fontSize: 13 * PX }]}>
+            <View
+              style={{
+                flexDirection: "row",
+                flexWrap: "wrap",
+                marginBottom: 12 * PX,
+              }}
+            >
+              {courses.map((c, i) => (
+                <View
+                  key={i}
+                  style={{
+                    width: "50%",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "baseline",
+                    paddingRight: i % 2 === 0 ? 12 * PX : 0,
+                    paddingLeft: i % 2 !== 0 ? 12 * PX : 0,
+                    marginBottom: 4 * PX,
+                  }}
+                  wrap={false}
+                >
+                  <Text
+                    style={[
+                      styles.itemTitle,
+                      {
+                        fontSize: 11 * PX,
+                        maxWidth: "65%",
+                      },
+                    ]}
+                  >
                     {c.name}
                   </Text>
-                  <Text style={styles.itemDate}>
+                  <Text style={[styles.itemDate, { fontSize: 8 * PX }]}>
                     {c.startDate && `${c.startDate} — `}
                     {c.current ? labels.current : c.endDate}
                   </Text>
                 </View>
-              </View>
-            ))}
+              ))}
+            </View>
           </View>
         )}
 
