@@ -177,21 +177,37 @@ export function ResumeForm({
   const lastEmittedRef = useRef<string>(JSON.stringify(initialData));
   const latestDataRef = useRef<ResumeData>(watchedData);
 
+  // Sincroniza o form quando initialData mudar (importação/troca de locale)
+  useEffect(() => {
+    const currentInitialStr = JSON.stringify(initialData);
+    if (currentInitialStr !== lastEmittedRef.current) {
+      reset(initialData);
+      lastEmittedRef.current = currentInitialStr;
+      // Força atualização imediata do preview no parent
+      onDataChange(initialData);
+    }
+  }, [initialData, reset, onDataChange]);
+
   // Mantém apenas o ref interno atualizado
   useEffect(() => {
     latestDataRef.current = watchedData;
   }, [watchedData]);
 
-  // Gatilho único para Preview e Banco (Debounced)
+  // Gatilho para Preview Imediato
+  useEffect(() => {
+    onDataChange(watchedData);
+  }, [watchedData, onDataChange]);
+
+  // Gatilho para Banco (Debounced)
   useEffect(() => {
     const currentStr = JSON.stringify(debouncedData);
+    // Se o que temos agora é igual ao que salvamos/carregamos por último, ignora
     if (currentStr === lastEmittedRef.current) return;
 
-    // 1. Atualiza o Preview
-    onDataChange(debouncedData);
+    // Atualiza a referência do que foi emitido/salvo
     lastEmittedRef.current = currentStr;
 
-    // 2. Salva no Banco
+    // Salva no Banco
     const performSave = async () => {
       setIsSaving(true);
       try {
@@ -213,15 +229,7 @@ export function ResumeForm({
     };
 
     performSave();
-  }, [
-    debouncedData,
-    resumeId,
-    groupId,
-    locale,
-    onIdGenerated,
-    onDataChange,
-    t,
-  ]);
+  }, [debouncedData, resumeId, groupId, locale, onIdGenerated, t]);
 
   // Salvamento de segurança ao sair
   useEffect(() => {
