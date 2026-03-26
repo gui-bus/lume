@@ -107,7 +107,7 @@ export function EditorView({
 
     setIsGenerating(true);
 
-    try {
+    const downloadPromise = async () => {
       // Importações dinâmicas para evitar problemas de SSR e reduzir o bundle inicial
       const { pdf } = await import("@react-pdf/renderer");
       const { ResumePDF } = await import("@/components/pdf/ResumePDF");
@@ -151,9 +151,18 @@ export function EditorView({
       if (resumeId) {
         await incrementDownload(resumeId);
       }
-    } catch (error: any) {
+    };
+
+    toast.promise(downloadPromise(), {
+      loading: t("header.actions.generatingPdf") || "Gerando PDF...",
+      success: t("header.actions.successPdf") || "Download concluído!",
+      error: t("header.actions.errorPdf") || "Erro ao gerar PDF",
+    });
+
+    try {
+      await downloadPromise;
+    } catch (error) {
       console.error("Erro ao gerar PDF:", error);
-      toast.error(t("header.actions.errorPdf") || "Erro ao gerar PDF");
     } finally {
       setIsGenerating(false);
     }
@@ -211,37 +220,51 @@ export function EditorView({
   ) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    try {
-      toast.info(t("header.actions.importLinkedInInfo"));
+
+    const importPromise = async () => {
       const partialData = await parseLinkedInPDF(file);
       setData((prev) => ({
         ...prev,
         personalInfo: { ...prev.personalInfo, ...partialData.personalInfo },
       }));
-      toast.success(t("header.actions.importLinkedInSuccess"));
+    };
+
+    toast.promise(importPromise(), {
+      loading: t("header.actions.importLinkedInInfo"),
+      success: t("header.actions.importLinkedInSuccess"),
+      error: t("header.actions.importLinkedInError"),
+    });
+
+    try {
+      await importPromise;
     } catch (error) {
-      toast.error(t("header.actions.importLinkedInError"));
+      console.error("LinkedIn import error:", error);
     }
   };
 
   const handleExportJSON = () => {
-    const blob = new Blob([JSON.stringify(data, null, 2)], {
-      type: "application/json",
-    });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
+    try {
+      const blob = new Blob([JSON.stringify(data, null, 2)], {
+        type: "application/json",
+      });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
 
-    const userName = (data.personalInfo.name || "LUME")
-      .toUpperCase()
-      .replace(/\s+/g, "_");
-    link.download = `BACKUP_${userName}_${locale.toUpperCase()}.json`;
+      const userName = (data.personalInfo.name || "LUME")
+        .toUpperCase()
+        .replace(/\s+/g, "_");
+      link.download = `BACKUP_${userName}_${locale.toUpperCase()}.json`;
 
-    link.click();
+      link.click();
+      toast.success(t("header.actions.exportJsonSuccess"));
+    } catch (error) {
+      toast.error(t("header.actions.importJsonError"));
+    }
   };
 
   const handleShare = async () => {
-    try {
+    const sharePromise = async () => {
       const result = await saveResume(
         resumeId,
         data,
@@ -257,9 +280,18 @@ export function EditorView({
       const shareUrl = `${window.location.origin}/share/${result.slug || result.groupId}`;
 
       await navigator.clipboard.writeText(shareUrl);
-      toast.success(t("header.actions.shareSuccess"));
-    } catch (error: any) {
-      toast.error(error.message || t("header.actions.shareError"));
+    };
+
+    toast.promise(sharePromise(), {
+      loading: "Gerando link público...",
+      success: t("header.actions.shareSuccess"),
+      error: (err: any) => err.message || t("header.actions.shareError"),
+    });
+
+    try {
+      await sharePromise;
+    } catch (error) {
+      console.error("Share error:", error);
     }
   };
 
@@ -511,14 +543,34 @@ export function EditorView({
                   {t("header.healthCheck.title")}
                 </h3>
                 <div className="space-y-2 max-h-[30vh] overflow-y-auto">
-                  {atsResult?.suggestions.map((s, i) => (
-                    <div
-                      key={i}
-                      className="p-3 bg-muted/30 rounded-xl text-[10px] text-muted-foreground"
-                    >
-                      {s}
+                  {atsResult?.suggestions.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center py-6 px-4 text-center space-y-3 bg-emerald-500/5 rounded-2xl border border-emerald-500/10">
+                      <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center">
+                        <ShieldCheck
+                          size={24}
+                          weight="duotone"
+                          className="text-emerald-500"
+                        />
+                      </div>
+                      <div className="space-y-1">
+                        <p className="text-[11px] font-black uppercase tracking-widest text-emerald-600">
+                          {t("header.healthCheck.successTitle")}
+                        </p>
+                        <p className="text-[10px] text-muted-foreground leading-tight">
+                          {t("header.healthCheck.successDescription")}
+                        </p>
+                      </div>
                     </div>
-                  ))}
+                  ) : (
+                    atsResult?.suggestions.map((s, i) => (
+                      <div
+                        key={i}
+                        className="p-3 bg-muted/30 rounded-xl text-[10px] text-muted-foreground"
+                      >
+                        {s}
+                      </div>
+                    ))
+                  )}
                 </div>
               </PopoverContent>
             </Popover>

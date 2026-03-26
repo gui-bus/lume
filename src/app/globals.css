@@ -193,6 +193,28 @@
   @apply bg-muted-foreground/10 rounded-full hover:bg-muted-foreground/30;
 }
 
+/* Sonner Custom Styles */
+.cn-toast {
+  @apply !bg-background/80 !backdrop-blur-xl !border-border/50 !shadow-2xl !rounded-2xl !p-4 !gap-3 !flex !items-center !min-w-[300px] !font-sans !tracking-tight !text-sm !font-bold !text-foreground;
+  border: 1px solid var(--border) !important;
+}
+
+.cn-toast [data-icon] {
+  @apply !size-6 !flex !items-center !justify-center !rounded-xl !shrink-0;
+}
+
+.cn-toast[data-type="success"] [data-icon] {
+  @apply !bg-primary/10 !text-primary;
+}
+
+.cn-toast[data-type="error"] [data-icon] {
+  @apply !bg-destructive/10 !text-destructive;
+}
+
+.cn-toast[data-type="loading"] [data-icon] {
+  @apply !bg-muted/10 !text-muted-foreground;
+}
+
 /* Canvas Grid Background (estilo n8n/Figma) */
 .canvas-grid {
   background-color: var(--background);

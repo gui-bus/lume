@@ -50,7 +50,9 @@
         "title": "Resume Check-up",
         "atsStructure": "ATS Structure",
         "strongVerbs": "Action Verbs",
-        "suggestionsLabel": "Suggestions:"
+        "suggestionsLabel": "Suggestions:",
+        "successTitle": "Everything looks good!",
+        "successDescription": "Your resume is following the best practices."
       },
       "actions": {
         "importJsonSuccess": "Data imported successfully!",

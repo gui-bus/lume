@@ -50,7 +50,9 @@
         "title": "Check-up de Currículo",
         "atsStructure": "Estrutura ATS",
         "strongVerbs": "Verbos de Ação",
-        "suggestionsLabel": "Sugestões:"
+        "suggestionsLabel": "Sugestões:",
+        "successTitle": "Tudo certo!",
+        "successDescription": "Seu currículo está seguindo as melhores práticas."
       },
       "actions": {
         "importJsonSuccess": "Dados importados com sucesso!",

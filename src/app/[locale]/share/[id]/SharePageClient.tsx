@@ -47,7 +47,7 @@ export default function SharePageClient({
 
     setIsGenerating(true);
 
-    try {
+    const downloadPromise = async () => {
       const { pdf } = await import("@react-pdf/renderer");
       const { ResumePDF } = await import("@/components/pdf/ResumePDF");
 
@@ -92,10 +92,18 @@ export default function SharePageClient({
       URL.revokeObjectURL(url);
 
       await incrementDownload(resume.id);
-      toast.success(t("header.actions.successPdf") || "Download concluído!");
-    } catch (error: any) {
+    };
+
+    toast.promise(downloadPromise(), {
+      loading: t("header.actions.generatingPdf") || "Gerando PDF...",
+      success: t("header.actions.successPdf") || "Download concluído!",
+      error: t("header.actions.errorPdf") || "Erro ao gerar PDF",
+    });
+
+    try {
+      await downloadPromise;
+    } catch (error) {
       console.error("Erro ao gerar PDF:", error);
-      toast.error(t("header.actions.errorPdf") || "Erro ao gerar PDF");
     } finally {
       setIsGenerating(false);
     }
