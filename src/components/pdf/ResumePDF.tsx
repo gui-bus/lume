@@ -56,11 +56,11 @@ const styles = StyleSheet.create({
   },
   contactText: {
     fontSize: 11 * PX,
-    color: "#64748b",
+    color: "#475569",
   },
   contactTextMain: {
     fontSize: 11 * PX,
-    color: "#1e293b",
+    color: "#0f172a",
   },
   bullet: {
     fontSize: 11 * PX,
@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
   itemDate: {
     fontSize: 10 * PX,
     fontWeight: "bold",
-    color: "#94a3b8",
+    color: "#64748b",
     textTransform: "uppercase",
   },
   itemSubHeader: {
@@ -133,11 +133,11 @@ const styles = StyleSheet.create({
   company: {
     fontSize: 13 * PX,
     fontWeight: "bold",
-    color: "#475569",
+    color: "#334155",
   },
   location: {
     fontSize: 10 * PX,
-    color: "#94a3b8",
+    color: "#64748b",
   },
   description: {
     fontSize: 12 * PX,
@@ -172,12 +172,13 @@ const styles = StyleSheet.create({
   langName: {
     fontSize: 11 * PX,
     fontWeight: "bold",
-    color: "#334155",
+    color: "#1e293b",
+    textTransform: "uppercase",
   },
   langLevel: {
     fontSize: 10 * PX,
-    color: "#94a3b8",
-    textTransform: "uppercase",
+    color: "#475569",
+    fontWeight: "bold",
   },
 
   projectHeader: {
@@ -206,6 +207,7 @@ export const ResumePDF = ({
     certifications: string;
     projects: string;
     volunteering: string;
+    courses: string;
     current: string;
     at: string;
     repo: string;
@@ -221,6 +223,7 @@ export const ResumePDF = ({
     languages,
     certifications,
     volunteering,
+    courses,
   } = data;
 
   const renderSectionTitle = (title: string) => (
@@ -336,11 +339,33 @@ export const ResumePDF = ({
               <View key={i} style={{ marginBottom: 12 * PX }} wrap={false}>
                 <View style={styles.itemHeader}>
                   <Text style={[styles.itemTitle, { fontSize: 13 * PX }]}>
-                    {edu.degree} {labels.at} {edu.field}
+                    {edu.school}
                   </Text>
                   <Text style={styles.itemDate}>{edu.graduationDate}</Text>
                 </View>
-                <Text style={styles.company}>{edu.school}</Text>
+                <Text style={styles.company}>
+                  {edu.degree} {labels.at} {edu.field}
+                </Text>
+              </View>
+            ))}
+          </View>
+        )}
+
+        {/* 3.1. Cursos */}
+        {courses?.length > 0 && (
+          <View>
+            {renderSectionTitle(labels.courses)}
+            {courses.map((c, i) => (
+              <View key={i} style={{ marginBottom: 12 * PX }} wrap={false}>
+                <View style={styles.itemHeader}>
+                  <Text style={[styles.itemTitle, { fontSize: 13 * PX }]}>
+                    {c.name}
+                  </Text>
+                  <Text style={styles.itemDate}>
+                    {c.startDate && `${c.startDate} — `}
+                    {c.current ? labels.current : c.endDate}
+                  </Text>
+                </View>
               </View>
             ))}
           </View>
@@ -366,9 +391,22 @@ export const ResumePDF = ({
             {renderSectionTitle(labels.languages)}
             <View style={{ marginBottom: 24 * PX }}>
               {languages.map((l, i) => (
-                <View key={i} style={styles.languageItem} wrap={false}>
-                  <Text style={styles.langName}>{l.name}:</Text>
-                  <Text style={styles.langLevel}>{l.level}</Text>
+                <View
+                  key={i}
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    gap: 6 * PX,
+                    marginBottom: 4 * PX,
+                  }}
+                  wrap={false}
+                >
+                  <Text style={styles.langName}>{l.name} —</Text>
+                  <Text style={styles.langLevel}>
+                    {l.conversation.toUpperCase()} (CONVERSAÇÃO) |{" "}
+                    {l.writing.toUpperCase()} (ESCRITA) |{" "}
+                    {l.reading.toUpperCase()} (LEITURA)
+                  </Text>
                 </View>
               ))}
             </View>

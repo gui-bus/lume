@@ -21,6 +21,7 @@ export function ResumeView({ data, colorTheme = "#18181b" }: ResumeViewProps) {
     languages,
     certifications,
     volunteering,
+    courses,
   } = data;
 
   const content = useMemo(() => {
@@ -159,13 +160,42 @@ export function ResumeView({ data, colorTheme = "#18181b" }: ResumeViewProps) {
                 <div key={i} className="mb-4 last:mb-0">
                   <div className="flex justify-between items-baseline">
                     <h3 className="font-bold text-[13px] text-slate-900">
-                      {edu.degree} {t("at")} {edu.field}
+                      {edu.school}
                     </h3>
                     <span className="text-[10px] text-slate-400 font-bold uppercase">
                       {edu.graduationDate}
                     </span>
                   </div>
-                  <p className="text-slate-600 text-[12px]">{edu.school}</p>
+                  <p className="text-slate-600 text-[12px]">
+                    {edu.degree} {t("at")} {edu.field}
+                  </p>
+                </div>
+              ))}
+            </section>
+          )}
+
+          {courses?.length > 0 && (
+            <section>
+              <div className="flex items-center gap-4 mb-4">
+                <h2
+                  className="text-[10px] font-bold uppercase tracking-[0.2em]"
+                  style={{ color: colorTheme }}
+                >
+                  {t("courses")}
+                </h2>
+                <div className="flex-1 h-[0.5px] bg-slate-200" />
+              </div>
+              {courses.map((c, i) => (
+                <div key={i} className="mb-4 last:mb-0">
+                  <div className="flex justify-between items-baseline">
+                    <h3 className="font-bold text-[13px] text-slate-900">
+                      {c.name}
+                    </h3>
+                    <span className="text-[10px] text-slate-400 font-bold uppercase">
+                      {c.startDate && `${c.startDate} — `}
+                      {c.current ? t("current") : c.endDate}
+                    </span>
+                  </div>
                 </div>
               ))}
             </section>
@@ -208,11 +238,23 @@ export function ResumeView({ data, colorTheme = "#18181b" }: ResumeViewProps) {
               </div>
               <div className="space-y-1.5">
                 {languages.map((l, i) => (
-                  <div key={i} className="flex gap-2 items-center text-[11px]">
-                    <span className="font-bold text-slate-700">{l.name}:</span>
-                    <span className="text-slate-500 uppercase text-[10px]">
-                      {l.level}
+                  <div key={i} className="flex items-center gap-2">
+                    <span className="font-bold text-[11px] text-slate-700 uppercase">
+                      {l.name} —
                     </span>
+                    <div className="flex gap-2 text-[9px] text-slate-500 uppercase font-medium">
+                      <span>
+                        CONVERSAÇÃO: <b>{l.conversation}</b>
+                      </span>
+                      <span className="text-slate-300">|</span>
+                      <span>
+                        ESCRITA: <b>{l.writing}</b>
+                      </span>
+                      <span className="text-slate-300">|</span>
+                      <span>
+                        LEITURA: <b>{l.reading}</b>
+                      </span>
+                    </div>
                   </div>
                 ))}
               </div>

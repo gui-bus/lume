@@ -77,6 +77,7 @@ const defaultData: ResumeData = {
   languages: [],
   certifications: [],
   volunteering: [],
+  courses: [],
 };
 
 interface EditorViewProps {
@@ -96,7 +97,11 @@ export function EditorView({
   const tResume = useTranslations("common.resume");
   const locale = useLocale();
 
-  const [data, setData] = useState<ResumeData>(initialData || defaultData);
+  const [data, setData] = useState<ResumeData>(
+    initialData
+      ? { ...defaultData, ...initialData, courses: initialData.courses || [] }
+      : defaultData,
+  );
   const [resumeId, setResumeId] = useState<string | undefined>(serverResumeId);
   const [groupId, setGroupId] = useState<string | undefined>(serverGroupId);
   const [slug, setSlug] = useState<string>(initialSlug || "");
@@ -123,6 +128,7 @@ export function EditorView({
         certifications: tResume("certifications"),
         projects: tResume("projects"),
         volunteering: tResume("volunteering"),
+        courses: tResume("courses"),
         current: tResume("current"),
         at: tResume("at"),
         repo: tResume("repo"),

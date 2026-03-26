@@ -38,7 +38,15 @@ export const ProjectsSchema = z.object({
 
 export const LanguageSchema = z.object({
   name: z.string().min(1, "Idioma é obrigatório"),
-  level: z.enum(["Básico", "Intermediário", "Avançado", "Fluente", "Nativo"]),
+  conversation: z.enum([
+    "Básico",
+    "Intermediário",
+    "Avançado",
+    "Fluente",
+    "Nativo",
+  ]),
+  writing: z.enum(["Básico", "Intermediário", "Avançado", "Fluente", "Nativo"]),
+  reading: z.enum(["Básico", "Intermediário", "Avançado", "Fluente", "Nativo"]),
 });
 
 export const CertificationSchema = z.object({
@@ -56,6 +64,13 @@ export const VolunteerSchema = z.object({
   description: z.string().optional(),
 });
 
+export const CourseSchema = z.object({
+  name: z.string().min(1, "Nome do curso é obrigatório"),
+  startDate: z.string().optional(),
+  endDate: z.string().optional(),
+  current: z.boolean(),
+});
+
 export const ResumeSchema = z.object({
   personalInfo: PersonalInfoSchema,
   experiences: z.array(ExperienceSchema),
@@ -65,4 +80,5 @@ export const ResumeSchema = z.object({
   languages: z.array(LanguageSchema),
   certifications: z.array(CertificationSchema),
   volunteering: z.array(VolunteerSchema),
+  courses: z.array(CourseSchema),
 });

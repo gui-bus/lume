@@ -36,7 +36,9 @@ export interface Project {
 
 export interface Language {
   name: string;
-  level: "Básico" | "Intermediário" | "Avançado" | "Fluente" | "Nativo";
+  conversation: "Básico" | "Intermediário" | "Avançado" | "Fluente" | "Nativo";
+  writing: "Básico" | "Intermediário" | "Avançado" | "Fluente" | "Nativo";
+  reading: "Básico" | "Intermediário" | "Avançado" | "Fluente" | "Nativo";
 }
 
 export interface Certification {
@@ -54,6 +56,13 @@ export interface Volunteer {
   description?: string;
 }
 
+export interface Course {
+  name: string;
+  startDate?: string;
+  endDate?: string;
+  current: boolean;
+}
+
 export interface ResumeData {
   personalInfo: PersonalInfo;
   experiences: Experience[];
@@ -63,4 +72,5 @@ export interface ResumeData {
   languages: Language[];
   certifications: Certification[];
   volunteering: Volunteer[];
+  courses: Course[];
 }

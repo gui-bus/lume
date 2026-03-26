@@ -62,6 +62,7 @@ export default function SharePageClient({
         certifications: tResume("certifications"),
         projects: tResume("projects"),
         volunteering: tResume("volunteering"),
+        courses: tResume("courses"),
         current: tResume("current"),
         at: tResume("at"),
         repo: tResume("repo"),

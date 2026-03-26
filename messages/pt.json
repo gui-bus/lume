@@ -27,9 +27,11 @@
       "certifications": "Certificações",
       "projects": "Projetos",
       "volunteering": "Trabalho Voluntário",
+      "courses": "Cursos",
       "current": "Presente",
-      "at": "em",
+      "at": "-",
       "repo": "Repositório",
+
       "demo": "Demo"
     },
     "step": "Passo {number}",
@@ -204,6 +206,9 @@
           "title": "Idiomas",
           "label": "Idioma",
           "placeholder": "Ex: Inglês",
+          "conversation": "Conversação",
+          "writing": "Escrita",
+          "reading": "Leitura",
           "proficiency": "Nível de Proficiência",
           "add": "Adicionar Idioma",
           "levels": {
@@ -228,6 +233,14 @@
           "role": "Função",
           "description": "O que você fez?",
           "add": "Adicionar Voluntariado"
+        },
+        "courses": {
+          "title": "Cursos",
+          "name": "Nome do Curso",
+          "startDate": "Data de Início",
+          "endDate": "Data de Término / Conclusão",
+          "current": "Ainda cursando",
+          "add": "Adicionar Curso"
         }
       }
     }

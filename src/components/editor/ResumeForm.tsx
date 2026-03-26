@@ -75,6 +75,7 @@ const defaultValues: ResumeData = {
   languages: [],
   certifications: [],
   volunteering: [],
+  courses: [],
 };
 
 interface SortableItemProps {
@@ -271,6 +272,11 @@ export function ResumeForm({
     append: appendVol,
     remove: removeVol,
   } = useFieldArray({ control, name: "volunteering" });
+  const {
+    fields: courseFields,
+    append: appendCourse,
+    remove: removeCourse,
+  } = useFieldArray({ control, name: "courses" });
 
   const handleDragEnd = useCallback(
     (
@@ -1009,88 +1015,152 @@ export function ResumeForm({
                   </div>
                   <div className="grid gap-4">
                     {langFields.map((field, i) => (
-                      <div key={field.id} className="space-y-1">
-                        <div className="flex gap-4 items-end">
-                          <div className="flex-1 space-y-2 text-left">
+                      <div
+                        key={field.id}
+                        className="p-5 rounded-2xl bg-muted/20 border border-border/50 relative group space-y-4"
+                      >
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => removeLang(i)}
+                          className="absolute top-3 right-3 h-8 w-8 text-muted-foreground hover:text-destructive opacity-0 group-hover:opacity-100 transition-opacity"
+                        >
+                          <Trash size={16} weight="duotone" />
+                        </Button>
+
+                        <div className="flex flex-col gap-4">
+                          <div className="max-w-xs space-y-2 text-left">
                             <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
                               {t("editor.extras.languages.label")}
                             </Label>
                             <Input
                               {...register(`languages.${i}.name`)}
                               className={cn(
-                                "h-11 bg-muted/20 border-border/50",
+                                "h-10 bg-background/50 border-border/50 font-bold",
                                 errors.languages?.[i]?.name &&
                                   "border-destructive/50 focus-visible:ring-destructive/20",
                               )}
                             />
+                            {errors.languages?.[i]?.name && (
+                              <span className="text-[10px] text-destructive font-bold uppercase tracking-widest ml-1">
+                                {errors.languages[i].name.message}
+                              </span>
+                            )}
                           </div>
-                          <div className="flex-1 space-y-2 text-left">
-                            <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-                              {t("editor.extras.languages.proficiency")}
-                            </Label>
-                            <select
-                              {...register(`languages.${i}.level`)}
-                              className={cn(
-                                "w-full h-11 px-3 rounded-md bg-muted/20 border border-border/50 text-sm focus:outline-none focus:ring-1 focus:ring-primary",
-                                errors.languages?.[i]?.level &&
-                                  "border-destructive/50 focus:ring-destructive/20",
-                              )}
-                            >
-                              <option value="Básico">
-                                {t("editor.extras.languages.levels.basico")}
-                              </option>
-                              <option value="Intermediário">
-                                {t(
-                                  "editor.extras.languages.levels.intermediario",
+
+                          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 p-4 rounded-xl bg-background/30 border border-border/30">
+                            <div className="space-y-2 text-left">
+                              <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+                                <div className="w-1 h-1 rounded-full bg-primary" />
+                                {t("editor.extras.languages.conversation")}
+                              </Label>
+                              <select
+                                {...register(`languages.${i}.conversation`)}
+                                className={cn(
+                                  "w-full h-9 px-3 rounded-lg bg-background border border-border/50 text-[10px] font-bold focus:outline-none focus:ring-1 focus:ring-primary transition-all",
+                                  errors.languages?.[i]?.conversation &&
+                                    "border-destructive/50 focus:ring-destructive/20",
                                 )}
-                              </option>
-                              <option value="Avançado">
-                                {t("editor.extras.languages.levels.avancado")}
-                              </option>
-                              <option value="Fluente">
-                                {t("editor.extras.languages.levels.fluente")}
-                              </option>
-                              <option value="Nativo">
-                                {t("editor.extras.languages.levels.nativo")}
-                              </option>
-                            </select>
+                              >
+                                <option value="Básico">
+                                  {t("editor.extras.languages.levels.basico")}
+                                </option>
+                                <option value="Intermediário">
+                                  {t(
+                                    "editor.extras.languages.levels.intermediario",
+                                  )}
+                                </option>
+                                <option value="Avançado">
+                                  {t("editor.extras.languages.levels.avancado")}
+                                </option>
+                                <option value="Fluente">
+                                  {t("editor.extras.languages.levels.fluente")}
+                                </option>
+                                <option value="Nativo">
+                                  {t("editor.extras.languages.levels.nativo")}
+                                </option>
+                              </select>
+                            </div>
+                            <div className="space-y-2 text-left">
+                              <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+                                <div className="w-1 h-1 rounded-full bg-primary" />
+                                {t("editor.extras.languages.writing")}
+                              </Label>
+                              <select
+                                {...register(`languages.${i}.writing`)}
+                                className={cn(
+                                  "w-full h-9 px-3 rounded-lg bg-background border border-border/50 text-[10px] font-bold focus:outline-none focus:ring-1 focus:ring-primary transition-all",
+                                  errors.languages?.[i]?.writing &&
+                                    "border-destructive/50 focus:ring-destructive/20",
+                                )}
+                              >
+                                <option value="Básico">
+                                  {t("editor.extras.languages.levels.basico")}
+                                </option>
+                                <option value="Intermediário">
+                                  {t(
+                                    "editor.extras.languages.levels.intermediario",
+                                  )}
+                                </option>
+                                <option value="Avançado">
+                                  {t("editor.extras.languages.levels.avancado")}
+                                </option>
+                                <option value="Fluente">
+                                  {t("editor.extras.languages.levels.fluente")}
+                                </option>
+                                <option value="Nativo">
+                                  {t("editor.extras.languages.levels.nativo")}
+                                </option>
+                              </select>
+                            </div>
+                            <div className="space-y-2 text-left">
+                              <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+                                <div className="w-1 h-1 rounded-full bg-primary" />
+                                {t("editor.extras.languages.reading")}
+                              </Label>
+                              <select
+                                {...register(`languages.${i}.reading`)}
+                                className={cn(
+                                  "w-full h-9 px-3 rounded-lg bg-background border border-border/50 text-[10px] font-bold focus:outline-none focus:ring-1 focus:ring-primary transition-all",
+                                  errors.languages?.[i]?.reading &&
+                                    "border-destructive/50 focus:ring-destructive/20",
+                                )}
+                              >
+                                <option value="Básico">
+                                  {t("editor.extras.languages.levels.basico")}
+                                </option>
+                                <option value="Intermediário">
+                                  {t(
+                                    "editor.extras.languages.levels.intermediario",
+                                  )}
+                                </option>
+                                <option value="Avançado">
+                                  {t("editor.extras.languages.levels.avancado")}
+                                </option>
+                                <option value="Fluente">
+                                  {t("editor.extras.languages.levels.fluente")}
+                                </option>
+                                <option value="Nativo">
+                                  {t("editor.extras.languages.levels.nativo")}
+                                </option>
+                              </select>
+                            </div>
                           </div>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => removeLang(i)}
-                            className="h-11 w-11 text-muted-foreground hover:text-destructive"
-                          >
-                            <Trash size={18} weight="duotone" />
-                          </Button>
                         </div>
-                        {(errors.languages?.[i]?.name ||
-                          errors.languages?.[i]?.level) && (
-                          <div className="flex gap-4">
-                            <div className="flex-1">
-                              {errors.languages?.[i]?.name && (
-                                <span className="text-[10px] text-destructive font-bold uppercase tracking-widest ml-1">
-                                  {errors.languages[i].name.message}
-                                </span>
-                              )}
-                            </div>
-                            <div className="flex-1">
-                              {errors.languages?.[i]?.level && (
-                                <span className="text-[10px] text-destructive font-bold uppercase tracking-widest ml-1">
-                                  {errors.languages[i].level.message}
-                                </span>
-                              )}
-                            </div>
-                            <div className="w-11" />
-                          </div>
-                        )}
                       </div>
                     ))}
                     <Button
                       variant="outline"
                       size="sm"
                       className="w-fit"
-                      onClick={() => appendLang({ name: "", level: "Básico" })}
+                      onClick={() =>
+                        appendLang({
+                          name: "",
+                          conversation: "Básico",
+                          writing: "Básico",
+                          reading: "Básico",
+                        })
+                      }
                     >
                       <Plus size={16} weight="duotone" className="mr-2" />{" "}
                       {t("editor.extras.languages.add")}
@@ -1297,6 +1367,113 @@ export function ResumeForm({
                     >
                       <Plus size={16} weight="duotone" className="mr-2" />{" "}
                       {t("editor.extras.volunteering.add")}
+                    </Button>
+                  </div>
+                </div>
+
+                <div className="space-y-6">
+                  <div className="flex items-center gap-3">
+                    <GraduationCap
+                      size={24}
+                      weight="duotone"
+                      className="text-primary"
+                    />
+                    <h3 className="text-sm font-black uppercase tracking-widest">
+                      {t("editor.extras.courses.title")}
+                    </h3>
+                  </div>
+                  <div className="grid gap-4">
+                    {courseFields.map((field, i) => (
+                      <div
+                        key={field.id}
+                        className="p-4 rounded-xl bg-muted/20 border border-border/50 relative group"
+                      >
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => removeCourse(i)}
+                          className="absolute top-2 right-2 h-8 w-8 text-muted-foreground hover:text-destructive opacity-0 group-hover:opacity-100"
+                        >
+                          <Trash size={16} weight="duotone" />
+                        </Button>
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="space-y-2 col-span-2 text-left">
+                            <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                              {t("editor.extras.courses.name")}
+                            </Label>
+                            <Input
+                              {...register(`courses.${i}.name`)}
+                              className={cn(
+                                "h-10 bg-background/50",
+                                errors.courses?.[i]?.name &&
+                                  "border-destructive/50 focus-visible:ring-destructive/20",
+                              )}
+                            />
+                            {errors.courses?.[i]?.name && (
+                              <span className="text-[10px] text-destructive font-bold uppercase tracking-widest ml-1">
+                                {errors.courses[i].name.message}
+                              </span>
+                            )}
+                          </div>
+                          <div className="space-y-2 text-left">
+                            <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                              {t("editor.extras.courses.startDate")}
+                            </Label>
+                            <Input
+                              {...register(`courses.${i}.startDate`)}
+                              className={cn(
+                                "h-10 bg-background/50",
+                                errors.courses?.[i]?.startDate &&
+                                  "border-destructive/50 focus-visible:ring-destructive/20",
+                              )}
+                            />
+                          </div>
+                          <div className="space-y-2 text-left">
+                            <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                              {t("editor.extras.courses.endDate")}
+                            </Label>
+                            <Input
+                              {...register(`courses.${i}.endDate`)}
+                              disabled={watch(`courses.${i}.current`)}
+                              className={cn(
+                                "h-10 bg-background/50",
+                                errors.courses?.[i]?.endDate &&
+                                  "border-destructive/50 focus-visible:ring-destructive/20",
+                              )}
+                            />
+                          </div>
+                          <div className="col-span-2 flex items-center gap-3 bg-background/30 p-3 rounded-lg border border-border/30">
+                            <input
+                              type="checkbox"
+                              id={`course-cur-${i}`}
+                              {...register(`courses.${i}.current`)}
+                              className="w-4 h-4 rounded border-border bg-background accent-primary"
+                            />
+                            <Label
+                              htmlFor={`course-cur-${i}`}
+                              className="text-xs font-bold text-muted-foreground uppercase tracking-widest"
+                            >
+                              {t("editor.extras.courses.current")}
+                            </Label>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="w-fit"
+                      onClick={() =>
+                        appendCourse({
+                          name: "",
+                          startDate: "",
+                          endDate: "",
+                          current: false,
+                        })
+                      }
+                    >
+                      <Plus size={16} weight="duotone" className="mr-2" />{" "}
+                      {t("editor.extras.courses.add")}
                     </Button>
                   </div>
                 </div>
