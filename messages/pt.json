@@ -64,6 +64,7 @@
         "generatingPdf": "Gerando...",
         "downloadPdf": "Baixar PDF",
         "pdfShort": "PDF",
+        "successPdf": "Download concluído!",
         "errorPdf": "Erro ao gerar PDF. Tente novamente."
       },
       "export": {
