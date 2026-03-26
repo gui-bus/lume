@@ -448,26 +448,101 @@ export const ResumePDF = ({
         {languages?.length > 0 && (
           <View>
             {renderSectionTitle(labels.languages)}
-            <View style={{ marginBottom: 24 * PX }}>
-              {languages.map((l, i) => (
-                <View
-                  key={i}
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    gap: 6 * PX,
-                    marginBottom: 4 * PX,
-                  }}
-                  wrap={false}
-                >
-                  <Text style={styles.langName}>{l.name} —</Text>
-                  <Text style={styles.langLevel}>
-                    {l.conversation.toUpperCase()} (CONVERSAÇÃO) |{" "}
-                    {l.writing.toUpperCase()} (ESCRITA) |{" "}
-                    {l.reading.toUpperCase()} (LEITURA)
-                  </Text>
-                </View>
-              ))}
+            <View
+              style={{
+                flexDirection: "row",
+                flexWrap: "wrap",
+                marginBottom: 24 * PX,
+                gap: 20 * PX,
+              }}
+            >
+              {languages.map((l, i) => {
+                const getLevelDots = (level: string) => {
+                  const levels = [
+                    "Básico",
+                    "Intermediário",
+                    "Avançado",
+                    "Fluente",
+                    "Nativo",
+                  ];
+                  const index = levels.indexOf(level) + 1;
+                  return (
+                    <View style={{ flexDirection: "row", gap: 2 * PX }}>
+                      {[1, 2, 3, 4, 5].map((dot) => (
+                        <View
+                          key={dot}
+                          style={{
+                            width: 5 * PX,
+                            height: 5 * PX,
+                            borderRadius: 2.5 * PX,
+                            backgroundColor:
+                              dot <= index ? "#94a3b8" : "#f1f5f9",
+                          }}
+                        />
+                      ))}
+                    </View>
+                  );
+                };
+
+                const renderLevelLine = (label: string, value: string) => (
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      marginBottom: 2 * PX,
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontSize: 7 * PX,
+                        fontWeight: "bold",
+                        color: "#94a3b8",
+                        textTransform: "uppercase",
+                      }}
+                    >
+                      {label}
+                    </Text>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        gap: 6 * PX,
+                      }}
+                    >
+                      <Text
+                        style={{
+                          fontSize: 7 * PX,
+                          fontWeight: "bold",
+                          color: "#475569",
+                          textTransform: "uppercase",
+                        }}
+                      >
+                        {value}
+                      </Text>
+                      {getLevelDots(value)}
+                    </View>
+                  </View>
+                );
+
+                return (
+                  <View key={i} style={{ width: "45%" }} wrap={false}>
+                    <Text
+                      style={[
+                        styles.langName,
+                        { fontSize: 10 * PX, marginBottom: 4 * PX },
+                      ]}
+                    >
+                      {l.name}
+                    </Text>
+                    <View>
+                      {renderLevelLine("CONVERSAÇÃO", l.conversation)}
+                      {renderLevelLine("ESCRITA", l.writing)}
+                      {renderLevelLine("LEITURA", l.reading)}
+                    </View>
+                  </View>
+                );
+              })}
             </View>
           </View>
         )}

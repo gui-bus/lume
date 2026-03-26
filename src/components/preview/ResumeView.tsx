@@ -234,27 +234,74 @@ export function ResumeView({ data, colorTheme = "#18181b" }: ResumeViewProps) {
                 </h2>
                 <div className="flex-1 h-[0.5px] bg-slate-200" />
               </div>
-              <div className="space-y-1.5">
-                {languages.map((l, i) => (
-                  <div key={i} className="flex items-center gap-2">
-                    <span className="font-bold text-[11px] text-slate-700 uppercase">
-                      {l.name} —
-                    </span>
-                    <div className="flex gap-2 text-[9px] text-slate-500 uppercase font-medium">
-                      <span>
-                        CONVERSAÇÃO: <b>{l.conversation}</b>
+              <div className="grid grid-cols-2 gap-x-12 gap-y-4">
+                {languages.map((l, i) => {
+                  const getLevelDots = (level: string) => {
+                    const levels = [
+                      "Básico",
+                      "Intermediário",
+                      "Avançado",
+                      "Fluente",
+                      "Nativo",
+                    ];
+                    const index = levels.indexOf(level) + 1;
+                    return (
+                      <div className="flex gap-0.5">
+                        {[1, 2, 3, 4, 5].map((dot) => (
+                          <div
+                            key={dot}
+                            className={`w-1.5 h-1.5 rounded-full ${
+                              dot <= index ? "bg-slate-400" : "bg-slate-100"
+                            }`}
+                          />
+                        ))}
+                      </div>
+                    );
+                  };
+
+                  return (
+                    <div key={i} className="space-y-2">
+                      <span className="font-black text-[11px] text-slate-800 uppercase tracking-wider block mb-1">
+                        {l.name}
                       </span>
-                      <span className="text-slate-300">|</span>
-                      <span>
-                        ESCRITA: <b>{l.writing}</b>
-                      </span>
-                      <span className="text-slate-300">|</span>
-                      <span>
-                        LEITURA: <b>{l.reading}</b>
-                      </span>
+                      <div className="grid grid-cols-1 gap-1">
+                        <div className="flex items-center justify-between group">
+                          <span className="text-[8px] font-bold text-slate-400 uppercase tracking-tighter">
+                            Conversação
+                          </span>
+                          <div className="flex items-center gap-2">
+                            <span className="text-[8px] font-black text-slate-600 uppercase">
+                              {l.conversation}
+                            </span>
+                            {getLevelDots(l.conversation)}
+                          </div>
+                        </div>
+                        <div className="flex items-center justify-between group">
+                          <span className="text-[8px] font-bold text-slate-400 uppercase tracking-tighter">
+                            Escrita
+                          </span>
+                          <div className="flex items-center gap-2">
+                            <span className="text-[8px] font-black text-slate-600 uppercase">
+                              {l.writing}
+                            </span>
+                            {getLevelDots(l.writing)}
+                          </div>
+                        </div>
+                        <div className="flex items-center justify-between group">
+                          <span className="text-[8px] font-bold text-slate-400 uppercase tracking-tighter">
+                            Leitura
+                          </span>
+                          <div className="flex items-center gap-2">
+                            <span className="text-[8px] font-black text-slate-600 uppercase">
+                              {l.reading}
+                            </span>
+                            {getLevelDots(l.reading)}
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </section>
           )}
