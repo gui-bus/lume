@@ -67,6 +67,18 @@ export default function SharePageClient({
         at: tResume("at"),
         repo: tResume("repo"),
         demo: tResume("demo"),
+        langLabels: {
+          conversation: tResume("extras.languages.conversation"),
+          writing: tResume("extras.languages.writing"),
+          reading: tResume("extras.languages.reading"),
+        },
+        langLevels: {
+          basico: tResume("extras.languages.levels.basico"),
+          intermediario: tResume("extras.languages.levels.intermediario"),
+          avancado: tResume("extras.languages.levels.avancado"),
+          fluente: tResume("extras.languages.levels.fluente"),
+          nativo: tResume("extras.languages.levels.nativo"),
+        },
       };
 
       const blob = await pdf(

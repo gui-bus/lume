@@ -236,6 +236,18 @@ export function ResumeView({ data, colorTheme = "#18181b" }: ResumeViewProps) {
               </div>
               <div className="grid grid-cols-2 gap-x-12 gap-y-4">
                 {languages.map((l, i) => {
+                  const translateLevel = (level: string) => {
+                    const map: Record<string, string> = {
+                      Básico: "basico",
+                      Intermediário: "intermediario",
+                      Avançado: "avancado",
+                      Fluente: "fluente",
+                      Nativo: "nativo",
+                    };
+                    const key = map[level] || "basico";
+                    return t(`extras.languages.levels.${key}`);
+                  };
+
                   const getLevelDots = (level: string) => {
                     const levels = [
                       "Básico",
@@ -267,33 +279,33 @@ export function ResumeView({ data, colorTheme = "#18181b" }: ResumeViewProps) {
                       <div className="grid grid-cols-1 gap-1">
                         <div className="flex items-center justify-between group">
                           <span className="text-[8px] font-bold text-slate-400 uppercase tracking-tighter">
-                            Conversação
+                            {t("editor.extras.languages.conversation")}
                           </span>
                           <div className="flex items-center gap-2">
                             <span className="text-[8px] font-black text-slate-600 uppercase">
-                              {l.conversation}
+                              {translateLevel(l.conversation)}
                             </span>
                             {getLevelDots(l.conversation)}
                           </div>
                         </div>
                         <div className="flex items-center justify-between group">
                           <span className="text-[8px] font-bold text-slate-400 uppercase tracking-tighter">
-                            Escrita
+                            {t("editor.extras.languages.writing")}
                           </span>
                           <div className="flex items-center gap-2">
                             <span className="text-[8px] font-black text-slate-600 uppercase">
-                              {l.writing}
+                              {translateLevel(l.writing)}
                             </span>
                             {getLevelDots(l.writing)}
                           </div>
                         </div>
                         <div className="flex items-center justify-between group">
                           <span className="text-[8px] font-bold text-slate-400 uppercase tracking-tighter">
-                            Leitura
+                            {t("editor.extras.languages.reading")}
                           </span>
                           <div className="flex items-center gap-2">
                             <span className="text-[8px] font-black text-slate-600 uppercase">
-                              {l.reading}
+                              {translateLevel(l.reading)}
                             </span>
                             {getLevelDots(l.reading)}
                           </div>

@@ -212,6 +212,18 @@ export const ResumePDF = ({
     at: string;
     repo: string;
     demo: string;
+    langLabels: {
+      conversation: string;
+      writing: string;
+      reading: string;
+    };
+    langLevels: {
+      basico: string;
+      intermediario: string;
+      avancado: string;
+      fluente: string;
+      nativo: string;
+    };
   };
 }) => {
   const {
@@ -225,6 +237,18 @@ export const ResumePDF = ({
     volunteering,
     courses,
   } = data;
+
+  const translateLevel = (level: string) => {
+    const map: Record<string, keyof typeof labels.langLevels> = {
+      Básico: "basico",
+      Intermediário: "intermediario",
+      Avançado: "avancado",
+      Fluente: "fluente",
+      Nativo: "nativo",
+    };
+    const key = map[level] || "basico";
+    return labels.langLevels[key];
+  };
 
   const renderSectionTitle = (title: string) => (
     <View style={styles.sectionTitleContainer} wrap={false}>
@@ -536,9 +560,18 @@ export const ResumePDF = ({
                       {l.name}
                     </Text>
                     <View>
-                      {renderLevelLine("CONVERSAÇÃO", l.conversation)}
-                      {renderLevelLine("ESCRITA", l.writing)}
-                      {renderLevelLine("LEITURA", l.reading)}
+                      {renderLevelLine(
+                        labels.langLabels.conversation,
+                        translateLevel(l.conversation),
+                      )}
+                      {renderLevelLine(
+                        labels.langLabels.writing,
+                        translateLevel(l.writing),
+                      )}
+                      {renderLevelLine(
+                        labels.langLabels.reading,
+                        translateLevel(l.reading),
+                      )}
                     </View>
                   </View>
                 );
