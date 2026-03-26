@@ -1,18 +1,29 @@
-# <p align="center">LUME</p>
+# <p align="center"><img src="./public/LUME_WHITE.svg" alt="LUME Logo" width="200" /></p>
+
+<img src="https://github.com/gui-bus/portfolio/blob/master/public/projects/lume.png?raw=true" width="100%" alt="Thumbnail Lume">
 
 <p align="center">
-  <strong>O Construtor de Currículos de Próxima Geração: Performance, ATS e Design Premium.</strong>
-</p>
-
-<p align="center">
-  <img src="https://img.shields.io/badge/Next.js-16.2.1-black?style=flat-square&logo=next.js" alt="Next.js" />
-  <img src="https://img.shields.io/badge/React-19.2.4-blue?style=flat-square&logo=react" alt="React" />
-  <img src="https://img.shields.io/badge/Tailwind_CSS-v4-38B2AC?style=flat-square&logo=tailwind-css" alt="Tailwind CSS" />
-  <img src="https://img.shields.io/badge/TypeScript-5.x-blue?style=flat-square&logo=typescript" alt="TypeScript" />
-  <img src="https://img.shields.io/badge/Clerk-Auth-6C47FF?style=flat-square&logo=clerk" alt="Clerk" />
-  <img src="https://img.shields.io/badge/Prisma-ORM-2D3748?style=flat-square&logo=prisma" alt="Prisma" />
-  <img src="https://img.shields.io/badge/Vitest-4.x-yellow?style=flat-square&logo=vitest" alt="Vitest" />
-</p>
+  <img alt="React" height="60" width="60" src="https://github.com/gui-bus/TechIcons/blob/main/Dark/React.svg">
+  <img alt="NextJS" height="60" width="60" src="https://github.com/gui-bus/TechIcons/blob/main/Dark/NextJS.svg">
+  <img alt="Typescript" height="60" width="60" src="https://github.com/gui-bus/TechIcons/blob/main/Dark/Typescript.svg">
+  <img alt="Tailwind" height="60" width="60" src="https://github.com/gui-bus/TechIcons/blob/main/Dark/TailwindCSS.svg">
+  <img alt="ShadCN" height="60" width="60" src="https://github.com/gui-bus/TechIcons/blob/main/Dark/ShadCNUI.svg">
+  <img alt="Framer Motion" height="60" width="60" src="https://github.com/gui-bus/TechIcons/blob/main/Dark/Framer%20Motion.svg">
+  <img alt="Radix UI" height="60" width="60" src="https://github.com/gui-bus/TechIcons/blob/main/Dark/Radix.svg">
+  <img alt="Phosphor Icons" height="60" width="60" src="https://github.com/gui-bus/TechIcons/blob/main/Dark/Phosphor%20Icons.svg">
+  <img alt="React Hook Form" height="60" width="60" src="https://github.com/gui-bus/TechIcons/blob/main/Dark/React%20Hook%20Form.svg">
+  <img alt="Zod" height="60" width="60" src="https://github.com/gui-bus/TechIcons/blob/main/Dark/Zod.svg">
+  <img alt="Prisma" height="60" width="60" src="https://github.com/gui-bus/TechIcons/blob/main/Dark/PrismaORM.svg">
+  <img alt="Postgresql" height="60" width="60" src="https://github.com/gui-bus/TechIcons/blob/main/Dark/Postgresql.svg">
+  <img alt="Clerk" height="60" width="60" src="https://github.com/gui-bus/TechIcons/blob/main/Dark/Clerk.svg">
+  <img alt="Vercel" height="60" width="60" src="https://github.com/gui-bus/TechIcons/blob/main/Dark/Vercel.svg">
+  <img alt="Vitest" height="60" width="60" src="https://github.com/gui-bus/TechIcons/blob/main/Dark/Vitest.svg">
+  <img alt="Husky" height="60" width="60" src="https://github.com/gui-bus/TechIcons/blob/main/Dark/Husky.svg">
+  <img alt="Conventional Commits" height="60" width="60" src="https://github.com/gui-bus/TechIcons/blob/main/Dark/Conventional%20Commits.svg">
+  <img alt="Cursor" height="60" width="60" src="https://github.com/gui-bus/TechIcons/blob/main/Dark/Cursor.svg">
+  <img alt="Gemini" height="60" width="60" src="https://github.com/gui-bus/TechIcons/blob/main/Dark/Gemini.svg">
+  <img alt="Windsurf" height="60" width="60" src="https://github.com/gui-bus/TechIcons/blob/main/Dark/Windsurf.svg">
+</p
 
 ---
 
@@ -66,37 +77,3 @@ Interface de alta performance focada em UX:
 - **Prisma ORM:** Modelagem de dados type-safe e interações robustas com PostgreSQL.
 - **Clerk Auth:** Autenticação de nível empresarial com fluxos de onboarding customizados.
 - **Zod:** Validação rigorosa de dados em tempo real no formulário.
-
----
-
-## 🏗️ Estrutura Arquitetural
-
-```text
-├── src/
-│   ├── app/              # Rotas, Layouts e Server Actions
-│   ├── components/       # Componentes (Editor, PDF, UI, Preview)
-│   ├── hooks/            # Custom Hooks (Debounce, Theme)
-│   ├── i18n/             # Configuração de Internacionalização
-│   ├── lib/              # Core Logic (ATS, Spellcheck, Matcher)
-│   └── types/            # Definições TypeScript
-├── prisma/               # Schema e Migrações (Database)
-├── messages/             # Dicionários de Tradução (JSON)
-├── vitest.config.ts      # Configurações de Teste
-└── vitest-setup.ts       # Setup do Testing Library
-```
-
----
-
-## 🧪 Engenharia de Qualidade
-
-A estabilidade é garantida por testes automatizados integrados ao fluxo de desenvolvimento:
-
-- **Logic Tests:** Validação dos motores de cálculo e parsing.
-- **Component Tests:** Testes de integração de UI com React Testing Library.
-- **Pre-commit Automation:** Husky executando `vitest` antes de cada commit.
-
-Para rodar os testes:
-
-```bash
-pnpm test
-```
