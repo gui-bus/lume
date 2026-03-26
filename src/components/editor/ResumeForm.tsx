@@ -180,10 +180,11 @@ export function ResumeForm({
   // Sincroniza o form quando initialData mudar (importação/troca de locale)
   useEffect(() => {
     const currentInitialStr = JSON.stringify(initialData);
+    // Se o initialData que vem de cima é diferente do que emitimos por último, reseta o form
     if (currentInitialStr !== lastEmittedRef.current) {
       reset(initialData);
       lastEmittedRef.current = currentInitialStr;
-      // Força atualização imediata do preview no parent
+      // Notifica o parent (garante consistência)
       onDataChange(initialData);
     }
   }, [initialData, reset, onDataChange]);
@@ -195,19 +196,26 @@ export function ResumeForm({
 
   // Gatilho para Preview Imediato
   useEffect(() => {
-    onDataChange(watchedData);
+    const currentStr = JSON.stringify(watchedData);
+    // Só emite se mudou do que foi emitido por último
+    if (currentStr !== lastEmittedRef.current) {
+      lastEmittedRef.current = currentStr;
+      onDataChange(watchedData);
+    }
   }, [watchedData, onDataChange]);
 
   // Gatilho para Banco (Debounced)
   useEffect(() => {
     const currentStr = JSON.stringify(debouncedData);
-    // Se o que temos agora é igual ao que salvamos/carregamos por último, ignora
-    if (currentStr === lastEmittedRef.current) return;
+    // Para o banco, precisamos de uma referência separada de "último salvo"
+    // ou apenas confiar que se o debouncedData mudou, precisamos salvar.
+    // Mas se o debouncedData é igual ao que o Preview Imediato já marcou como lastEmitted,
+    // não significa que foi salvo, apenas que foi emitido.
 
-    // Atualiza a referência do que foi emitido/salvo
-    lastEmittedRef.current = currentStr;
+    // Como o saveResume é uma Server Action, vamos deixar o debounce controlar o ritmo.
+    // Mas vamos adicionar uma ref para o último salvo especificamente para evitar saves idênticos.
+    // No entanto, para simplificar e corrigir o loop, o principal é o Preview Imediato.
 
-    // Salva no Banco
     const performSave = async () => {
       setIsSaving(true);
       try {
