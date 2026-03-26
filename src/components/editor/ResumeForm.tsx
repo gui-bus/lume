@@ -261,21 +261,25 @@ export function ResumeForm({
     fields: langFields,
     append: appendLang,
     remove: removeLang,
+    move: moveLang,
   } = useFieldArray({ control, name: "languages" });
   const {
     fields: certFields,
     append: appendCert,
     remove: removeCert,
+    move: moveCert,
   } = useFieldArray({ control, name: "certifications" });
   const {
     fields: volFields,
     append: appendVol,
     remove: removeVol,
+    move: moveVol,
   } = useFieldArray({ control, name: "volunteering" });
   const {
     fields: courseFields,
     append: appendCourse,
     remove: removeCourse,
+    move: moveCourse,
   } = useFieldArray({ control, name: "courses" });
 
   const handleDragEnd = useCallback(
@@ -402,7 +406,6 @@ export function ResumeForm({
                 {t("editor.subtitle")}
               </p>
             </div>
-
             {activeStep === 0 && (
               <div className="space-y-8">
                 <div className="grid grid-cols-2 gap-6">
@@ -562,7 +565,6 @@ export function ResumeForm({
                 </div>
               </div>
             )}
-
             {activeStep === 1 && (
               <div className="space-y-6">
                 <Label className="text-sm font-bold uppercase tracking-widest text-muted-foreground">
@@ -595,7 +597,6 @@ export function ResumeForm({
                 </p>
               </div>
             )}
-
             {activeStep === 2 && (
               <div className="space-y-8">
                 <DndContext
@@ -754,7 +755,6 @@ export function ResumeForm({
                 </Button>
               </div>
             )}
-
             {activeStep === 3 && (
               <div className="space-y-8">
                 <DndContext
@@ -878,7 +878,6 @@ export function ResumeForm({
                 </Button>
               </div>
             )}
-
             {activeStep === 4 && (
               <div className="space-y-8">
                 <DndContext
@@ -999,7 +998,6 @@ export function ResumeForm({
                 </Button>
               </div>
             )}
-
             {activeStep === 5 && (
               <div className="space-y-12">
                 <div className="space-y-6">
@@ -1014,141 +1012,174 @@ export function ResumeForm({
                     </h3>
                   </div>
                   <div className="grid gap-4">
-                    {langFields.map((field, i) => (
-                      <div
-                        key={field.id}
-                        className="p-5 rounded-2xl bg-muted/20 border border-border/50 relative group space-y-4"
+                    <DndContext
+                      sensors={sensors}
+                      collisionDetection={closestCenter}
+                      onDragEnd={(e) => handleDragEnd(e, langFields, moveLang)}
+                    >
+                      <SortableContext
+                        items={langFields.map((f) => f.id)}
+                        strategy={verticalListSortingStrategy}
                       >
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => removeLang(i)}
-                          className="absolute top-3 right-3 h-8 w-8 text-muted-foreground hover:text-destructive opacity-0 group-hover:opacity-100 transition-opacity"
-                        >
-                          <Trash size={16} weight="duotone" />
-                        </Button>
+                        {langFields.map((field, i) => (
+                          <SortableItem
+                            key={field.id}
+                            id={field.id}
+                            onRemove={() => removeLang(i)}
+                          >
+                            <div className="p-5 pl-12 rounded-2xl bg-muted/20 border border-border/50 relative space-y-4">
+                              <div className="flex flex-col gap-4">
+                                <div className="max-w-xs space-y-2 text-left">
+                                  <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                                    {t("editor.extras.languages.label")}
+                                  </Label>
+                                  <Input
+                                    {...register(`languages.${i}.name`)}
+                                    className={cn(
+                                      "h-10 bg-background/50 border-border/50 font-bold",
+                                      errors.languages?.[i]?.name &&
+                                        "border-destructive/50 focus-visible:ring-destructive/20",
+                                    )}
+                                  />
+                                  {errors.languages?.[i]?.name && (
+                                    <span className="text-[10px] text-destructive font-bold uppercase tracking-widest ml-1">
+                                      {errors.languages[i].name.message}
+                                    </span>
+                                  )}
+                                </div>
 
-                        <div className="flex flex-col gap-4">
-                          <div className="max-w-xs space-y-2 text-left">
-                            <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-                              {t("editor.extras.languages.label")}
-                            </Label>
-                            <Input
-                              {...register(`languages.${i}.name`)}
-                              className={cn(
-                                "h-10 bg-background/50 border-border/50 font-bold",
-                                errors.languages?.[i]?.name &&
-                                  "border-destructive/50 focus-visible:ring-destructive/20",
-                              )}
-                            />
-                            {errors.languages?.[i]?.name && (
-                              <span className="text-[10px] text-destructive font-bold uppercase tracking-widest ml-1">
-                                {errors.languages[i].name.message}
-                              </span>
-                            )}
-                          </div>
-
-                          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 p-4 rounded-xl bg-background/30 border border-border/30">
-                            <div className="space-y-2 text-left">
-                              <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
-                                <div className="w-1 h-1 rounded-full bg-primary" />
-                                {t("editor.extras.languages.conversation")}
-                              </Label>
-                              <select
-                                {...register(`languages.${i}.conversation`)}
-                                className={cn(
-                                  "w-full h-9 px-3 rounded-lg bg-background border border-border/50 text-[10px] font-bold focus:outline-none focus:ring-1 focus:ring-primary transition-all",
-                                  errors.languages?.[i]?.conversation &&
-                                    "border-destructive/50 focus:ring-destructive/20",
-                                )}
-                              >
-                                <option value="Básico">
-                                  {t("editor.extras.languages.levels.basico")}
-                                </option>
-                                <option value="Intermediário">
-                                  {t(
-                                    "editor.extras.languages.levels.intermediario",
-                                  )}
-                                </option>
-                                <option value="Avançado">
-                                  {t("editor.extras.languages.levels.avancado")}
-                                </option>
-                                <option value="Fluente">
-                                  {t("editor.extras.languages.levels.fluente")}
-                                </option>
-                                <option value="Nativo">
-                                  {t("editor.extras.languages.levels.nativo")}
-                                </option>
-                              </select>
+                                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 p-4 rounded-xl bg-background/30 border border-border/30">
+                                  <div className="space-y-2 text-left">
+                                    <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+                                      <div className="w-1 h-1 rounded-full bg-primary" />
+                                      {t(
+                                        "editor.extras.languages.conversation",
+                                      )}
+                                    </Label>
+                                    <select
+                                      {...register(
+                                        `languages.${i}.conversation`,
+                                      )}
+                                      className={cn(
+                                        "w-full h-9 px-3 rounded-lg bg-background border border-border/50 text-[10px] font-bold focus:outline-none focus:ring-1 focus:ring-primary transition-all",
+                                        errors.languages?.[i]?.conversation &&
+                                          "border-destructive/50 focus:ring-destructive/20",
+                                      )}
+                                    >
+                                      <option value="Básico">
+                                        {t(
+                                          "editor.extras.languages.levels.basico",
+                                        )}
+                                      </option>
+                                      <option value="Intermediário">
+                                        {t(
+                                          "editor.extras.languages.levels.intermediario",
+                                        )}
+                                      </option>
+                                      <option value="Avançado">
+                                        {t(
+                                          "editor.extras.languages.levels.avancado",
+                                        )}
+                                      </option>
+                                      <option value="Fluente">
+                                        {t(
+                                          "editor.extras.languages.levels.fluente",
+                                        )}
+                                      </option>
+                                      <option value="Nativo">
+                                        {t(
+                                          "editor.extras.languages.levels.nativo",
+                                        )}
+                                      </option>
+                                    </select>
+                                  </div>
+                                  <div className="space-y-2 text-left">
+                                    <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+                                      <div className="w-1 h-1 rounded-full bg-primary" />
+                                      {t("editor.extras.languages.writing")}
+                                    </Label>
+                                    <select
+                                      {...register(`languages.${i}.writing`)}
+                                      className={cn(
+                                        "w-full h-9 px-3 rounded-lg bg-background border border-border/50 text-[10px] font-bold focus:outline-none focus:ring-1 focus:ring-primary transition-all",
+                                        errors.languages?.[i]?.writing &&
+                                          "border-destructive/50 focus:ring-destructive/20",
+                                      )}
+                                    >
+                                      <option value="Básico">
+                                        {t(
+                                          "editor.extras.languages.levels.basico",
+                                        )}
+                                      </option>
+                                      <option value="Intermediário">
+                                        {t(
+                                          "editor.extras.languages.levels.intermediario",
+                                        )}
+                                      </option>
+                                      <option value="Avançado">
+                                        {t(
+                                          "editor.extras.languages.levels.avancado",
+                                        )}
+                                      </option>
+                                      <option value="Fluente">
+                                        {t(
+                                          "editor.extras.languages.levels.fluente",
+                                        )}
+                                      </option>
+                                      <option value="Nativo">
+                                        {t(
+                                          "editor.extras.languages.levels.nativo",
+                                        )}
+                                      </option>
+                                    </select>
+                                  </div>
+                                  <div className="space-y-2 text-left">
+                                    <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+                                      <div className="w-1 h-1 rounded-full bg-primary" />
+                                      {t("editor.extras.languages.reading")}
+                                    </Label>
+                                    <select
+                                      {...register(`languages.${i}.reading`)}
+                                      className={cn(
+                                        "w-full h-9 px-3 rounded-lg bg-background border border-border/50 text-[10px] font-bold focus:outline-none focus:ring-1 focus:ring-primary transition-all",
+                                        errors.languages?.[i]?.reading &&
+                                          "border-destructive/50 focus:ring-destructive/20",
+                                      )}
+                                    >
+                                      <option value="Básico">
+                                        {t(
+                                          "editor.extras.languages.levels.basico",
+                                        )}
+                                      </option>
+                                      <option value="Intermediário">
+                                        {t(
+                                          "editor.extras.languages.levels.intermediario",
+                                        )}
+                                      </option>
+                                      <option value="Avançado">
+                                        {t(
+                                          "editor.extras.languages.levels.avancado",
+                                        )}
+                                      </option>
+                                      <option value="Fluente">
+                                        {t(
+                                          "editor.extras.languages.levels.fluente",
+                                        )}
+                                      </option>
+                                      <option value="Nativo">
+                                        {t(
+                                          "editor.extras.languages.levels.nativo",
+                                        )}
+                                      </option>
+                                    </select>
+                                  </div>
+                                </div>
+                              </div>
                             </div>
-                            <div className="space-y-2 text-left">
-                              <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
-                                <div className="w-1 h-1 rounded-full bg-primary" />
-                                {t("editor.extras.languages.writing")}
-                              </Label>
-                              <select
-                                {...register(`languages.${i}.writing`)}
-                                className={cn(
-                                  "w-full h-9 px-3 rounded-lg bg-background border border-border/50 text-[10px] font-bold focus:outline-none focus:ring-1 focus:ring-primary transition-all",
-                                  errors.languages?.[i]?.writing &&
-                                    "border-destructive/50 focus:ring-destructive/20",
-                                )}
-                              >
-                                <option value="Básico">
-                                  {t("editor.extras.languages.levels.basico")}
-                                </option>
-                                <option value="Intermediário">
-                                  {t(
-                                    "editor.extras.languages.levels.intermediario",
-                                  )}
-                                </option>
-                                <option value="Avançado">
-                                  {t("editor.extras.languages.levels.avancado")}
-                                </option>
-                                <option value="Fluente">
-                                  {t("editor.extras.languages.levels.fluente")}
-                                </option>
-                                <option value="Nativo">
-                                  {t("editor.extras.languages.levels.nativo")}
-                                </option>
-                              </select>
-                            </div>
-                            <div className="space-y-2 text-left">
-                              <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
-                                <div className="w-1 h-1 rounded-full bg-primary" />
-                                {t("editor.extras.languages.reading")}
-                              </Label>
-                              <select
-                                {...register(`languages.${i}.reading`)}
-                                className={cn(
-                                  "w-full h-9 px-3 rounded-lg bg-background border border-border/50 text-[10px] font-bold focus:outline-none focus:ring-1 focus:ring-primary transition-all",
-                                  errors.languages?.[i]?.reading &&
-                                    "border-destructive/50 focus:ring-destructive/20",
-                                )}
-                              >
-                                <option value="Básico">
-                                  {t("editor.extras.languages.levels.basico")}
-                                </option>
-                                <option value="Intermediário">
-                                  {t(
-                                    "editor.extras.languages.levels.intermediario",
-                                  )}
-                                </option>
-                                <option value="Avançado">
-                                  {t("editor.extras.languages.levels.avancado")}
-                                </option>
-                                <option value="Fluente">
-                                  {t("editor.extras.languages.levels.fluente")}
-                                </option>
-                                <option value="Nativo">
-                                  {t("editor.extras.languages.levels.nativo")}
-                                </option>
-                              </select>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
+                          </SortableItem>
+                        ))}
+                      </SortableContext>
+                    </DndContext>
                     <Button
                       variant="outline"
                       size="sm"
@@ -1180,80 +1211,86 @@ export function ResumeForm({
                     </h3>
                   </div>
                   <div className="grid gap-4">
-                    {certFields.map((field, i) => (
-                      <div
-                        key={field.id}
-                        className="p-4 rounded-xl bg-muted/20 border border-border/50 relative group"
+                    <DndContext
+                      sensors={sensors}
+                      collisionDetection={closestCenter}
+                      onDragEnd={(e) => handleDragEnd(e, certFields, moveCert)}
+                    >
+                      <SortableContext
+                        items={certFields.map((f) => f.id)}
+                        strategy={verticalListSortingStrategy}
                       >
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => removeCert(i)}
-                          className="absolute top-2 right-2 h-8 w-8 text-muted-foreground hover:text-destructive opacity-0 group-hover:opacity-100"
-                        >
-                          <Trash size={16} weight="duotone" />
-                        </Button>
-                        <div className="grid grid-cols-2 gap-4">
-                          <div className="space-y-2 text-left">
-                            <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-                              {t("editor.extras.certifications.name")}
-                            </Label>
-                            <Input
-                              {...register(`certifications.${i}.name`)}
-                              className={cn(
-                                "h-10 bg-background/50",
-                                errors.certifications?.[i]?.name &&
-                                  "border-destructive/50 focus-visible:ring-destructive/20",
-                              )}
-                            />
-                            {errors.certifications?.[i]?.name && (
-                              <span className="text-[10px] text-destructive font-bold uppercase tracking-widest ml-1">
-                                {errors.certifications[i].name.message}
-                              </span>
-                            )}
-                          </div>
-                          <div className="space-y-2 text-left">
-                            <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-                              {t("editor.extras.certifications.issuer")}
-                            </Label>
-                            <Input
-                              {...register(`certifications.${i}.issuer`)}
-                              className={cn(
-                                "h-10 bg-background/50",
-                                errors.certifications?.[i]?.issuer &&
-                                  "border-destructive/50 focus-visible:ring-destructive/20",
-                              )}
-                            />
-                            {errors.certifications?.[i]?.issuer && (
-                              <span className="text-[10px] text-destructive font-bold uppercase tracking-widest ml-1">
-                                {errors.certifications[i].issuer.message}
-                              </span>
-                            )}
-                          </div>
-                          <div className="space-y-2 col-span-2 text-left">
-                            <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-                              {t("editor.extras.certifications.date")}
-                            </Label>
-                            <Input
-                              {...register(`certifications.${i}.date`)}
-                              placeholder={t(
-                                "editor.extras.certifications.datePlaceholder",
-                              )}
-                              className={cn(
-                                "h-10 bg-background/50",
-                                errors.certifications?.[i]?.date &&
-                                  "border-destructive/50 focus-visible:ring-destructive/20",
-                              )}
-                            />
-                            {errors.certifications?.[i]?.date && (
-                              <span className="text-[10px] text-destructive font-bold uppercase tracking-widest ml-1">
-                                {errors.certifications[i].date.message}
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    ))}
+                        {certFields.map((field, i) => (
+                          <SortableItem
+                            key={field.id}
+                            id={field.id}
+                            onRemove={() => removeCert(i)}
+                          >
+                            <div className="p-4 pl-12 rounded-xl bg-muted/20 border border-border/50 relative">
+                              <div className="grid grid-cols-2 gap-4">
+                                <div className="space-y-2 text-left">
+                                  <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                                    {t("editor.extras.certifications.name")}
+                                  </Label>
+                                  <Input
+                                    {...register(`certifications.${i}.name`)}
+                                    className={cn(
+                                      "h-10 bg-background/50",
+                                      errors.certifications?.[i]?.name &&
+                                        "border-destructive/50 focus-visible:ring-destructive/20",
+                                    )}
+                                  />
+                                  {errors.certifications?.[i]?.name && (
+                                    <span className="text-[10px] text-destructive font-bold uppercase tracking-widest ml-1">
+                                      {errors.certifications[i].name.message}
+                                    </span>
+                                  )}
+                                </div>
+                                <div className="space-y-2 text-left">
+                                  <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                                    {t("editor.extras.certifications.issuer")}
+                                  </Label>
+                                  <Input
+                                    {...register(`certifications.${i}.issuer`)}
+                                    className={cn(
+                                      "h-10 bg-background/50",
+                                      errors.certifications?.[i]?.issuer &&
+                                        "border-destructive/50 focus-visible:ring-destructive/20",
+                                    )}
+                                  />
+                                  {errors.certifications?.[i]?.issuer && (
+                                    <span className="text-[10px] text-destructive font-bold uppercase tracking-widest ml-1">
+                                      {errors.certifications[i].issuer.message}
+                                    </span>
+                                  )}
+                                </div>
+                                <div className="space-y-2 col-span-2 text-left">
+                                  <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                                    {t("editor.extras.certifications.date")}
+                                  </Label>
+                                  <Input
+                                    {...register(`certifications.${i}.date`)}
+                                    placeholder={t(
+                                      "editor.extras.certifications.datePlaceholder",
+                                    )}
+                                    className={cn(
+                                      "h-10 bg-background/50",
+                                      errors.certifications?.[i]?.date &&
+                                        "border-destructive/50 focus-visible:ring-destructive/20",
+                                    )}
+                                  />
+                                  {errors.certifications?.[i]?.date && (
+                                    <span className="text-[10px] text-destructive font-bold uppercase tracking-widest ml-1">
+                                      {errors.certifications[i].date.message}
+                                    </span>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                          </SortableItem>
+                        ))}
+                      </SortableContext>
+                    </DndContext>
                     <Button
                       variant="outline"
                       size="sm"
@@ -1280,77 +1317,97 @@ export function ResumeForm({
                     </h3>
                   </div>
                   <div className="grid gap-4">
-                    {volFields.map((field, i) => (
-                      <div
-                        key={field.id}
-                        className="p-4 rounded-xl bg-muted/20 border border-border/50 relative group"
+                    <DndContext
+                      sensors={sensors}
+                      collisionDetection={closestCenter}
+                      onDragEnd={(e) => handleDragEnd(e, volFields, moveVol)}
+                    >
+                      <SortableContext
+                        items={volFields.map((f) => f.id)}
+                        strategy={verticalListSortingStrategy}
                       >
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => removeVol(i)}
-                          className="absolute top-2 right-2 h-8 w-8 text-muted-foreground hover:text-destructive opacity-0 group-hover:opacity-100"
-                        >
-                          <Trash size={16} weight="duotone" />
-                        </Button>
-                        <div className="grid grid-cols-2 gap-4">
-                          <div className="space-y-2 text-left">
-                            <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-                              {t("editor.extras.volunteering.organization")}
-                            </Label>
-                            <Input
-                              {...register(`volunteering.${i}.organization`)}
-                              className={cn(
-                                "h-10 bg-background/50",
-                                errors.volunteering?.[i]?.organization &&
-                                  "border-destructive/50 focus-visible:ring-destructive/20",
-                              )}
-                            />
-                            {errors.volunteering?.[i]?.organization && (
-                              <span className="text-[10px] text-destructive font-bold uppercase tracking-widest ml-1">
-                                {errors.volunteering[i].organization.message}
-                              </span>
-                            )}
-                          </div>
-                          <div className="space-y-2 text-left">
-                            <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-                              {t("editor.extras.volunteering.role")}
-                            </Label>
-                            <Input
-                              {...register(`volunteering.${i}.role`)}
-                              className={cn(
-                                "h-10 bg-background/50",
-                                errors.volunteering?.[i]?.role &&
-                                  "border-destructive/50 focus-visible:ring-destructive/20",
-                              )}
-                            />
-                            {errors.volunteering?.[i]?.role && (
-                              <span className="text-[10px] text-destructive font-bold uppercase tracking-widest ml-1">
-                                {errors.volunteering[i].role.message}
-                              </span>
-                            )}
-                          </div>
-                          <div className="col-span-2 space-y-2 text-left">
-                            <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-                              {t("editor.extras.volunteering.description")}
-                            </Label>
-                            <Textarea
-                              {...register(`volunteering.${i}.description`)}
-                              className={cn(
-                                "min-h-[100px] bg-background/50",
-                                errors.volunteering?.[i]?.description &&
-                                  "border-destructive/50 focus-visible:ring-destructive/20",
-                              )}
-                            />
-                            {errors.volunteering?.[i]?.description && (
-                              <span className="text-[10px] text-destructive font-bold uppercase tracking-widest ml-1">
-                                {errors.volunteering[i].description.message}
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    ))}
+                        {volFields.map((field, i) => (
+                          <SortableItem
+                            key={field.id}
+                            id={field.id}
+                            onRemove={() => removeVol(i)}
+                          >
+                            <div className="p-4 pl-12 rounded-xl bg-muted/20 border border-border/50 relative">
+                              <div className="grid grid-cols-2 gap-4">
+                                <div className="space-y-2 text-left">
+                                  <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                                    {t(
+                                      "editor.extras.volunteering.organization",
+                                    )}
+                                  </Label>
+                                  <Input
+                                    {...register(
+                                      `volunteering.${i}.organization`,
+                                    )}
+                                    className={cn(
+                                      "h-10 bg-background/50",
+                                      errors.volunteering?.[i]?.organization &&
+                                        "border-destructive/50 focus-visible:ring-destructive/20",
+                                    )}
+                                  />
+                                  {errors.volunteering?.[i]?.organization && (
+                                    <span className="text-[10px] text-destructive font-bold uppercase tracking-widest ml-1">
+                                      {
+                                        errors.volunteering[i].organization
+                                          .message
+                                      }
+                                    </span>
+                                  )}
+                                </div>
+                                <div className="space-y-2 text-left">
+                                  <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                                    {t("editor.extras.volunteering.role")}
+                                  </Label>
+                                  <Input
+                                    {...register(`volunteering.${i}.role`)}
+                                    className={cn(
+                                      "h-10 bg-background/50",
+                                      errors.volunteering?.[i]?.role &&
+                                        "border-destructive/50 focus-visible:ring-destructive/20",
+                                    )}
+                                  />
+                                  {errors.volunteering?.[i]?.role && (
+                                    <span className="text-[10px] text-destructive font-bold uppercase tracking-widest ml-1">
+                                      {errors.volunteering[i].role.message}
+                                    </span>
+                                  )}
+                                </div>
+                                <div className="col-span-2 space-y-2 text-left">
+                                  <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                                    {t(
+                                      "editor.extras.volunteering.description",
+                                    )}
+                                  </Label>
+                                  <Textarea
+                                    {...register(
+                                      `volunteering.${i}.description`,
+                                    )}
+                                    className={cn(
+                                      "min-h-[100px] bg-background/50",
+                                      errors.volunteering?.[i]?.description &&
+                                        "border-destructive/50 focus-visible:ring-destructive/20",
+                                    )}
+                                  />
+                                  {errors.volunteering?.[i]?.description && (
+                                    <span className="text-[10px] text-destructive font-bold uppercase tracking-widest ml-1">
+                                      {
+                                        errors.volunteering[i].description
+                                          .message
+                                      }
+                                    </span>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                          </SortableItem>
+                        ))}
+                      </SortableContext>
+                    </DndContext>
                     <Button
                       variant="outline"
                       size="sm"
@@ -1383,82 +1440,90 @@ export function ResumeForm({
                     </h3>
                   </div>
                   <div className="grid gap-4">
-                    {courseFields.map((field, i) => (
-                      <div
-                        key={field.id}
-                        className="p-4 rounded-xl bg-muted/20 border border-border/50 relative group"
+                    <DndContext
+                      sensors={sensors}
+                      collisionDetection={closestCenter}
+                      onDragEnd={(e) =>
+                        handleDragEnd(e, courseFields, moveCourse)
+                      }
+                    >
+                      <SortableContext
+                        items={courseFields.map((f) => f.id)}
+                        strategy={verticalListSortingStrategy}
                       >
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => removeCourse(i)}
-                          className="absolute top-2 right-2 h-8 w-8 text-muted-foreground hover:text-destructive opacity-0 group-hover:opacity-100"
-                        >
-                          <Trash size={16} weight="duotone" />
-                        </Button>
-                        <div className="grid grid-cols-2 gap-4">
-                          <div className="space-y-2 col-span-2 text-left">
-                            <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-                              {t("editor.extras.courses.name")}
-                            </Label>
-                            <Input
-                              {...register(`courses.${i}.name`)}
-                              className={cn(
-                                "h-10 bg-background/50",
-                                errors.courses?.[i]?.name &&
-                                  "border-destructive/50 focus-visible:ring-destructive/20",
-                              )}
-                            />
-                            {errors.courses?.[i]?.name && (
-                              <span className="text-[10px] text-destructive font-bold uppercase tracking-widest ml-1">
-                                {errors.courses[i].name.message}
-                              </span>
-                            )}
-                          </div>
-                          <div className="space-y-2 text-left">
-                            <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-                              {t("editor.extras.courses.startDate")}
-                            </Label>
-                            <Input
-                              {...register(`courses.${i}.startDate`)}
-                              className={cn(
-                                "h-10 bg-background/50",
-                                errors.courses?.[i]?.startDate &&
-                                  "border-destructive/50 focus-visible:ring-destructive/20",
-                              )}
-                            />
-                          </div>
-                          <div className="space-y-2 text-left">
-                            <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-                              {t("editor.extras.courses.endDate")}
-                            </Label>
-                            <Input
-                              {...register(`courses.${i}.endDate`)}
-                              disabled={watch(`courses.${i}.current`)}
-                              className={cn(
-                                "h-10 bg-background/50",
-                                errors.courses?.[i]?.endDate &&
-                                  "border-destructive/50 focus-visible:ring-destructive/20",
-                              )}
-                            />
-                          </div>
-                          <div className="col-span-2 flex items-center gap-3 bg-background/30 p-3 rounded-lg border border-border/30">
-                            <input
-                              type="checkbox"
-                              id={`course-cur-${i}`}
-                              {...register(`courses.${i}.current`)}
-                              className="w-4 h-4 rounded border-border bg-background accent-primary"
-                            />
-                            <Label
-                              htmlFor={`course-cur-${i}`}
-                              className="text-xs font-bold text-muted-foreground uppercase tracking-widest"
-                            >
-                              {t("editor.extras.courses.current")}
-                            </Label>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
+                        {courseFields.map((field, i) => (
+                          <SortableItem
+                            key={field.id}
+                            id={field.id}
+                            onRemove={() => removeCourse(i)}
+                          >
+                            <div className="p-4 pl-12 rounded-xl bg-muted/20 border border-border/50 relative">
+                              <div className="grid grid-cols-2 gap-4">
+                                <div className="space-y-2 col-span-2 text-left">
+                                  <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                                    {t("editor.extras.courses.name")}
+                                  </Label>
+                                  <Input
+                                    {...register(`courses.${i}.name`)}
+                                    className={cn(
+                                      "h-10 bg-background/50",
+                                      errors.courses?.[i]?.name &&
+                                        "border-destructive/50 focus-visible:ring-destructive/20",
+                                    )}
+                                  />
+                                  {errors.courses?.[i]?.name && (
+                                    <span className="text-[10px] text-destructive font-bold uppercase tracking-widest ml-1">
+                                      {errors.courses[i].name.message}
+                                    </span>
+                                  )}
+                                </div>
+                                <div className="space-y-2 text-left">
+                                  <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                                    {t("editor.extras.courses.startDate")}
+                                  </Label>
+                                  <Input
+                                    {...register(`courses.${i}.startDate`)}
+                                    className={cn(
+                                      "h-10 bg-background/50",
+                                      errors.courses?.[i]?.startDate &&
+                                        "border-destructive/50 focus-visible:ring-destructive/20",
+                                    )}
+                                  />
+                                </div>
+                                <div className="space-y-2 text-left">
+                                  <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                                    {t("editor.extras.courses.endDate")}
+                                  </Label>
+                                  <Input
+                                    {...register(`courses.${i}.endDate`)}
+                                    disabled={watch(`courses.${i}.current`)}
+                                    className={cn(
+                                      "h-10 bg-background/50",
+                                      errors.courses?.[i]?.endDate &&
+                                        "border-destructive/50 focus-visible:ring-destructive/20",
+                                    )}
+                                  />
+                                </div>
+                                <div className="col-span-2 flex items-center gap-3 bg-background/30 p-3 rounded-lg border border-border/30">
+                                  <input
+                                    type="checkbox"
+                                    id={`course-cur-${i}`}
+                                    {...register(`courses.${i}.current`)}
+                                    className="w-4 h-4 rounded border-border bg-background accent-primary"
+                                  />
+                                  <Label
+                                    htmlFor={`course-cur-${i}`}
+                                    className="text-xs font-bold text-muted-foreground uppercase tracking-widest"
+                                  >
+                                    {t("editor.extras.courses.current")}
+                                  </Label>
+                                </div>
+                              </div>
+                            </div>
+                          </SortableItem>
+                        ))}
+                      </SortableContext>
+                    </DndContext>
                     <Button
                       variant="outline"
                       size="sm"
@@ -1478,7 +1543,7 @@ export function ResumeForm({
                   </div>
                 </div>
               </div>
-            )}
+            )}{" "}
           </motion.div>
         </AnimatePresence>
       </div>
