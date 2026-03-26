@@ -33,7 +33,7 @@ import {
 } from "@/components/ui/sheet";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
-import { validateATS } from "@/lib/validations/ats-validator";
+import { validateATS } from "@/lib/validations/atsValidator";
 import { analyzeJobMatch } from "@/lib/validations/keyword-matcher";
 import { parseLinkedInPDF } from "@/lib/validations/linkedin-parser";
 import { checkStrongVerbs } from "@/lib/validations/spellchecker";
@@ -562,14 +562,18 @@ export function EditorView({
                       </div>
                     </div>
                   ) : (
-                    atsResult?.suggestions.map((s, i) => (
-                      <div
-                        key={i}
-                        className="p-3 bg-muted/30 rounded-xl text-[10px] text-muted-foreground"
-                      >
-                        {t(`header.healthCheck.suggestions.${s}`)}
-                      </div>
-                    ))
+                    atsResult?.checks
+                      .filter((c) => c.status !== "success")
+                      .map((check, i) => (
+                        <div
+                          key={i}
+                          className="p-3 bg-muted/30 rounded-xl text-[10px] text-muted-foreground"
+                        >
+                          {t(
+                            `header.healthCheck.checks.${check.id}.${check.status}`,
+                          )}
+                        </div>
+                      ))
                   )}
                 </div>
               </PopoverContent>
@@ -709,14 +713,18 @@ export function EditorView({
                   {t("header.healthCheck.title")}
                 </h3>
                 <div className="space-y-2 max-h-[40vh] overflow-y-auto custom-scrollbar">
-                  {atsResult?.suggestions.map((s, i) => (
-                    <div
-                      key={i}
-                      className="p-3 bg-muted/30 rounded-xl text-[11px] text-muted-foreground border border-border/20"
-                    >
-                      {s}
-                    </div>
-                  ))}
+                  {atsResult?.checks
+                    .filter((c) => c.status !== "success")
+                    .map((check, i) => (
+                      <div
+                        key={i}
+                        className="p-3 bg-muted/30 rounded-xl text-[11px] text-muted-foreground border border-border/20"
+                      >
+                        {t(
+                          `header.healthCheck.checks.${check.id}.${check.status}`,
+                        )}
+                      </div>
+                    ))}
                 </div>
               </PopoverContent>
             </Popover>

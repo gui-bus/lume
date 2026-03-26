@@ -53,14 +53,29 @@
         "suggestionsLabel": "Suggestions:",
         "successTitle": "Everything looks good!",
         "successDescription": "Your resume is following the best practices.",
-        "suggestions": {
-          "summary": "Add a professional summary with at least 50 characters.",
-          "contact": "Make sure to include contact email and phone.",
-          "experience_low": "Consider adding more than one professional experience.",
-          "experience_none": "Add at least two professional experiences.",
-          "skills": "List at least 5 relevant technical skills.",
-          "length_short": "Your resume seems too short. Add more details.",
-          "length_long": "Your resume is too long. Try to be more concise."
+        "checks": {
+          "summary": {
+            "success": "Well-structured professional summary.",
+            "error": "Add a summary with at least 50 characters."
+          },
+          "contact": {
+            "success": "Complete contact information.",
+            "error": "Include contact email and phone."
+          },
+          "experience": {
+            "success": "Good amount of professional experience.",
+            "warning": "Consider adding more than one experience.",
+            "error": "Add at least two professional experiences."
+          },
+          "skills": {
+            "success": "Technical skills well listed.",
+            "error": "List at least 5 relevant skills."
+          },
+          "length": {
+            "success": "Ideal length for reading.",
+            "warning": "Content too long, try to be more concise.",
+            "error": "Content too short, add more details."
+          }
         }
       },
       "actions": {

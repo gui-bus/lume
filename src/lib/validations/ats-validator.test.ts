@@ -1,6 +1,6 @@
 import { ResumeData } from "@/types/resume";
 import { describe, expect, it } from "vitest";
-import { validateATS } from "./ats-validator";
+import { validateATS } from "./atsValidator";
 
 describe("ATS Validator", () => {
   const mockData: ResumeData = {
