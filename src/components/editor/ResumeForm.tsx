@@ -175,6 +175,7 @@ export function ResumeForm({
   const debouncedData = useDebounce(watchedData, 500);
 
   const lastEmittedRef = useRef<string>(JSON.stringify(initialData));
+  const lastSavedRef = useRef<string>(JSON.stringify(initialData));
   const latestDataRef = useRef<ResumeData>(watchedData);
 
   // Sincroniza o form quando initialData mudar (importação/troca de locale)
@@ -184,6 +185,7 @@ export function ResumeForm({
     if (currentInitialStr !== lastEmittedRef.current) {
       reset(initialData);
       lastEmittedRef.current = currentInitialStr;
+      lastSavedRef.current = currentInitialStr;
       // Notifica o parent (garante consistência)
       onDataChange(initialData);
     }
@@ -207,14 +209,16 @@ export function ResumeForm({
   // Gatilho para Banco (Debounced)
   useEffect(() => {
     const currentStr = JSON.stringify(debouncedData);
-    // Para o banco, precisamos de uma referência separada de "último salvo"
-    // ou apenas confiar que se o debouncedData mudou, precisamos salvar.
-    // Mas se o debouncedData é igual ao que o Preview Imediato já marcou como lastEmitted,
-    // não significa que foi salvo, apenas que foi emitido.
 
-    // Como o saveResume é uma Server Action, vamos deixar o debounce controlar o ritmo.
-    // Mas vamos adicionar uma ref para o último salvo especificamente para evitar saves idênticos.
-    // No entanto, para simplificar e corrigir o loop, o principal é o Preview Imediato.
+    // IMPORTANTE: Só salva se for diferente do último salvo
+    if (currentStr === lastSavedRef.current) return;
+
+    // Não salva se o nome estiver vazio (estado inicial/reset)
+    if (
+      !debouncedData.personalInfo.name &&
+      debouncedData.experiences.length === 0
+    )
+      return;
 
     const performSave = async () => {
       setIsSaving(true);
@@ -226,6 +230,10 @@ export function ResumeForm({
           locale,
           groupId,
         );
+
+        // Atualiza o ref do último salvo com SUCESSO
+        lastSavedRef.current = currentStr;
+
         if (result.id !== resumeId || result.groupId !== groupId) {
           onIdGenerated(result.id, result.groupId);
         }
@@ -238,7 +246,6 @@ export function ResumeForm({
 
     performSave();
   }, [debouncedData, resumeId, groupId, locale, onIdGenerated, t]);
-
   // Salvamento de segurança ao sair
   useEffect(() => {
     return () => {
