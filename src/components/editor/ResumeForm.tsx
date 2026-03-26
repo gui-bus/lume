@@ -45,6 +45,7 @@ import {
 } from "@phosphor-icons/react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useLocale, useTranslations } from "next-intl";
+import { parseAsInteger, useQueryState } from "nuqs";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 
@@ -140,7 +141,10 @@ export function ResumeForm({
 }: ResumeFormProps) {
   const t = useTranslations("common");
   const locale = useLocale();
-  const [activeStep, setActiveStep] = useState(0);
+  const [activeStep, setActiveStep] = useQueryState(
+    "step",
+    parseAsInteger.withDefault(0),
+  );
   const [isSaving, setIsSaving] = useState(false);
 
   const sensors = useSensors(

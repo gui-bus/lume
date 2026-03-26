@@ -4,6 +4,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { enUS, ptBR } from "@clerk/localizations";
 import { ClerkProvider } from "@clerk/nextjs";
 import { AbstractIntlMessages, NextIntlClientProvider } from "next-intl";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 import * as React from "react";
 import { ThemeProvider } from "./theme-provider";
 
@@ -24,7 +25,7 @@ export function Providers({ children, messages, locale }: ProvidersProps) {
           locale={locale}
           timeZone="America/Sao_Paulo"
         >
-          {children}
+          <NuqsAdapter>{children}</NuqsAdapter>
           <Toaster />
         </NextIntlClientProvider>
       </ThemeProvider>

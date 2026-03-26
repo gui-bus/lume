@@ -3,6 +3,7 @@ import { EditorView } from "@/components/editor/EditorView";
 import { ResumeData } from "@/types/resume";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
+import { Suspense } from "react";
 
 export default async function Page({
   params,
@@ -49,11 +50,13 @@ export default async function Page({
   }
 
   return (
-    <EditorView
-      initialData={initialData || undefined}
-      resumeId={resumeId}
-      groupId={groupId}
-      initialSlug={initialSlug}
-    />
+    <Suspense fallback={null}>
+      <EditorView
+        initialData={initialData || undefined}
+        resumeId={resumeId}
+        groupId={groupId}
+        initialSlug={initialSlug}
+      />
+    </Suspense>
   );
 }
