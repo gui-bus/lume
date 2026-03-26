@@ -1,5 +1,6 @@
 # <p align="center"><img src="./public/LUME_WHITE.svg" alt="LUME Logo" width="200" /></p>
 
+<img src="https://github.com/gui-bus/portfolio/blob/master/public/projects/lume.png?raw=true" width="100%" alt="Thumbnail Lume">
 
 <p align="center">
   <img alt="React" height="60" width="60" src="https://github.com/gui-bus/TechIcons/blob/main/Dark/React.svg">
