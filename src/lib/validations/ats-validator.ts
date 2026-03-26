@@ -23,30 +23,40 @@ export function validateATS(data: ResumeData): ATSResult {
   const skillsCount = data.skills?.length || 0;
   const wordCount = JSON.stringify(data).split(/\W+/).length;
 
-  if (hasSummary) score += 20;
-  else
-    suggestions.push(
-      "Adicione um resumo profissional com pelo menos 50 caracteres.",
-    );
+  if (hasSummary) {
+    score += 20;
+  } else {
+    suggestions.push("summary");
+  }
 
-  if (hasContact) score += 20;
-  else
-    suggestions.push("Certifique-se de incluir e-mail e telefone de contato.");
+  if (hasContact) {
+    score += 20;
+  } else {
+    suggestions.push("contact");
+  }
 
-  if (experienceCount >= 2) score += 20;
-  else if (experienceCount === 1) score += 10;
-  else suggestions.push("Adicione pelo menos duas experiências profissionais.");
+  if (experienceCount >= 2) {
+    score += 20;
+  } else if (experienceCount === 1) {
+    score += 10;
+    suggestions.push("experience_low");
+  } else {
+    suggestions.push("experience_none");
+  }
 
-  if (skillsCount >= 5) score += 20;
-  else suggestions.push("Liste pelo menos 5 habilidades técnicas relevantes.");
+  if (skillsCount >= 5) {
+    score += 20;
+  } else {
+    suggestions.push("skills");
+  }
 
-  if (wordCount > 200 && wordCount < 1000) score += 20;
-  else if (wordCount <= 200)
-    suggestions.push(
-      "Seu currículo parece muito curto. Adicione mais detalhes.",
-    );
-  else
-    suggestions.push("Seu currículo está muito longo. Tente ser mais conciso.");
+  if (wordCount > 200 && wordCount < 1000) {
+    score += 20;
+  } else if (wordCount <= 200) {
+    suggestions.push("length_short");
+  } else {
+    suggestions.push("length_long");
+  }
 
   return {
     score,

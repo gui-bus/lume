@@ -567,7 +567,7 @@ export function EditorView({
                         key={i}
                         className="p-3 bg-muted/30 rounded-xl text-[10px] text-muted-foreground"
                       >
-                        {s}
+                        {t(`header.healthCheck.suggestions.${s}`)}
                       </div>
                     ))
                   )}

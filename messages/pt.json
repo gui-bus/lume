@@ -52,7 +52,16 @@
         "strongVerbs": "Verbos de Ação",
         "suggestionsLabel": "Sugestões:",
         "successTitle": "Tudo certo!",
-        "successDescription": "Seu currículo está seguindo as melhores práticas."
+        "successDescription": "Seu currículo está seguindo as melhores práticas.",
+        "suggestions": {
+          "summary": "Adicione um resumo profissional com pelo menos 50 caracteres.",
+          "contact": "Certifique-se de incluir e-mail e telefone de contato.",
+          "experience_low": "Considere adicionar mais de uma experiência profissional.",
+          "experience_none": "Adicione pelo menos duas experiências profissionais.",
+          "skills": "Liste pelo menos 5 habilidades técnicas relevantes.",
+          "length_short": "Seu currículo parece muito curto. Adicione mais detalhes.",
+          "length_long": "Seu currículo está muito longo. Tente ser mais conciso."
+        }
       },
       "actions": {
         "importJsonSuccess": "Dados importados com sucesso!",
