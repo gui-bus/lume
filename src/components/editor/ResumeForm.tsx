@@ -185,7 +185,6 @@ export function ResumeForm({
     if (currentInitialStr !== lastEmittedRef.current) {
       reset(initialData);
       lastEmittedRef.current = currentInitialStr;
-      lastSavedRef.current = currentInitialStr;
       // Notifica o parent (garante consistência)
       onDataChange(initialData);
     }
