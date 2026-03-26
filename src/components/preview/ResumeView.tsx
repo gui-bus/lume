@@ -122,17 +122,15 @@ export function ResumeView({ data, colorTheme = "#18181b" }: ResumeViewProps) {
               {experiences.map((exp, i) => (
                 <div key={i} className="mb-6 last:mb-0">
                   <div className="flex justify-between items-baseline">
-                    <h3 className="font-bold text-[14px] text-slate-900">
-                      {exp.position}
+                    <h3 className="font-bold text-[14px] text-slate-900 uppercase">
+                      {exp.company} —{" "}
+                      <span className="font-semibold normal-case text-slate-600">
+                        {exp.position}
+                      </span>
                     </h3>
                     <span className="text-[10px] text-slate-400 font-bold uppercase">
                       {exp.startDate} —{" "}
                       {exp.current ? t("current") : exp.endDate}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-baseline">
-                    <span className="text-slate-600 font-semibold text-[13px]">
-                      {exp.company}
                     </span>
                   </div>
                   {exp.description && (
@@ -159,16 +157,16 @@ export function ResumeView({ data, colorTheme = "#18181b" }: ResumeViewProps) {
               {educations.map((edu, i) => (
                 <div key={i} className="mb-4 last:mb-0">
                   <div className="flex justify-between items-baseline">
-                    <h3 className="font-bold text-[13px] text-slate-900">
-                      {edu.school}
+                    <h3 className="font-bold text-[13px] text-slate-900 uppercase">
+                      {edu.school}{" "}
+                      <span className="font-semibold normal-case text-slate-600">
+                        | {edu.degree} — {edu.field}
+                      </span>
                     </h3>
                     <span className="text-[10px] text-slate-400 font-bold uppercase">
                       {edu.graduationDate}
                     </span>
                   </div>
-                  <p className="text-slate-600 text-[12px]">
-                    {edu.degree} {t("at")} {edu.field}
-                  </p>
                 </div>
               ))}
             </section>

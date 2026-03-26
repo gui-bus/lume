@@ -309,18 +309,35 @@ export const ResumePDF = ({
             {experiences.map((exp, i) => (
               <View key={i} style={styles.item} wrap={false}>
                 <View style={styles.itemHeader}>
-                  <Text style={styles.itemTitle}>{exp.position}</Text>
+                  <View
+                    style={{ flexDirection: "row", alignItems: "baseline" }}
+                  >
+                    <Text
+                      style={[styles.itemTitle, { textTransform: "uppercase" }]}
+                    >
+                      {exp.company}
+                    </Text>
+                    <Text
+                      style={{
+                        fontSize: 12 * PX,
+                        color: "#475569",
+                        fontWeight: "bold",
+                        marginLeft: 4 * PX,
+                      }}
+                    >
+                      — {exp.position}
+                    </Text>
+                  </View>
                   <Text style={styles.itemDate}>
                     {exp.startDate} —{" "}
                     {exp.current ? labels.current : exp.endDate}
                   </Text>
                 </View>
-                <View style={styles.itemSubHeader}>
-                  <Text style={styles.company}>{exp.company}</Text>
-                  {exp.location && (
-                    <Text style={styles.location}>{exp.location}</Text>
-                  )}
-                </View>
+                {exp.location && (
+                  <Text style={[styles.location, { marginBottom: 2 * PX }]}>
+                    {exp.location}
+                  </Text>
+                )}
                 {exp.description && (
                   <Text style={styles.description}>
                     {exp.description.replace(/[*-]/g, "•")}
@@ -338,14 +355,30 @@ export const ResumePDF = ({
             {educations.map((edu, i) => (
               <View key={i} style={{ marginBottom: 12 * PX }} wrap={false}>
                 <View style={styles.itemHeader}>
-                  <Text style={[styles.itemTitle, { fontSize: 13 * PX }]}>
-                    {edu.school}
-                  </Text>
+                  <View
+                    style={{ flexDirection: "row", alignItems: "baseline" }}
+                  >
+                    <Text
+                      style={[
+                        styles.itemTitle,
+                        { fontSize: 13 * PX, textTransform: "uppercase" },
+                      ]}
+                    >
+                      {edu.school}
+                    </Text>
+                    <Text
+                      style={{
+                        fontSize: 11 * PX,
+                        color: "#475569",
+                        fontWeight: "bold",
+                        marginLeft: 4 * PX,
+                      }}
+                    >
+                      | {edu.degree} — {edu.field}
+                    </Text>
+                  </View>
                   <Text style={styles.itemDate}>{edu.graduationDate}</Text>
                 </View>
-                <Text style={styles.company}>
-                  {edu.degree} {labels.at} {edu.field}
-                </Text>
               </View>
             ))}
           </View>
