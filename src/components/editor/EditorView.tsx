@@ -617,7 +617,7 @@ export function EditorView({
       <div className="w-full lg:w-[480px] xl:w-[540px] lg:flex-none flex-1 lg:h-full shrink-0 border-r bg-card/10 overflow-hidden relative flex flex-col text-left">
         <ResumeForm
           key={locale}
-          initialData={initialData || defaultData}
+          initialData={data}
           resumeId={resumeId}
           groupId={groupId}
           onDataChange={handleDataChange}
