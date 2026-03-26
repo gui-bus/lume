@@ -916,7 +916,7 @@ export function EditorView({
               animate={{ scale: zoom }}
               className="origin-top my-8 z-10"
             >
-              <div className="shadow-[0_0_50px_-12px_rgba(0,0,0,0.12)] dark:shadow-[0_0_50px_-12px_rgba(0,0,0,0.5)] rounded-sm overflow-hidden bg-white ring-1 ring-black/5 dark:ring-white/10">
+              <div className="w-[210mm] shadow-[0_0_50px_-12px_rgba(0,0,0,0.12)] dark:shadow-[0_0_50px_-12px_rgba(0,0,0,0.5)] rounded-sm overflow-hidden bg-white ring-1 ring-black/5 dark:ring-white/10">
                 <ResumeView data={data} colorTheme="#18181b" />
               </div>
             </motion.div>

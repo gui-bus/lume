@@ -204,6 +204,12 @@
   background-size: 24px 24px;
 }
 
+.resume-container {
+  width: 210mm;
+  transform-origin: top center;
+  transition: transform 0.2s ease-out;
+}
+
 .dark .canvas-grid {
   background-image: radial-gradient(
     circle,

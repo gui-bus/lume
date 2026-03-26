@@ -1,6 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import React, { useLayoutEffect, useRef, useState } from "react";
 
 interface PageWrapperProps {
   children: React.ReactNode;
@@ -8,14 +9,74 @@ interface PageWrapperProps {
 }
 
 export function PageWrapper({ children, className }: PageWrapperProps) {
+  const [scale, setScale] = useState(1);
+  const [height, setHeight] = useState<number | string>("auto");
+  const containerRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+    const updateScale = () => {
+      if (!containerRef.current || !contentRef.current) return;
+
+      const windowWidth = window.innerWidth;
+      const padding = windowWidth < 640 ? 32 : 64;
+      const availableWidth = windowWidth - padding;
+      const contentWidth = 794; // 210mm em pixels (aprox)
+
+      let newScale = 1;
+      if (availableWidth < contentWidth) {
+        newScale = availableWidth / contentWidth;
+      }
+
+      setScale(newScale);
+
+      // Pegamos a altura real do conteúdo e multiplicamos pela escala
+      const rect = contentRef.current.getBoundingClientRect();
+      const realHeight = contentRef.current.offsetHeight;
+      setHeight(realHeight * newScale);
+    };
+
+    const resizeObserver = new ResizeObserver(() => {
+      updateScale();
+    });
+
+    if (contentRef.current) {
+      resizeObserver.observe(contentRef.current);
+    }
+
+    updateScale();
+    window.addEventListener("resize", updateScale);
+
+    return () => {
+      window.removeEventListener("resize", updateScale);
+      resizeObserver.disconnect();
+    };
+  }, []);
+
   return (
     <div
+      ref={containerRef}
       className={cn(
-        "page-wrapper min-h-full w-full py-12 flex flex-col items-center gap-10",
+        "relative w-full flex flex-col items-center no-print",
         className,
       )}
+      style={{ height }}
     >
-      {children}
+      <div
+        ref={contentRef}
+        className="absolute top-0 origin-top transition-transform duration-200"
+        style={{
+          transform: `scale(${scale})`,
+          width: "210mm",
+        }}
+      >
+        <div className="shadow-[0_20px_50px_rgba(0,0,0,0.1)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.3)] rounded-sm overflow-hidden">
+          {children}
+        </div>
+      </div>
+
+      {/* Versão para impressão */}
+      <div className="hidden print:block w-full">{children}</div>
     </div>
   );
 }
@@ -46,13 +107,6 @@ export function A4Sheet({ children, pageNumber, totalPages }: A4SheetProps) {
         style={{ fontFamily: "'Inter', sans-serif" }}
       >
         {children}
-      </div>
-
-      {/* Régua Visual Opcional */}
-      <div className="absolute -top-6 left-0 right-0 h-4 no-print flex justify-between px-[20mm] opacity-20">
-        <div className="text-[8px] font-mono">0mm</div>
-        <div className="text-[8px] font-mono text-center">105mm</div>
-        <div className="text-[8px] font-mono">210mm</div>
       </div>
     </div>
   );

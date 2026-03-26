@@ -25,7 +25,7 @@ export function ResumeView({ data, colorTheme = "#18181b" }: ResumeViewProps) {
 
   const content = useMemo(() => {
     return (
-      <div className="flex flex-col bg-white text-slate-900 p-[20mm] shadow-none min-h-[297mm] w-[210mm] text-left">
+      <div className="a4-page flex flex-col shadow-none text-left">
         {/* Header */}
         <div className="flex flex-col gap-2 pb-8">
           <h1
@@ -329,7 +329,5 @@ export function ResumeView({ data, colorTheme = "#18181b" }: ResumeViewProps) {
     );
   }, [data, colorTheme, t]);
 
-  return (
-    <div className="flex flex-col items-center gap-10 no-print">{content}</div>
-  );
+  return content;
 }
