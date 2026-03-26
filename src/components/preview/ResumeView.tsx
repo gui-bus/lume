@@ -279,7 +279,7 @@ export function ResumeView({ data, colorTheme = "#18181b" }: ResumeViewProps) {
                       <div className="grid grid-cols-1 gap-1">
                         <div className="flex items-center justify-between group">
                           <span className="text-[8px] font-bold text-slate-400 uppercase tracking-tighter">
-                            {t("editor.extras.languages.conversation")}
+                            {t("extras.languages.conversation")}
                           </span>
                           <div className="flex items-center gap-2">
                             <span className="text-[8px] font-black text-slate-600 uppercase">
@@ -290,7 +290,7 @@ export function ResumeView({ data, colorTheme = "#18181b" }: ResumeViewProps) {
                         </div>
                         <div className="flex items-center justify-between group">
                           <span className="text-[8px] font-bold text-slate-400 uppercase tracking-tighter">
-                            {t("editor.extras.languages.writing")}
+                            {t("extras.languages.writing")}
                           </span>
                           <div className="flex items-center gap-2">
                             <span className="text-[8px] font-black text-slate-600 uppercase">
@@ -301,7 +301,7 @@ export function ResumeView({ data, colorTheme = "#18181b" }: ResumeViewProps) {
                         </div>
                         <div className="flex items-center justify-between group">
                           <span className="text-[8px] font-bold text-slate-400 uppercase tracking-tighter">
-                            {t("editor.extras.languages.reading")}
+                            {t("extras.languages.reading")}
                           </span>
                           <div className="flex items-center gap-2">
                             <span className="text-[8px] font-black text-slate-600 uppercase">

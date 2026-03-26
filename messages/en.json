@@ -32,7 +32,21 @@
       "at": "-",
       "repo": "Repository",
 
-      "demo": "Demo"
+      "demo": "Demo",
+      "extras": {
+        "languages": {
+          "conversation": "Conversation",
+          "writing": "Writing",
+          "reading": "Reading",
+          "levels": {
+            "basico": "Basic",
+            "intermediario": "Intermediate",
+            "avancado": "Advanced",
+            "fluente": "Fluent",
+            "nativo": "Native"
+          }
+        }
+      }
     },
     "step": "Step {number}",
     "header": {
