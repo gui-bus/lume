@@ -2,7 +2,6 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 
-// Mocking dependencies
 vi.mock("next-intl", () => ({
   useLocale: () => "pt",
 }));

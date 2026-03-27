@@ -113,7 +113,6 @@ export function EditorView({
     setIsGenerating(true);
 
     const downloadPromise = async () => {
-      // Importações dinâmicas para evitar problemas de SSR e reduzir o bundle inicial
       const { pdf } = await import("@react-pdf/renderer");
       const { ResumePDF } = await import("@/components/pdf/ResumePDF");
 
@@ -316,13 +315,11 @@ export function EditorView({
   const toggleTheme = () => {
     const nextTheme = theme === "dark" ? "light" : "dark";
 
-    // @ts-ignore - View Transitions API
     if (!document.startViewTransition) {
       setTheme(nextTheme);
       return;
     }
 
-    // @ts-ignore
     document.startViewTransition(() => {
       setTheme(nextTheme);
     });
@@ -356,7 +353,6 @@ export function EditorView({
         </div>
       </div>
 
-      {/* LinkedIn Section */}
       <div className="space-y-4">
         <h4 className="text-[10px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-2">
           <LinkedinLogo size={14} weight="duotone" /> LinkedIn Import
@@ -388,7 +384,6 @@ export function EditorView({
         </div>
       </div>
 
-      {/* Slug Section */}
       <div className="space-y-4">
         <h4 className="text-[10px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-2">
           <Browser size={14} weight="duotone" />{" "}
@@ -435,7 +430,6 @@ export function EditorView({
         </div>
       </div>
 
-      {/* Import/Export Section */}
       <div className="space-y-4">
         <h4 className="text-[10px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-2">
           <FileArrowUp size={14} weight="duotone" /> Backup & Restore

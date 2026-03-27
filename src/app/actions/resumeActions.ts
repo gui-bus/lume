@@ -21,7 +21,6 @@ export async function saveResume(
     throw new Error("Usuário não autenticado");
   }
 
-  // Sincronizar Usuário de forma robusta
   const email = user.emailAddresses[0].emailAddress;
   const name = `${user.firstName} ${user.lastName}`.trim();
 
@@ -36,7 +35,6 @@ export async function saveResume(
       data: { id: userId, email, name },
     });
   } else if (existingUser.id !== userId) {
-    // Conflito: O e-mail existe sob outro ID. Migramos tudo para o novo ID do Clerk.
     await prisma.$transaction([
       prisma.resume.updateMany({
         where: { userId: existingUser.id },
@@ -48,7 +46,6 @@ export async function saveResume(
       }),
     ]);
   } else {
-    // Mesmo ID, apenas atualizamos os dados se necessário
     await prisma.user.update({
       where: { id: userId },
       data: { email, name },
@@ -57,7 +54,6 @@ export async function saveResume(
 
   const finalGroupId = groupId || crypto.randomUUID();
 
-  // Verifica se o slug já está em uso por outro grupo
   if (slug) {
     const slugExists = await prisma.resume.findFirst({
       where: {
@@ -72,7 +68,6 @@ export async function saveResume(
     }
   }
 
-  // Busca manual para separar idiomas corretamente
   const existingVersion = await prisma.resume.findFirst({
     where: {
       groupId: finalGroupId,
@@ -143,16 +138,13 @@ export async function deleteResume(id: string) {
 
 export async function getResume(identifier: string, locale?: string) {
   try {
-    // 1. Tenta buscar por SLUG primeiro
     const bySlug = await prisma.resume.findFirst({
       where: { slug: identifier },
     });
 
     if (bySlug) {
-      // Se o slug encontrado for do idioma certo, retorna ele
       if (!locale || bySlug.locale === locale) return bySlug;
 
-      // Se o slug for de outro idioma, buscamos a versão correta no MESMO GRUPO
       const localized = await prisma.resume.findFirst({
         where: {
           groupId: bySlug.groupId,
@@ -160,11 +152,9 @@ export async function getResume(identifier: string, locale?: string) {
         },
       });
 
-      // Retorna a versão traduzida se existir, ou o rascunho original se não
       return localized || bySlug;
     }
 
-    // 2. Busca por GROUP ID + LOCALE (Para links UUID padrão)
     if (locale) {
       const byGroup = await prisma.resume.findFirst({
         where: {
@@ -175,7 +165,6 @@ export async function getResume(identifier: string, locale?: string) {
       if (byGroup) return byGroup;
     }
 
-    // 3. Fallback: Busca por ID individual
     const byId = await prisma.resume.findUnique({ where: { id: identifier } });
     if (byId) {
       if (locale && byId.locale !== locale) {

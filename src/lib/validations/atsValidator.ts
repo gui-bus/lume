@@ -16,7 +16,6 @@ export function validateATS(data: ResumeData): ATSResult {
   const checks: ATSCheck[] = [];
   let score = 0;
 
-  // 1. Resumo Profissional
   const summaryLength = data.personalInfo.summary?.length || 0;
   if (summaryLength > 50) {
     score += 20;
@@ -25,7 +24,6 @@ export function validateATS(data: ResumeData): ATSResult {
     checks.push({ id: "summary", status: "error" });
   }
 
-  // 2. Informações de Contato
   const hasContact = !!(data.personalInfo.email && data.personalInfo.phone);
   if (hasContact) {
     score += 20;
@@ -34,7 +32,6 @@ export function validateATS(data: ResumeData): ATSResult {
     checks.push({ id: "contact", status: "error" });
   }
 
-  // 3. Experiências
   const experienceCount = data.experiences?.length || 0;
   if (experienceCount >= 2) {
     score += 20;
@@ -54,7 +51,6 @@ export function validateATS(data: ResumeData): ATSResult {
     checks.push({ id: "experience", status: "error", value: experienceCount });
   }
 
-  // 4. Habilidades
   const skillsCount = data.skills?.length || 0;
   if (skillsCount >= 5) {
     score += 20;
@@ -63,7 +59,6 @@ export function validateATS(data: ResumeData): ATSResult {
     checks.push({ id: "skills", status: "error", value: skillsCount });
   }
 
-  // 5. Extensão/Volume de Conteúdo
   const wordCount = JSON.stringify(data).split(/\W+/).length;
   if (wordCount > 200 && wordCount < 1000) {
     score += 20;

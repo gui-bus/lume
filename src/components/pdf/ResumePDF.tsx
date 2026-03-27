@@ -9,8 +9,6 @@ import {
   View,
 } from "@react-pdf/renderer";
 
-// Registrar fontes para garantir estabilidade máxima em produção
-// Roboto é a fonte com melhor suporte no motor do react-pdf
 Font.register({
   family: "Roboto",
   fonts: [
@@ -25,7 +23,6 @@ Font.register({
   ],
 });
 
-// Desativar hifenização para evitar erros de cálculo de layout
 Font.registerHyphenationCallback((word) => [word]);
 
 const PX = 0.75;
@@ -35,7 +32,7 @@ const styles = StyleSheet.create({
     paddingTop: "25mm",
     paddingLeft: "25mm",
     paddingRight: "25mm",
-    paddingBottom: "15mm", // Reduzido para evitar página em branco extra
+    paddingBottom: "15mm",
     backgroundColor: "#FFFFFF",
     fontFamily: "Roboto",
     color: "#1e293b",

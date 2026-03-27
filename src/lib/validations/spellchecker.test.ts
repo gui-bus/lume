@@ -29,7 +29,7 @@ describe("Spellchecker (Strong Verbs)", () => {
   it("should identify weak verbs in summary and experiences", () => {
     const result = checkStrongVerbs(mockData);
     expect(result.hasIssues).toBe(true);
-    expect(result.suggestions).toHaveLength(2); // Summary and 1 Experience
+    expect(result.suggestions).toHaveLength(2);
 
     const summaryIssues = result.suggestions.find(
       (s) => s.section === "Resumo Profissional",

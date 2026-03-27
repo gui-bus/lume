@@ -178,41 +178,32 @@ export function ResumeForm({
   const lastSavedRef = useRef<string>(JSON.stringify(initialData));
   const latestDataRef = useRef<ResumeData>(watchedData);
 
-  // Sincroniza o form quando initialData mudar (importação/troca de locale)
   useEffect(() => {
     const currentInitialStr = JSON.stringify(initialData);
-    // Se o initialData que vem de cima é diferente do que emitimos por último, reseta o form
     if (currentInitialStr !== lastEmittedRef.current) {
       reset(initialData);
       lastEmittedRef.current = currentInitialStr;
-      // Notifica o parent (garante consistência)
       onDataChange(initialData);
     }
   }, [initialData, reset, onDataChange]);
 
-  // Mantém apenas o ref interno atualizado
   useEffect(() => {
     latestDataRef.current = watchedData;
   }, [watchedData]);
 
-  // Gatilho para Preview Imediato
   useEffect(() => {
     const currentStr = JSON.stringify(watchedData);
-    // Só emite se mudou do que foi emitido por último
     if (currentStr !== lastEmittedRef.current) {
       lastEmittedRef.current = currentStr;
       onDataChange(watchedData);
     }
   }, [watchedData, onDataChange]);
 
-  // Gatilho para Banco (Debounced)
   useEffect(() => {
     const currentStr = JSON.stringify(debouncedData);
 
-    // IMPORTANTE: Só salva se for diferente do último salvo
     if (currentStr === lastSavedRef.current) return;
 
-    // Não salva se o nome estiver vazio (estado inicial/reset)
     if (
       !debouncedData.personalInfo.name &&
       debouncedData.experiences.length === 0
@@ -230,7 +221,6 @@ export function ResumeForm({
           groupId,
         );
 
-        // Atualiza o ref do último salvo com SUCESSO
         lastSavedRef.current = currentStr;
 
         if (result.id !== resumeId || result.groupId !== groupId) {
@@ -245,7 +235,7 @@ export function ResumeForm({
 
     performSave();
   }, [debouncedData, resumeId, groupId, locale, onIdGenerated, t]);
-  // Salvamento de segurança ao sair
+
   useEffect(() => {
     return () => {
       const currentStr = JSON.stringify(latestDataRef.current);

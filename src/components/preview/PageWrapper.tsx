@@ -21,7 +21,7 @@ export function PageWrapper({ children, className }: PageWrapperProps) {
       const windowWidth = window.innerWidth;
       const padding = windowWidth < 640 ? 32 : 64;
       const availableWidth = windowWidth - padding;
-      const contentWidth = 794; // 210mm em pixels (aprox)
+      const contentWidth = 794;
 
       let newScale = 1;
       if (availableWidth < contentWidth) {
@@ -30,7 +30,6 @@ export function PageWrapper({ children, className }: PageWrapperProps) {
 
       setScale(newScale);
 
-      // Pegamos a altura real do conteúdo e multiplicamos pela escala
       const rect = contentRef.current.getBoundingClientRect();
       const realHeight = contentRef.current.offsetHeight;
       setHeight(realHeight * newScale);

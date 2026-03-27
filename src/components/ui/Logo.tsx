@@ -15,7 +15,6 @@ export function Logo({ className, width = 120, height = 31 }: LogoProps) {
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
-  // Evitar erro de hidratação garantindo que o tema só seja lido no cliente
   useEffect(() => {
     setMounted(true);
   }, []);
