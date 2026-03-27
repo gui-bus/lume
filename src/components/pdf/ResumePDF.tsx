@@ -32,7 +32,10 @@ const PX = 0.75;
 
 const styles = StyleSheet.create({
   page: {
-    padding: "25mm",
+    paddingTop: "25mm",
+    paddingLeft: "25mm",
+    paddingRight: "25mm",
+    paddingBottom: "15mm", // Reduzido para evitar página em branco extra
     backgroundColor: "#FFFFFF",
     fontFamily: "Roboto",
     color: "#1e293b",
@@ -328,10 +331,17 @@ export const ResumePDF = ({
 
         {/* 2. Experiência */}
         {experiences?.length > 0 && (
-          <View>
+          <View style={{ marginBottom: 10 * PX }}>
             {renderSectionTitle(labels.experience)}
             {experiences.map((exp, i) => (
-              <View key={i} style={styles.item} wrap={false}>
+              <View
+                key={i}
+                style={[
+                  styles.item,
+                  i === experiences.length - 1 ? { marginBottom: 0 } : {},
+                ]}
+                wrap={false}
+              >
                 <View style={styles.itemHeader}>
                   <View
                     style={{ flexDirection: "row", alignItems: "baseline" }}
@@ -374,10 +384,16 @@ export const ResumePDF = ({
 
         {/* 3. Educação */}
         {educations?.length > 0 && (
-          <View>
+          <View style={{ marginBottom: 10 * PX }}>
             {renderSectionTitle(labels.education)}
             {educations.map((edu, i) => (
-              <View key={i} style={{ marginBottom: 12 * PX }} wrap={false}>
+              <View
+                key={i}
+                style={{
+                  marginBottom: i === educations.length - 1 ? 0 : 12 * PX,
+                }}
+                wrap={false}
+              >
                 <View style={styles.itemHeader}>
                   <View
                     style={{ flexDirection: "row", alignItems: "baseline" }}
@@ -410,13 +426,12 @@ export const ResumePDF = ({
 
         {/* 3.1. Cursos */}
         {courses?.length > 0 && (
-          <View>
+          <View style={{ marginBottom: 10 * PX }}>
             {renderSectionTitle(labels.courses)}
             <View
               style={{
                 flexDirection: "row",
                 flexWrap: "wrap",
-                marginBottom: 12 * PX,
               }}
             >
               {courses.map((c, i) => (
@@ -456,9 +471,9 @@ export const ResumePDF = ({
 
         {/* 4. Habilidades */}
         {skills?.length > 0 && (
-          <View>
+          <View style={{ marginBottom: 10 * PX }}>
             {renderSectionTitle(labels.skills)}
-            <View style={styles.skillsGrid}>
+            <View style={[styles.skillsGrid, { marginBottom: 0 }]}>
               {skills.map((s, i) => (
                 <Text key={i} style={styles.skillTag}>
                   {s}
@@ -470,13 +485,12 @@ export const ResumePDF = ({
 
         {/* 5. Idiomas */}
         {languages?.length > 0 && (
-          <View>
+          <View style={{ marginBottom: 10 * PX }}>
             {renderSectionTitle(labels.languages)}
             <View
               style={{
                 flexDirection: "row",
                 flexWrap: "wrap",
-                marginBottom: 24 * PX,
                 gap: 20 * PX,
               }}
             >
@@ -582,10 +596,16 @@ export const ResumePDF = ({
 
         {/* 6. Certificações */}
         {certifications?.length > 0 && (
-          <View>
+          <View style={{ marginBottom: 10 * PX }}>
             {renderSectionTitle(labels.certifications)}
             {certifications.map((c, i) => (
-              <View key={i} style={{ marginBottom: 12 * PX }} wrap={false}>
+              <View
+                key={i}
+                style={{
+                  marginBottom: i === certifications.length - 1 ? 0 : 12 * PX,
+                }}
+                wrap={false}
+              >
                 <View style={styles.itemHeader}>
                   <Text style={[styles.itemTitle, { fontSize: 12 * PX }]}>
                     {c.name}
@@ -600,10 +620,17 @@ export const ResumePDF = ({
 
         {/* 7. Projetos */}
         {projects?.length > 0 && (
-          <View>
+          <View style={{ marginBottom: 10 * PX }}>
             {renderSectionTitle(labels.projects)}
             {projects.map((proj, i) => (
-              <View key={i} style={styles.item} wrap={false}>
+              <View
+                key={i}
+                style={[
+                  styles.item,
+                  i === projects.length - 1 ? { marginBottom: 0 } : {},
+                ]}
+                wrap={false}
+              >
                 <View style={styles.projectHeader}>
                   <Text style={[styles.itemTitle, { fontSize: 13 * PX }]}>
                     {proj.name}
@@ -631,10 +658,16 @@ export const ResumePDF = ({
 
         {/* 8. Voluntariado */}
         {volunteering?.length > 0 && (
-          <View>
+          <View style={{ marginBottom: 0 }}>
             {renderSectionTitle(labels.volunteering)}
             {volunteering.map((v, i) => (
-              <View key={i} style={{ marginBottom: 12 * PX }} wrap={false}>
+              <View
+                key={i}
+                style={{
+                  marginBottom: i === volunteering.length - 1 ? 0 : 12 * PX,
+                }}
+                wrap={false}
+              >
                 <View style={styles.itemHeader}>
                   <Text style={[styles.itemTitle, { fontSize: 13 * PX }]}>
                     {v.organization}
